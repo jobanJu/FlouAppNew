@@ -1,5 +1,61 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
+node_modules/
+backend/node_modules/
+dist/
+build/
+.expo/
+.expo-shared/
+web-build/
+*.log
+*.lock
+*.DS_Store
+*.env
+*.env.*
+Thumbs.db
+.vscode/
+.idea/
+.history/
+.sass-cache/
+.cache/
+.npm/
+.yarn/
+.parcel-cache/
+.turbo/
+.next/
+.vercel/
+coverage/
+*.iml
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+*.rej
+*.gz
+*.zip
+*.tar
+*.tgz
+*.7z
+*.rar
+*.pid
+*.seed
+*.pid.lock
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+*.jks
+*.keystore
+*.p8
+*.p10
+*.csr
+*.der
+*.srl
+*.pub
 # dependencies
 node_modules/
 
@@ -30,13 +86,20 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# env files
+.env
+.env.*
 .env*.local
 
 # typescript
 *.tsbuildinfo
 
-app-example
+# archives
+*.zip
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
 
 # generated native folders
 /ios
