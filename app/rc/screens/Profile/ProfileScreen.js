@@ -107,7 +107,7 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Centres d'intérêt</Text>
+          <Text style={styles.sectionTitle}>Centres d&apos;intérêt</Text>
           <View style={styles.tagsWrap}>
             {userData.interets.split(',').map((tag, idx) => (
               <View key={idx} style={styles.tagChip}>

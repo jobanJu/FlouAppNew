@@ -249,7 +249,7 @@ export default function SupportScreen() {
               <View style={styles.emergencyCard}>
                 <View style={styles.emergencyHeader}>
                   <Text style={styles.emergencyIcon}>🆘</Text>
-                  <Text style={styles.emergencyTitle}>Besoin d'aide urgente ?</Text>
+                  <Text style={styles.emergencyTitle}>Besoin d&apos;aide urgente ?</Text>
                 </View>
                 <Text style={styles.emergencyText}>
                   Si tu es en danger, contacte les autorités locales ou appelle le 17.
@@ -270,7 +270,7 @@ export default function SupportScreen() {
             <Text style={styles.appVersion}>Version 1.0.0</Text>
             <View style={styles.legalLinks}>
               <TouchableOpacity>
-                <Text style={styles.legalLink}>Conditions d'utilisation</Text>
+                <Text style={styles.legalLink}>Conditions d&apos;utilisation</Text>
               </TouchableOpacity>
               <Text style={styles.legalDot}>•</Text>
               <TouchableOpacity>

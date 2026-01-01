@@ -4,11 +4,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function TabLayout() {
-  const renderIcon = (glyph: string) => ({ focused }: { focused: boolean }) => (
-    <View style={[styles.iconShell, focused && styles.iconShellActive]}>
-      <Text style={[styles.iconText, focused && styles.iconTextActive]}>{glyph}</Text>
-    </View>
-  );
+  const renderIcon = (glyph: string) => {
+    const IconComponent = ({ focused }: { focused: boolean }) => (
+      <View style={[styles.iconShell, focused && styles.iconShellActive]}>
+        <Text style={[styles.iconText, focused && styles.iconTextActive]}>{glyph}</Text>
+      </View>
+    );
+    IconComponent.displayName = `TabIcon_${glyph}`;
+    return IconComponent;
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

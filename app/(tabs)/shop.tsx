@@ -333,7 +333,7 @@ export default function ShopScreen() {
                       ) : (
                         <View style={styles.subscribeBtn}>
                           <Text style={styles.subscribeBtnText}>
-                            S'abonner
+                            S&apos;abonner
                           </Text>
                         </View>
                       )}
