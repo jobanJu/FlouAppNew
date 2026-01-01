@@ -285,7 +285,7 @@ export default function EditProfileScreen() {
             </View>
             
             <Text style={styles.photosSubtitle}>
-              Tes photos sont floutées par défaut. Les autres ne les verront clairement qu'après un match !
+              Tes photos sont floutées par défaut. Les autres ne les verront clairement qu&apos;après un match !
             </Text>
 
             {/* Photos Grid */}
@@ -650,7 +650,7 @@ export default function EditProfileScreen() {
 
           {/* Interests */}
           <View style={styles.formCard}>
-            <Text style={styles.cardTitle}>Centres d'intérêt</Text>
+            <Text style={styles.cardTitle}>Centres d&apos;intérêt</Text>
             <Text style={styles.cardSubtitle}>
               Sélectionne tes passions ({selectedInterests.length} sélectionnés)
             </Text>

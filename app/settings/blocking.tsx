@@ -119,7 +119,7 @@ export default function BlockingScreen() {
                 </View>
                 <Text style={styles.infoText}>
                   Les personnes bloquées ne peuvent plus voir ton profil, 
-                  t'envoyer de messages ou interagir avec toi.
+                  t&apos;envoyer de messages ou interagir avec toi.
                 </Text>
               </View>
 
@@ -158,7 +158,7 @@ export default function BlockingScreen() {
                   <Text style={styles.emptyIcon}>🎉</Text>
                   <Text style={styles.emptyTitle}>Aucun utilisateur bloqué</Text>
                   <Text style={styles.emptyText}>
-                    Tu n'as bloqué personne pour le moment
+                    Tu n&apos;as bloqué personne pour le moment
                   </Text>
                 </View>
               )}

@@ -252,8 +252,8 @@ export default function RegisterScreen() {
       {/* ÉTAPE 3: INTÉRÊTS */}
       {step === 3 && (
         <View style={styles.stepContainer}>
-          <Text style={styles.title}>Tes centres d'intérêt</Text>
-          <Text style={styles.subtitle}>Sélectionne jusqu'à 10 ({selectedInterests.length}/10)</Text>
+          <Text style={styles.title}>Tes centres d&apos;intérêt</Text>
+          <Text style={styles.subtitle}>Sélectionne jusqu&apos;à 10 ({selectedInterests.length}/10)</Text>
           
           <View style={styles.interestsGrid}>
             {INTERESTS.map(interest => (

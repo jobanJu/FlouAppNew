@@ -6,25 +6,26 @@ if (Platform.OS !== 'web') {
   ({ LiveKitRoom, useTracks, VideoTrack } = require('@livekit/react-native'));
 }
 // Composant pour afficher tous les flux vidéo des participants
-function VideoTracks() {
-  if (Platform.OS === 'web') {
-    return null;
-  }
-  const tracks = useTracks();
-  return (
-    <>
-      {tracks.map((ref: any) =>
-        ref.publication && ref.publication.kind === 'video' ? (
-          <VideoTrack
-            key={ref.publication.trackSid}
-            trackRef={ref}
-            style={{ width: 80, height: 80, borderRadius: 16, margin: 4 }}
-          />
-        ) : null
-      )}
-    </>
-  );
-}
+// This component is currently not used but kept for future reference
+// function VideoTracks() {
+//   if (Platform.OS === 'web') {
+//     return null;
+//   }
+//   const tracks = useTracks();
+//   return (
+//     <>
+//       {tracks.map((ref: any) =>
+//         ref.publication && ref.publication.kind === 'video' ? (
+//           <VideoTrack
+//             key={ref.publication.trackSid}
+//             trackRef={ref}
+//             style={{ width: 80, height: 80, borderRadius: 16, margin: 4 }}
+//           />
+//         ) : null
+//       )}
+//     </>
+//   );
+// }
 // LiveKit integration
 // import { LiveKitRoom, useTracks, VideoTrack } from '@livekit/react-native';
 // VideoTracks component for rendering all video tracks in the room
@@ -294,7 +295,7 @@ export default function LiveScreen() {
         <View style={styles.liveCardInfo}>
           <Text style={styles.liveUsername}>{room.username}</Text>
           <View style={styles.tagsRow}>
-            {room.tags.map((tag, idx) => (
+            {room.tags.map((tag: string, idx: number) => (
               <View key={idx} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
@@ -371,13 +372,11 @@ export default function LiveScreen() {
           {errorRooms && <Text style={{ color: 'red', margin: 20 }}>{errorRooms}</Text>}
           {LIVE_ROOMS
             .filter(room => room.type === activeTab || !room.type)
-            .map(room => (
-              <LiveVideoCard key={room.id} room={room} />
-            ))}
+            .map(room => renderLiveCard(room))}
           {Platform.OS === 'web' && (
             <View style={{ alignItems: 'center', margin: 32 }}>
               <Text style={{ color: '#888', fontSize: 16, textAlign: 'center' }}>
-                Le live vidéo n'est disponible que sur l'application mobile (Android/iOS).
+                Le live vidéo n&apos;est disponible que sur l&apos;application mobile (Android/iOS).
               </Text>
             </View>
           )}

@@ -318,7 +318,7 @@ export default function OnboardingScreen() {
             <Text style={styles.welcomeEmoji}>💜</Text>
             <Text style={styles.welcomeTitle}>Bienvenue sur Flou</Text>
             <Text style={styles.welcomeSubtitle}>
-              L'application de rencontre où les photos se défloutent progressivement.
+              L&apos;application de rencontre où les photos se défloutent progressivement.
               Découvre la personnalité avant le physique !
             </Text>
             <View style={styles.welcomeFeatures}>
@@ -416,8 +416,8 @@ export default function OnboardingScreen() {
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.stepEmoji}>👋</Text>
-            <Text style={styles.stepTitle}>Comment tu t'appelles ?</Text>
-            <Text style={styles.stepSubtitle}>C'est le prénom qui sera affiché sur ton profil</Text>
+            <Text style={styles.stepTitle}>Comment tu t&apos;appelles ?</Text>
+            <Text style={styles.stepSubtitle}>C&apos;est le prénom qui sera affiché sur ton profil</Text>
             <HideKeyboardArrow />
             <TextInput
               style={styles.bigInput}
@@ -608,7 +608,7 @@ export default function OnboardingScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-            <Text style={styles.photoHint}>💡 Tes photos seront floutées jusqu'à ce que tu matches</Text>
+            <Text style={styles.photoHint}>💡 Tes photos seront floutées jusqu&apos;à ce que tu matches</Text>
           </View>
         );
 
@@ -640,7 +640,7 @@ export default function OnboardingScreen() {
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.stepEmoji}>💝</Text>
-            <Text style={styles.stepTitle}>Tes centres d'intérêt</Text>
+            <Text style={styles.stepTitle}>Tes centres d&apos;intérêt</Text>
             <Text style={styles.stepSubtitle}>Choisis au moins 3 passions</Text>
             <ScrollView 
               style={styles.interestsScroll}
