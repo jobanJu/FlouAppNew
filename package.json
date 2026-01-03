@@ -4,17 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "start:server": "node server.js",
-    "start:docker": "docker-compose up -d",
-    "stop:docker": "docker-compose down",
-    "restart:docker": "docker-compose restart",
-    "logs:docker": "docker-compose logs -f flouapp",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "livekit-token-api": "node scripts/livekit-token-api.js"
+    "reset-project": "node ./scripts/reset-project.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
