@@ -15,6 +15,7 @@
 | **LiveKit** | ✅ Configuré pour la vidéo en direct |
 | **Supabase** | ✅ Backend prêt |
 | **Stripe** | ✅ Paiements intégrés |
+| **Matching** | ✅ Swipe cards + Gestion des matches |
 | **Git** | ✅ Tout committé |
 
 ### 📁 Structure du projet
@@ -117,16 +118,28 @@ npm run reset-project  # Réinitialiser le projet
 2. **Navigation par Onglets**
    - Accueil (⌂)
    - Messages (✉)
-   - Explore (♥)
+   - Matching (❤️) ← NOUVEAU
    - Live (●)
    - Shop (🛒)
 
-3. **Paramètres utilisateur**
+3. **Système de Matching** ⭐ NOUVEAU
+   - Swipe cards (left = reject, right = like)
+   - Animations fluides avec PanResponder
+   - Gestion des matches
+   - Profil preview (image + bio + localisation)
+   - Stack preview (prochaine carte visible)
+
+4. **Mes Matches** (Explore)
+   - Affichage en grille 2x2
+   - Bouton "Écrire" pour message
+   - Compteur de matches
+
+5. **Paramètres utilisateur**
    - Édition du profil
    - Gestion des blocages
    - Support client
 
-4. **Intégrations**
+6. **Intégrations**
    - LiveKit pour vidéo en direct
    - Supabase pour authentification et données
    - Stripe pour les paiements
