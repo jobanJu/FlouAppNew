@@ -1,25 +1,24 @@
-import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import React, { useState, useRef, useEffect } from 'react';
-import HideKeyboardArrow from '../../components/HideKeyboardArrow';
-import { 
-  ScrollView, 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
-  View,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Image,
+import { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
   Animated,
   Dimensions,
-  Alert,
-  ActivityIndicator,
+  Image,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import HideKeyboardArrow from '../../components/HideKeyboardArrow';
 
 const { width } = Dimensions.get('window');
 

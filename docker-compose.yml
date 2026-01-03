@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  flouapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flouapp-server
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+    environment:
+      - NODE_ENV=production
+      - EXPO_PUBLIC_SUPABASE_URL=https://lyqtupcjevgxpovzevcz.supabase.co
+      - EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXR1cGNqZXZneHBvdnpldmN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMTUwNzAsImV4cCI6MjA4MTc5MTA3MH0.pN4bjcbxHSLIkOFwyZuGwEiZ5vYVNC-SS9RqTTle3bk
+      - LIVEKIT_URL=wss://flouapp-mejnaydh.livekit.cloud
+      - LIVEKIT_API_KEY=APIJZ8kdXvHxS4j
+      - LIVEKIT_API_SECRET=KyLjPsROTeXbd294yoLNhI2dXCUwOZTLcGLg73RiqCd
+    volumes:
+      - ./logs:/app/logs
+      - ./node_modules:/app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - flouapp-network
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:latest
+    container_name: flouapp-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - flouapp
+    restart: unless-stopped
+    networks:
+      - flouapp-network
+
+networks:
+  flouapp-network:
+    driver: bridge

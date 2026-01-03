@@ -1,5 +1,13 @@
 // LiveKit integration
-import { Platform } from 'react-native';
+import { Audio } from 'expo-av';
+import { BlurView } from 'expo-blur';
+import { useCameraPermissions } from 'expo-camera';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, Dimensions, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { supabase } from '../../lib/supabase';
 let LiveKitRoom: any, useTracks: any, VideoTrack: any;
 if (Platform.OS !== 'web') {
   // @ts-ignore
@@ -56,26 +64,6 @@ async function fetchLiveKitToken(room: string, user: string): Promise<string> {
   const data = await res.json();
   return data.token;
 }
-import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../../lib/supabase';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Audio } from 'expo-av';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-  Animated,
-  Modal,
-  ActivityIndicator,
-  Keyboard,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
@@ -294,7 +282,7 @@ export default function LiveScreen() {
         <View style={styles.liveCardInfo}>
           <Text style={styles.liveUsername}>{room.username}</Text>
           <View style={styles.tagsRow}>
-            {room.tags.map((tag, idx) => (
+            {room.tags.map((tag: string, idx: number) => (
               <View key={idx} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
@@ -369,11 +357,8 @@ export default function LiveScreen() {
           {/* Lives en cours */}
           {loadingRooms && <ActivityIndicator color="#667eea" style={{ margin: 20 }} />}
           {errorRooms && <Text style={{ color: 'red', margin: 20 }}>{errorRooms}</Text>}
-          {LIVE_ROOMS
-            .filter(room => room.type === activeTab || !room.type)
-            .map(room => (
-              <LiveVideoCard key={room.id} room={room} />
-            ))}
+          {filteredRooms
+            .map(room => renderLiveCard(room))}
           {Platform.OS === 'web' && (
             <View style={{ alignItems: 'center', margin: 32 }}>
               <Text style={{ color: '#888', fontSize: 16, textAlign: 'center' }}>

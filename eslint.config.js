@@ -1,10 +1,17 @@
-// https://docs.expo.dev/guides/using-eslint/
-const { defineConfig } = require('eslint/config');
-const expoConfig = require('eslint-config-expo/flat');
-
-module.exports = defineConfig([
-  expoConfig,
+module.exports = [
   {
-    ignores: ['dist/*'],
+    ignores: ['node_modules', '.expo', 'dist', 'build', '.expo-shared'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      parser: require('@typescript-eslint/parser'),
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
   },
-]);
+];

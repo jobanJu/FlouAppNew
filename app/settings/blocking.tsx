@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import HideKeyboardArrow from '../../components/HideKeyboardArrow';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  TextInput,
-  Dimensions,
+    Alert,
+    Dimensions,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
+import HideKeyboardArrow from '../../components/HideKeyboardArrow';
 
 const { width } = Dimensions.get('window');
 

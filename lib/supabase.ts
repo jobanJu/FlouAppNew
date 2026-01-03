@@ -1,5 +1,5 @@
-import Constants from 'expo-constants';
 import { createClient } from '@supabase/supabase-js';
+import Constants from 'expo-constants';
 
 const DEFAULT_URL = 'https://lyqtupcjevgxpovzevcz.supabase.co';
 const DEFAULT_ANON_KEY =

@@ -1,6 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, Keyboard, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Keyboard, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function HideKeyboardArrow({ style }: { style?: any }) {
   return (

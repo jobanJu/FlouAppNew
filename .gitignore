@@ -104,3 +104,20 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+# env
+.env
+.env.*
+
+# archives
+*.zip
+
+# node
+node_modules/
+
+# expo
+.expo/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
