@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import BulleProfilFlou from '@/components/BulleProfilFlou';
+import BulleProfilFlou from '../../../components/BulleProfilFlou';
 
 export default function ProfileScreen() {
   const [userData] = useState({
