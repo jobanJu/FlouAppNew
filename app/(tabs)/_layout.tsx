@@ -38,8 +38,8 @@ export default function TabLayout() {
         />
 
         <Tabs.Screen
-          name="explore"
-          options={{ tabBarIcon: renderIcon('♥') }}
+          name="matching"
+          options={{ tabBarIcon: renderIcon('❤️') }}
         />
 
         <Tabs.Screen
