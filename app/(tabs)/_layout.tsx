@@ -51,6 +51,36 @@ export default function TabLayout() {
           name="shop"
           options={{ tabBarIcon: renderIcon('🛒') }}
         />
+
+        <Tabs.Screen
+          name="explore"
+          options={{ tabBarIcon: renderIcon('🔍') }}
+        />
+
+        <Tabs.Screen
+          name="sessions"
+          options={{ tabBarIcon: renderIcon('🏄') }}
+        />
+
+        <Tabs.Screen
+          name="spots"
+          options={{ tabBarIcon: renderIcon('🗺️') }}
+        />
+
+        <Tabs.Screen
+          name="feed"
+          options={{ tabBarIcon: renderIcon('📸') }}
+        />
+
+        <Tabs.Screen
+          name="notifications"
+          options={{ tabBarIcon: renderIcon('🔔') }}
+        />
+
+        <Tabs.Screen
+          name="gamification"
+          options={{ tabBarIcon: renderIcon('⭐') }}
+        />
       </Tabs>
     </GestureHandlerRootView>
   );
