@@ -2,17 +2,22 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Copy all files
-COPY . .
+# Copy package files
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+COPY ecosystem.config.js ./
 
-# Install dependencies
-RUN npm ci --only=production && \
-    npm ci --save-dev
+# Install all dependencies
+RUN npm ci && cd backend && npm ci && cd ..
+
+# Copy source code
+COPY . .
 
 # Expose ports
 EXPOSE 3001 8081
 
-# Start both services with PM2
+# Install PM2 globally
 RUN npm install -g pm2
 
+# Start services
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
