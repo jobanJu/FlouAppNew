@@ -81,9 +81,11 @@ jobs:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
+          echo "Logging into Supabase CLI and linking project $SUPABASE_PROJECT_REF"
+          supabase login --access-token "$SUPABASE_ACCESS_TOKEN" || true
+          supabase link --project-ref "$SUPABASE_PROJECT_REF" || true
           echo "Applying DB schema to project $SUPABASE_PROJECT_REF"
-          # Use access token / project ref to push migrations
-          supabase db push --project-ref "$SUPABASE_PROJECT_REF"
+          supabase db push
 
       - name: Deploy edge functions
         env:
@@ -95,7 +97,7 @@ jobs:
             for d in supabase/functions/*/ ; do
               fn=$(basename "$d")
               echo "Deploying function: $fn"
-              supabase functions deploy "$fn" --project-ref "$SUPABASE_PROJECT_REF"
+              supabase functions deploy "$fn"
             done
           else
             echo "No functions directory found, skipping."
