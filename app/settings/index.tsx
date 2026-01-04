@@ -133,13 +133,19 @@ export default function SettingsScreen() {
               </View>
             </View>
 
-            {/* Edit Profile Button */}
-            <TouchableOpacity 
-              style={styles.editProfileBtn}
-              onPress={() => router.push('/settings/edit-profile')}
-            >
-              <Text style={styles.editProfileText}>✏️ Modifier mon profil</Text>
-            </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.editProfileBtn}
+            onPress={() => router.push('/settings/quick-edit')}
+          >
+            <Text style={styles.editProfileText}>✏️ Éditer rapidement</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.editProfileBtn}
+            onPress={() => router.push('/settings/edit-profile')}
+          >
+            <Text style={styles.editProfileText}>🎨 Profil complet</Text>
+          </TouchableOpacity>
           </View>
 
           {/* Premium Banner */}
