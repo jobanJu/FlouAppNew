@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const { AccessToken, VideoGrant } = require('livekit-server-sdk');
+import { createClient } from '@supabase/supabase-js';
+import { AccessToken, VideoGrant } from 'livekit-server-sdk';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -9,7 +9,7 @@ const livekitSecret = process.env.LIVEKIT_API_SECRET;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
