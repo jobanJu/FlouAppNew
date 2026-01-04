@@ -10,8 +10,8 @@ interface LiveKitConfig {
 const getLiveKitConfig = (): LiveKitConfig => {
   const extra = Constants.expoConfig?.extra as Record<string, string | undefined> | undefined;
   
-  const url = process.env.LIVEKIT_URL || extra?.LIVEKIT_URL || 'wss://flouapp-mejnaydh.livekit.cloud';
-  const backendUrl = process.env.BACKEND_URL || extra?.BACKEND_URL || 'http://localhost:3001';
+  const url = process.env.EXPO_PUBLIC_LIVEKIT_URL || extra?.EXPO_PUBLIC_LIVEKIT_URL || 'wss://flouapp-mejnaydh.livekit.cloud';
+  const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL || extra?.EXPO_PUBLIC_BACKEND_URL || 'http://localhost:3001';
 
   if (!url || !backendUrl) {
     console.error('LiveKit configuration manquante');
