@@ -1,18 +1,18 @@
 FROM node:22-alpine
 
-WORKDIR /app
+WORKDIR /app/backend
 
 # Copy backend package files
-COPY backend/package*.json ./backend/
+COPY backend/package*.json ./
 
-# Install backend dependencies only
-RUN cd backend && npm ci && cd ..
+# Install backend dependencies
+RUN npm ci
 
 # Copy backend source code
-COPY backend ./backend
+COPY backend .
 
 # Expose port for backend
 EXPOSE 3001
 
-# Start backend only
-CMD ["node", "backend/index.js"]
+# Start backend
+CMD ["node", "index.js"]
