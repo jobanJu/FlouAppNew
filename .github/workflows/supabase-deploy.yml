@@ -35,16 +35,16 @@ jobs:
           RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/supabase/cli/releases/latest) || { echo "Failed to fetch release info"; exit 2; }
 
           echo "Locating .deb asset for asset: $ASSET"
-          URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*\\.deb\")) | .browser_download_url" | head -n1)
+          URL=$(echo "$RELEASE_JSON" | jq -r --arg asset "$ASSET" '.assets[] | select(.name | test($asset + ".*\\.deb")) | .browser_download_url' | head -n1)
 
           if [ -z "$URL" ]; then
             echo "No .deb asset found for $ASSET; attempting pkg.tar.zst/tar.gz/rpm"
-            URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*(pkg\\.tar\\.zst|tar\\.gz|rpm)\")) | .browser_download_url" | head -n1)
+            URL=$(echo "$RELEASE_JSON" | jq -r --arg asset "$ASSET" '.assets[] | select(.name | test($asset + ".*(pkg\\.tar\\.zst|tar\\.gz|rpm)")) | .browser_download_url' | head -n1)
           fi
 
           if [ -z "$URL" ]; then
             echo "No pkg/rpm asset found; attempting apk as last resort"
-            URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*apk\")) | .browser_download_url" | head -n1)
+            URL=$(echo "$RELEASE_JSON" | jq -r --arg asset "$ASSET" '.assets[] | select(.name | test($asset + ".*apk")) | .browser_download_url' | head -n1)
           fi
 
           if [ -z "$URL" ]; then
