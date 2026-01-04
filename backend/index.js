@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '.env.local' });
+
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
@@ -7,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Changed to SERVICE_ROLE
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Exemple de route pour lire la table users

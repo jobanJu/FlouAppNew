@@ -1,0 +1,26 @@
+{
+  "buildCommand": "cd backend && npm install",
+  "outputDirectory": ".",
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/api/health.js"
+    }
+  ],
+  "env": {
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "LIVEKIT_URL": "@livekit_url",
+    "LIVEKIT_API_KEY": "@livekit_api_key",
+    "LIVEKIT_API_SECRET": "@livekit_api_secret"
+  }
+}
