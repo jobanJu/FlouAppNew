@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "Detecting architecture"
           ARCH="$(uname -m)"
-          ASSET="linux_x86_64"
+          ASSET="linux_amd64"
           if [ "$ARCH" = "aarch64" ]; then ASSET="linux_arm64"; fi
           echo "Arch: $ARCH -> asset: $ASSET"
 
