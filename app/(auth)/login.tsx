@@ -11,7 +11,9 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
 import { supabase } from '../../lib/supabase';
+import theme from '../../constants/theme';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -140,7 +142,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
+    backgroundColor: theme.colors.dark,
   },
   content: {
     padding: 20,
@@ -158,12 +160,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: '700',
-    color: '#fff',
+    color: theme.colors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#aaa',
+    color: theme.colors.textSecondary,
   },
   section: {
     marginBottom: 20,
@@ -171,17 +173,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#fff',
+    color: theme.colors.text,
     marginBottom: 8,
   },
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: theme.colors.border,
     borderRadius: 12,
     padding: 14,
     fontSize: 16,
-    color: '#fff',
+    color: theme.colors.text,
   },
   passwordContainer: {
     position: 'relative',
@@ -200,11 +202,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   button: {
-    backgroundColor: '#9370db',
+    backgroundColor: theme.colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginTop: 8,
+    shadowColor: theme.colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -222,11 +229,11 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: theme.colors.border,
   },
   dividerText: {
     marginHorizontal: 12,
-    color: '#999',
+    color: theme.colors.textSecondary,
     fontSize: 13,
   },
   signupContainer: {
@@ -234,31 +241,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   signupText: {
-    color: '#aaa',
+    color: theme.colors.textSecondary,
     fontSize: 14,
   },
   signupLink: {
-    color: '#9370db',
+    color: theme.colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },
   testBox: {
     marginTop: 32,
-    backgroundColor: 'rgba(147, 112, 219, 0.1)',
+    backgroundColor: theme.colors.primaryLight,
     borderLeftWidth: 3,
-    borderLeftColor: '#9370db',
+    borderLeftColor: theme.colors.primary,
     borderRadius: 8,
     padding: 12,
   },
   testLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#9370db',
+    color: theme.colors.primary,
     marginBottom: 6,
   },
   testText: {
     fontSize: 11,
-    color: '#ddd',
+    color: theme.colors.text,
     fontFamily: 'monospace',
   },
 });
