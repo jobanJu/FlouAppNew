@@ -103,7 +103,9 @@ jobs:
         run: |
           echo "Deploying functions from supabase/functions"
           if [ -d "supabase/functions" ]; then
-            for d in supabase/functions/*/ ; do
+            shopt -s nullglob
+            for d in supabase/functions/*/; do
+              [ -d "$d" ] || continue
               fn=$(basename "$d")
               echo "Deploying function: $fn"
               supabase functions deploy "$fn"
