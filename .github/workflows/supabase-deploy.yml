@@ -28,10 +28,24 @@ jobs:
           if [ "$ARCH" = "aarch64" ]; then ASSET="linux_arm64"; fi
           echo "Arch: $ARCH -> asset: $ASSET"
 
+          echo "Ensure jq is installed for reliable JSON parsing"
+          sudo apt-get update && sudo apt-get install -y jq
+
           echo "Fetching latest Supabase CLI release info"
           RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/supabase/cli/releases/latest) || { echo "Failed to fetch release info"; exit 2; }
-          echo "Parsing download URL for asset: $ASSET"
-          URL=$(echo "$RELEASE_JSON" | grep browser_download_url | grep "$ASSET" | head -n1 | cut -d '"' -f 4)
+
+          echo "Locating .deb asset for asset: $ASSET"
+          URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*\\.deb\")) | .browser_download_url" | head -n1)
+
+          if [ -z "$URL" ]; then
+            echo "No .deb asset found for $ASSET; attempting pkg.tar.zst/tar.gz/rpm"
+            URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*(pkg\\.tar\\.zst|tar\\.gz|rpm)\")) | .browser_download_url" | head -n1)
+          fi
+
+          if [ -z "$URL" ]; then
+            echo "No pkg/rpm asset found; attempting apk as last resort"
+            URL=$(echo "$RELEASE_JSON" | jq -r ".assets[] | select(.name | test(\"${ASSET}.*apk\")) | .browser_download_url" | head -n1)
+          fi
 
           if [ -z "$URL" ]; then
             echo "ERROR: Could not determine supabase CLI download URL for asset: $ASSET"
@@ -41,10 +55,25 @@ jobs:
           fi
 
           echo "Downloading Supabase CLI from: $URL"
-          curl -fsSL "$URL" -o supabase.tar.gz || { echo "Failed to download $URL"; exit 4; }
-          tar -xzf supabase.tar.gz || { echo "Failed to extract supabase.tar.gz"; ls -al; exit 5; }
-          sudo mv supabase /usr/local/bin/ || { echo "Failed to move supabase binary to /usr/local/bin"; ls -al; exit 6; }
-          rm supabase.tar.gz
+          FILENAME=$(basename "$URL")
+          curl -fsSL "$URL" -o "$FILENAME" || { echo "Failed to download $URL"; exit 4; }
+
+          if [[ "$FILENAME" == *.deb ]]; then
+            echo "Installing deb package $FILENAME"
+            sudo apt-get install -y ./$FILENAME || { echo "Failed to install $FILENAME"; ls -al; exit 6; }
+          else
+            echo "Attempting to extract archive $FILENAME"
+            if [[ "$FILENAME" == *.tar.gz ]] || [[ "$FILENAME" == *.tgz ]]; then
+              tar -xzf "$FILENAME" || { echo "Failed to extract $FILENAME"; ls -al; exit 5; }
+            elif [[ "$FILENAME" == *.pkg.tar.zst ]]; then
+              sudo apt-get install -y zstd || true
+              unzstd "$FILENAME" -c | tar -xvf - || { echo "Failed to extract $FILENAME"; ls -al; exit 5; }
+            else
+              echo "Unknown archive format for $FILENAME, listing directory for debugging"; ls -al; exit 7
+            fi
+            sudo mv supabase /usr/local/bin/ || { echo "Failed to move supabase binary to /usr/local/bin"; ls -al; exit 6; }
+          fi
+          rm -f "$FILENAME"
 
       - name: Apply DB schema (migrations)
         env:
