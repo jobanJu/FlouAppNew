@@ -24,6 +24,10 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello from your server!' });
 });
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Mount migrated update-match-status handler
 const updateMatchRouter = require('./update-match-status');
 app.use(updateMatchRouter);
