@@ -1,0 +1,12 @@
+api/
+supabase/
+scripts/
+livekit-agent/
+node_modules/
+.expo/
+dist/
+build/
+*.md
+.git
+.env.local
+logs/
