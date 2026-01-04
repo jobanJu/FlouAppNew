@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import theme from '@/constants/theme';
 import {
   View,
   Text,
@@ -155,7 +156,7 @@ export default function ProfileScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </SafeAreaView>
     );
   }
@@ -169,7 +170,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* Avatar Section */}
         <View style={{ alignItems: 'center', paddingVertical: 20 }}>
@@ -179,7 +180,7 @@ export default function ProfileScreen() {
               width: 120,
               height: 120,
               borderRadius: 60,
-              backgroundColor: '#F0F0F0',
+              backgroundColor: theme.colors.surface,
               justifyContent: 'center',
               alignItems: 'center',
               overflow: 'hidden',
@@ -199,7 +200,7 @@ export default function ProfileScreen() {
                   position: 'absolute',
                   bottom: 0,
                   right: 0,
-                  backgroundColor: '#007AFF',
+                  backgroundColor: theme.colors.primary,
                   width: 36,
                   height: 36,
                   borderRadius: 18,
@@ -215,10 +216,10 @@ export default function ProfileScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 12 }}>
             {editedProfile.first_name} {editedProfile.last_name}
           </Text>
-          <Text style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
+          <Text style={{ fontSize: 14, color: theme.colors.muted, marginTop: 4 }}>
             {editedProfile.age} ans • {editedProfile.level}
           </Text>
-          <Text style={{ fontSize: 12, color: '#999', marginTop: 2 }}>
+          <Text style={{ fontSize: 12, color: theme.colors.muted, marginTop: 2 }}>
             📍 {editedProfile.city}
           </Text>
         </View>
@@ -236,7 +237,7 @@ export default function ProfileScreen() {
             style={{
               marginHorizontal: 16,
               paddingVertical: 12,
-              backgroundColor: isEditing ? '#34C759' : '#007AFF',
+              backgroundColor: isEditing ? theme.colors.primary : theme.colors.primary,
               borderRadius: 8,
               alignItems: 'center',
               marginBottom: 16,
@@ -251,13 +252,13 @@ export default function ProfileScreen() {
         {/* Bio Section */}
         {isEditing && isOwnProfile ? (
           <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-            <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
               BIO
             </Text>
             <TextInput
               style={{
                 borderWidth: 1,
-                borderColor: '#E0E0E0',
+                borderColor: theme.colors.border,
                 borderRadius: 8,
                 padding: 12,
                 minHeight: 80,
@@ -275,7 +276,7 @@ export default function ProfileScreen() {
             <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
               À PROPOS
             </Text>
-            <Text style={{ fontSize: 14, lineHeight: 20, color: '#333' }}>
+            <Text style={{ fontSize: 14, lineHeight: 20, color: theme.colors.text }}>
               {editedProfile.bio || 'Aucune bio'}
             </Text>
           </View>
@@ -284,7 +285,7 @@ export default function ProfileScreen() {
         {/* Level Section */}
         {isEditing && isOwnProfile ? (
           <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-            <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 8 }}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 8 }}>
               NIVEAU
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -297,12 +298,12 @@ export default function ProfileScreen() {
                     paddingVertical: 8,
                     borderRadius: 20,
                     backgroundColor:
-                      editedProfile.level === level ? '#007AFF' : '#F0F0F0',
+                      editedProfile.level === level ? theme.colors.primary : theme.colors.surface,
                   }}
                 >
                   <Text
                     style={{
-                      color: editedProfile.level === level ? '#FFF' : '#333',
+                      color: editedProfile.level === level ? '#FFF' : theme.colors.text,
                       fontWeight: '600',
                     }}
                   >
@@ -336,7 +337,7 @@ export default function ProfileScreen() {
         {/* Interests Section */}
         {isEditing && isOwnProfile ? (
           <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-            <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 8 }}>
+              <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 8 }}>
               INTÉRÊTS
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -350,18 +351,18 @@ export default function ProfileScreen() {
                       setSelectedInterests([...selectedInterests, interest]);
                     }
                   }}
-                  style={{
+                    style={{
                     paddingHorizontal: 12,
                     paddingVertical: 8,
                     borderRadius: 20,
                     backgroundColor: selectedInterests.includes(interest)
-                      ? '#007AFF'
-                      : '#F0F0F0',
+                      ? theme.colors.primary
+                      : theme.colors.surface,
                   }}
                 >
                   <Text
                     style={{
-                      color: selectedInterests.includes(interest) ? '#FFF' : '#333',
+                      color: selectedInterests.includes(interest) ? '#FFF' : theme.colors.text,
                       fontWeight: '600',
                     }}
                   >
@@ -380,20 +381,20 @@ export default function ProfileScreen() {
               {selectedInterests.length > 0 ? (
                 selectedInterests.map((interest) => (
                   <Text
-                    key={interest}
-                    style={{
-                      fontSize: 13,
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      backgroundColor: '#F0F0F0',
-                      borderRadius: 8,
-                    }}
-                  >
+                      key={interest}
+                      style={{
+                        fontSize: 13,
+                        paddingHorizontal: 12,
+                        paddingVertical: 6,
+                        backgroundColor: theme.colors.surface,
+                        borderRadius: 8,
+                      }}
+                    >
                     {interest}
                   </Text>
                 ))
               ) : (
-                <Text style={{ color: '#999' }}>Aucun intérêt renseigné</Text>
+                <Text style={{ color: theme.colors.muted }}>Aucun intérêt renseigné</Text>
               )}
             </View>
           </View>

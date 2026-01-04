@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getDeviceId } from '../../lib/device-id';
 import { supabase } from '../../lib/supabase';
+import theme from '@/constants/theme';
 
 const { width } = Dimensions.get('window');
 
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#34C759',
+    backgroundColor: theme.colors.primary,
     borderWidth: 3,
     borderColor: '#fff',
   },

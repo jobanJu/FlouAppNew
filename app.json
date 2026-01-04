@@ -14,6 +14,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "scheme": "flouapp",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jobaniju.flouapp"

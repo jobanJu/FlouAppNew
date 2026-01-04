@@ -10,8 +10,12 @@ module.exports = [
         ecmaFeatures: { jsx: true },
       },
     },
+    plugins: {
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      '@typescript-eslint/no-var-requires': 'off',
     },
   },
 ];

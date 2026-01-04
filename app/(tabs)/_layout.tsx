@@ -27,59 +27,28 @@ export default function TabLayout() {
           tabBarItemStyle: styles.tabBarItem,
         }}>
 
+        {/* Swipe - Découverte avec flou progressif */}
         <Tabs.Screen
           name="index"
-          options={{ tabBarIcon: renderIcon('⌂') }}
+          options={{ tabBarIcon: renderIcon('⊙') }}
         />
 
-        <Tabs.Screen
-          name="messages"
-          options={{ tabBarIcon: renderIcon('✉') }}
-        />
-
-        <Tabs.Screen
-          name="matching"
-          options={{ tabBarIcon: renderIcon('❤️') }}
-        />
-
+        {/* Live - Connexion en temps réel */}
         <Tabs.Screen
           name="live"
           options={{ tabBarIcon: renderIcon('●') }}
         />
 
+        {/* Messages - Dialogues émotionnels */}
         <Tabs.Screen
-          name="shop"
-          options={{ tabBarIcon: renderIcon('🛒') }}
+          name="messages"
+          options={{ tabBarIcon: renderIcon('✉') }}
         />
 
+        {/* Profil - Mon espace personnel */}
         <Tabs.Screen
-          name="explore"
-          options={{ tabBarIcon: renderIcon('🔍') }}
-        />
-
-        <Tabs.Screen
-          name="sessions"
-          options={{ tabBarIcon: renderIcon('🏄') }}
-        />
-
-        <Tabs.Screen
-          name="spots"
-          options={{ tabBarIcon: renderIcon('🗺️') }}
-        />
-
-        <Tabs.Screen
-          name="feed"
-          options={{ tabBarIcon: renderIcon('📸') }}
-        />
-
-        <Tabs.Screen
-          name="notifications"
-          options={{ tabBarIcon: renderIcon('🔔') }}
-        />
-
-        <Tabs.Screen
-          name="gamification"
-          options={{ tabBarIcon: renderIcon('⭐') }}
+          name="profile"
+          options={{ tabBarIcon: renderIcon('👤') }}
         />
       </Tabs>
     </GestureHandlerRootView>
@@ -89,49 +58,49 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    bottom: 16,
-    left: 20,
-    right: 20,
-    height: 72,
+    bottom: 20,
+    left: 16,
+    right: 16,
+    height: 68,
     borderRadius: 24,
     backgroundColor: 'transparent',
     borderTopWidth: 0,
     elevation: 0,
-    shadowColor: '#6c5ce7',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
   tabBarBg: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: 'rgba(255,255,255,0.92)',
+    backgroundColor: 'rgba(255,255,255,0.88)',
     borderWidth: 1,
-    borderColor: 'rgba(108,92,231,0.12)',
+    borderColor: 'rgba(200,200,220,0.3)',
   },
   tabBarItem: {
     paddingVertical: 8,
   },
   iconShell: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
+    width: 52,
+    height: 52,
+    borderRadius: 14,
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  } as any,
   iconShellActive: {
-    backgroundColor: 'rgba(108,92,231,0.12)',
+    backgroundColor: 'rgba(108,92,231,0.08)',
   },
   iconText: {
-    fontSize: 22,
-    color: '#a0a3bd',
-    fontWeight: '600',
+    fontSize: 24,
+    color: '#8b8e9f',
+    fontWeight: '500',
     textAlign: 'center',
   },
   iconTextActive: {
     color: '#6c5ce7',
-    fontWeight: '800',
+    fontWeight: '700',
   },
 });

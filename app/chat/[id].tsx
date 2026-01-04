@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import theme from '@/constants/theme';
 import {
   View,
   Text,
@@ -45,8 +46,8 @@ export default function ChatScreen() {
   const [messageText, setMessageText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
-  const flatListRef = useRef<FlatList>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const flatListRef = useRef<FlatList<any> | null>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!conversationId || !user?.id) return;
@@ -94,7 +95,7 @@ export default function ChatScreen() {
             .eq('user_id', newMessage.user_id)
             .single();
           
-          setMessages((prev) => [...prev, { ...newMessage, sender }]);
+          setMessages((prev) => [...prev, { ...newMessage, sender: sender || undefined }]);
           flatListRef.current?.scrollToEnd({ animated: true });
         }
       )
@@ -190,7 +191,7 @@ export default function ChatScreen() {
         <View
           style={{
             maxWidth: '75%',
-            backgroundColor: isOwnMessage ? '#007AFF' : '#E5E5EA',
+            backgroundColor: isOwnMessage ? theme.colors.primary : theme.colors.border,
             borderRadius: 12,
             paddingHorizontal: 12,
             paddingVertical: 8,
@@ -218,7 +219,7 @@ export default function ChatScreen() {
           </Text>
           <Text
             style={{
-              color: isOwnMessage ? '#E0E0E0' : '#999',
+              color: isOwnMessage ? theme.colors.border : theme.colors.muted,
               fontSize: 11,
               marginTop: 4,
               alignSelf: 'flex-end',
@@ -237,7 +238,7 @@ export default function ChatScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -245,7 +246,7 @@ export default function ChatScreen() {
       >
         {loading ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color="#007AFF" />
+              <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         ) : (
           <>
@@ -261,17 +262,17 @@ export default function ChatScreen() {
               }}
               ListEmptyComponent={
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ color: '#999' }}>Aucun message pour le moment</Text>
+                  <Text style={{ color: theme.colors.muted }}>Aucun message pour le moment</Text>
                 </View>
               }
             />
 
             {otherUserTyping && (
               <View style={{ paddingHorizontal: 12, paddingVertical: 4 }}>
-                <Text style={{ fontSize: 12, color: '#999', fontStyle: 'italic' }}>
-                  Utilisateur en train d'écrire...
-                </Text>
-              </View>
+                  <Text style={{ fontSize: 12, color: theme.colors.muted, fontStyle: 'italic' }}>
+                    Utilisateur en train d'écrire...
+                  </Text>
+                </View>
             )}
 
             <View
@@ -288,7 +289,7 @@ export default function ChatScreen() {
                 style={{
                   flex: 1,
                   borderRadius: 20,
-                  backgroundColor: '#F2F2F2',
+                  backgroundColor: theme.colors.surface,
                   paddingHorizontal: 16,
                   paddingVertical: 10,
                   marginRight: 8,
@@ -296,7 +297,7 @@ export default function ChatScreen() {
                   fontSize: 16,
                 }}
                 placeholder="Message..."
-                placeholderTextColor="#999"
+                placeholderTextColor={theme.colors.muted}
                 value={messageText}
                 onChangeText={(text) => {
                   setMessageText(text);
@@ -311,7 +312,7 @@ export default function ChatScreen() {
                   width: 36,
                   height: 36,
                   borderRadius: 18,
-                  backgroundColor: messageText.trim() ? '#007AFF' : '#E5E5EA',
+                  backgroundColor: messageText.trim() ? theme.colors.primary : theme.colors.border,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}

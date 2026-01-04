@@ -63,3 +63,13 @@ export const messagesAPI = {
     return newConv;
   },
 };
+
+export async function getMessages(conversationId: string, limit = 100) {
+  const res = await messagesAPI.getMessages(conversationId, limit);
+  return (res.data ?? []) as any[];
+}
+
+export async function sendMessage(conversationId: string, userId: string, content: string) {
+  const res = await messagesAPI.sendMessage(conversationId, userId, content);
+  return res;
+}

@@ -11,10 +11,17 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HideKeyboardArrow from '../../components/HideKeyboardArrow';
+import theme from '@/constants/theme';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '@/hooks/useAuth';
+import { useMatches } from '@/hooks/useMatches';
+import { usePendingSocialRequests } from '@/hooks/useSocialRequests';
+import { SocialRequestModal } from '@/components/SocialRequestModal';
+import { SocialRequest } from '@/lib/social-requests';
 
 interface Conversation {
   id: string;
@@ -266,7 +273,7 @@ export default function MessagesScreen() {
             onChangeText={setInputText}
             multiline
             editable={!sending}
-            placeholderTextColor="#ccc"
+            placeholderTextColor={theme.colors.muted}
           />
           <TouchableOpacity
             style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
@@ -287,7 +294,7 @@ export default function MessagesScreen() {
 
       {loading ? (
         <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#667eea" />
+          <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       ) : conversations.length === 0 ? (
         <View style={styles.centerContainer}>
@@ -333,14 +340,14 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#faf9ff',
+    backgroundColor: theme.colors.surface,
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    color: '#000',
+    color: theme.colors.text,
   },
   centerContainer: {
     flex: 1,
@@ -353,14 +360,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: theme.colors.border,
   },
   avatar: {
     width: 60,
     height: 60,
     borderRadius: 30,
     marginRight: 12,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: theme.colors.border,
   },
   content: {
     flex: 1,
@@ -368,16 +375,16 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: theme.colors.text,
     marginBottom: 4,
   },
   lastMessage: {
     fontSize: 13,
-    color: '#999',
+    color: theme.colors.muted,
     lineHeight: 18,
   },
   badge: {
-    backgroundColor: '#6c5ce7',
+    backgroundColor: theme.colors.primary,
     borderRadius: 10,
     width: 20,
     height: 20,
@@ -409,8 +416,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    backgroundColor: '#fff',
+    borderBottomColor: theme.colors.border,
+    backgroundColor: theme.colors.background,
   },
   backButton: {
     paddingHorizontal: 8,
@@ -418,7 +425,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 24,
-    color: '#6c5ce7',
+    color: theme.colors.primary,
     fontWeight: '600',
   },
   headerAvatar: {
@@ -426,12 +433,12 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginLeft: 12,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: theme.colors.border,
   },
   chatName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: theme.colors.text,
     marginLeft: 12,
   },
   messagesContainer: {
@@ -453,14 +460,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   otherBubble: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: theme.colors.surface,
   },
   ownBubble: {
-    backgroundColor: '#6c5ce7',
+    backgroundColor: theme.colors.primary,
   },
   messageText: {
     fontSize: 14,
-    color: '#000',
+    color: theme.colors.text,
     lineHeight: 18,
   },
   ownText: {
@@ -476,9 +483,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 12,
     paddingTop: 8,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.background,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: theme.colors.border,
     gap: 8,
   },
   input: {
@@ -487,23 +494,23 @@ const styles = StyleSheet.create({
     maxHeight: 100,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: theme.colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
     fontSize: 14,
-    color: '#000',
+    color: theme.colors.text,
   },
   sendButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#6c5ce7',
+    backgroundColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   sendButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: theme.colors.border,
     opacity: 0.5,
   },
   sendButtonText: {

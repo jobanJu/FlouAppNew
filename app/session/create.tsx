@@ -9,10 +9,37 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import MapView, { Marker } from 'react-native-maps';
+let DateTimePicker: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  DateTimePicker = require('@react-native-community/datetimepicker').default;
+} catch (e: any) {
+  console.warn('@react-native-community/datetimepicker not available:', e?.message || e);
+  DateTimePicker = null;
+}
+
+let MapView: any = null;
+let Marker: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const maps = require('react-native-maps');
+  const { NativeModules } = require('react-native');
+  if (!NativeModules || !NativeModules.RNMapsAirModule) {
+    console.warn('react-native-maps native module not found; disabling MapView in CreateSession');
+    MapView = null;
+    Marker = null;
+  } else {
+    MapView = maps.default || maps.MapView || maps;
+    Marker = maps.Marker || maps.MapView?.Marker || maps.default?.Marker;
+  }
+} catch (e: any) {
+  console.warn('react-native-maps not available:', e?.message || e);
+  MapView = null;
+  Marker = null;
+}
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
+import theme from '@/constants/theme';
 
 interface SessionData {
   title: string;
@@ -89,16 +116,16 @@ export default function CreateSessionScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {/* Title */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           TITRE *
         </Text>
         <TextInput
           style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -110,13 +137,13 @@ export default function CreateSessionScreen() {
         />
 
         {/* Description */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           DESCRIPTION
         </Text>
         <TextInput
           style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -131,14 +158,14 @@ export default function CreateSessionScreen() {
         />
 
         {/* Date */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           DATE *
         </Text>
         <TouchableOpacity
           onPress={() => setShowDatePicker(true)}
-          style={{
+            style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -149,12 +176,12 @@ export default function CreateSessionScreen() {
           </Text>
         </TouchableOpacity>
 
-        {showDatePicker && (
+        {showDatePicker && DateTimePicker && (
           <DateTimePicker
             value={sessionData.date}
             mode="date"
             display="spinner"
-            onChange={(event, date) => {
+            onChange={(event: any, date?: Date) => {
               if (date) setSessionData({ ...sessionData, date });
               setShowDatePicker(false);
             }}
@@ -162,14 +189,14 @@ export default function CreateSessionScreen() {
         )}
 
         {/* Time */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           HEURE *
         </Text>
         <TouchableOpacity
           onPress={() => setShowTimePicker(true)}
-          style={{
+            style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -183,12 +210,12 @@ export default function CreateSessionScreen() {
           </Text>
         </TouchableOpacity>
 
-        {showTimePicker && (
+        {showTimePicker && DateTimePicker && (
           <DateTimePicker
             value={sessionData.time}
             mode="time"
             display="spinner"
-            onChange={(event, date) => {
+            onChange={(event: any, date?: Date) => {
               if (date) setSessionData({ ...sessionData, time: date });
               setShowTimePicker(false);
             }}
@@ -196,13 +223,13 @@ export default function CreateSessionScreen() {
         )}
 
         {/* Location */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           LIEU *
         </Text>
         <TextInput
           style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -218,32 +245,38 @@ export default function CreateSessionScreen() {
           POSITION
         </Text>
         <View style={{ height: 200, borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
-          <MapView
-            style={{ flex: 1 }}
-            initialRegion={{
-              latitude: sessionData.lat,
-              longitude: sessionData.lng,
-              latitudeDelta: 0.05,
-              longitudeDelta: 0.05,
-            }}
-            onPress={(e) => {
-              const { latitude, longitude } = e.nativeEvent.coordinate;
-              setSessionData({
-                ...sessionData,
-                lat: latitude,
-                lng: longitude,
-              });
-            }}
-          >
-            <Marker
-              coordinate={{ latitude: sessionData.lat, longitude: sessionData.lng }}
-              pinColor="#007AFF"
-            />
-          </MapView>
+          {MapView ? (
+            <MapView
+              style={{ flex: 1 }}
+              initialRegion={{
+                latitude: sessionData.lat,
+                longitude: sessionData.lng,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+              }}
+              onPress={(e: any) => {
+                const { latitude, longitude } = e.nativeEvent.coordinate;
+                setSessionData({
+                  ...sessionData,
+                  lat: latitude,
+                  lng: longitude,
+                });
+              }}
+            >
+              <Marker
+                coordinate={{ latitude: sessionData.lat, longitude: sessionData.lng }}
+                pinColor={theme.colors.primary}
+              />
+            </MapView>
+          ) : (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: theme.colors.muted }}>La carte n'est pas disponible dans cet environnement.</Text>
+            </View>
+          )}
         </View>
 
         {/* Level */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 8 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 8 }}>
           NIVEAU
         </Text>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
@@ -255,12 +288,12 @@ export default function CreateSessionScreen() {
                 paddingHorizontal: 12,
                 paddingVertical: 8,
                 borderRadius: 20,
-                backgroundColor: sessionData.level === level ? '#007AFF' : '#F0F0F0',
+                backgroundColor: sessionData.level === level ? theme.colors.primary : theme.colors.surface,
               }}
             >
               <Text
                 style={{
-                  color: sessionData.level === level ? '#FFF' : '#333',
+                  color: sessionData.level === level ? '#FFF' : theme.colors.text,
                   fontWeight: '600',
                 }}
               >
@@ -271,13 +304,13 @@ export default function CreateSessionScreen() {
         </View>
 
         {/* Max Participants */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           PARTICIPANTS MAX
         </Text>
         <TextInput
-          style={{
+            style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 16,
@@ -295,13 +328,13 @@ export default function CreateSessionScreen() {
         />
 
         {/* Conditions */}
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 6 }}>
+        <Text style={{ fontSize: 12, fontWeight: '600', color: theme.colors.muted, marginBottom: 6 }}>
           CONDITIONS
         </Text>
         <TextInput
           style={{
             borderWidth: 1,
-            borderColor: '#E0E0E0',
+            borderColor: theme.colors.border,
             borderRadius: 8,
             padding: 12,
             marginBottom: 24,
@@ -316,7 +349,7 @@ export default function CreateSessionScreen() {
         <TouchableOpacity
           onPress={handleCreateSession}
           style={{
-            backgroundColor: '#007AFF',
+            backgroundColor: theme.colors.primary,
             paddingVertical: 14,
             borderRadius: 8,
             alignItems: 'center',
