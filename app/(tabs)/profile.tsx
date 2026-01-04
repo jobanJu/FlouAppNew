@@ -80,7 +80,12 @@ export default function ProfileScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Mon Profil</Text>
-          <Text style={styles.headerSubtitle}>Flou.</Text>
+          <TouchableOpacity 
+            style={styles.settingsBtn}
+            onPress={() => router.push('/settings')}
+          >
+            <Text style={styles.settingsIcon}>⚙️</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Photo Profil - NETTE (contrairement au swipe) */}
@@ -192,9 +197,12 @@ export default function ProfileScreen() {
 
         {/* Autres actions */}
         <View style={styles.actionsGrid}>
-          <TouchableOpacity style={styles.actionCard}>
-            <Text style={styles.actionIcon}>⚙️</Text>
-            <Text style={styles.actionLabel}>Paramètres</Text>
+          <TouchableOpacity 
+            style={styles.actionCard}
+            onPress={() => router.push('/settings/edit-profile')}
+          >
+            <Text style={styles.actionIcon}>✏️</Text>
+            <Text style={styles.actionLabel}>Éditer Profil</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionCard}>
@@ -207,7 +215,12 @@ export default function ProfileScreen() {
             <Text style={styles.actionLabel}>Aide</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard}>
+          <TouchableOpacity 
+            style={styles.actionCard}
+            onPress={() => {
+              Alert.alert('Déconnexion', 'À implémenter');
+            }}
+          >
             <Text style={styles.actionIcon}>🚪</Text>
             <Text style={styles.actionLabel}>Déconnexion</Text>
           </TouchableOpacity>
@@ -234,17 +247,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 20,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: '800',
     color: theme.colors.dark,
   },
-  headerSubtitle: {
-    fontSize: 12,
-    color: theme.colors.textMuted,
-    marginTop: 4,
+  settingsBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(108, 92, 231, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  settingsIcon: {
+    fontSize: 20,
   },
   photoCard: {
     marginHorizontal: 20,
