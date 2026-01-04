@@ -14,5 +14,5 @@ COPY backend .
 # Expose port for backend
 EXPOSE 3001
 
-# Start backend
-CMD ["node", "index.js"]
+# Start backend with start.js (handles Railway env vars)
+CMD ["node", "start.js"]
