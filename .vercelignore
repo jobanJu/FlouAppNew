@@ -1,7 +1,0 @@
-backend/
-Dockerfile
-docker-compose.yml
-railway.toml
-Procfile
-.env.local
-*.md
