@@ -136,11 +136,12 @@ serve(async (req: Request) => {
         .eq('match_id', matchId)
 
       // ⚠️ Anti-doublon
-      if (!existingRequests || existingRequests.length === 0) {
+      if (!existingRequests || existingRequests.length < 2) {
         const requests = [
           {
             match_id: matchId,
             owner_user_id: match.user_1,
+            target_user_id: match.user_2,
             social_type: 'instagram',
             social_value: '',
             consent: null,
@@ -148,6 +149,7 @@ serve(async (req: Request) => {
           {
             match_id: matchId,
             owner_user_id: match.user_2,
+            target_user_id: match.user_1,
             social_type: 'instagram',
             social_value: '',
             consent: null,

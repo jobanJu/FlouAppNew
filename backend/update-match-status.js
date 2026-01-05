@@ -32,16 +32,21 @@ router.post('/api/update-match-status', async (req, res) => {
 
     if (match.status === 'day3') return res.json({ status: 'day3' });
 
-    const { data: messageCounts, error: countError } = await supabase
+    // Compter côté serveur par sécurité (évite les subtilités de groupby)
+    const { data: messagesData, error: messagesError } = await supabase
       .from('messages')
-      .select('sender_id, count:id', { group: 'sender_id' })
+      .select('sender_id')
       .eq('match_id', matchId);
 
-    if (countError || !messageCounts) return res.status(500).send('Error counting messages');
+    if (messagesError || !messagesData) return res.status(500).send('Error fetching messages');
 
-    const counts = messageCounts;
-    const user1Count = counts.find((m) => m.sender_id === match.user_1)?.count ?? 0;
-    const user2Count = counts.find((m) => m.sender_id === match.user_2)?.count ?? 0;
+    const countsMap = {};
+    for (const m of messagesData) {
+      const sid = m.sender_id;
+      countsMap[sid] = (countsMap[sid] ?? 0) + 1;
+    }
+    const user1Count = countsMap[match.user_1] ?? 0;
+    const user2Count = countsMap[match.user_2] ?? 0;
 
     let newStatus = match.status;
 
@@ -63,11 +68,14 @@ router.post('/api/update-match-status', async (req, res) => {
     }
 
     if (newStatus === 'day3') {
-      const { data: existingRequests } = await supabase.from('match_social_requests').select('id').eq('match_id', matchId);
-      if (!existingRequests || existingRequests.length === 0) {
+      const { data: existingRequests } = await supabase
+        .from('match_social_requests')
+        .select('id')
+        .eq('match_id', matchId);
+      if (!existingRequests || existingRequests.length < 2) {
         const requests = [
-          { match_id: matchId, owner_user_id: match.user_1, social_type: 'instagram', social_value: '', consent: null },
-          { match_id: matchId, owner_user_id: match.user_2, social_type: 'instagram', social_value: '', consent: null },
+          { match_id: matchId, owner_user_id: match.user_1, target_user_id: match.user_2, social_type: 'instagram', social_value: '', consent: null },
+          { match_id: matchId, owner_user_id: match.user_2, target_user_id: match.user_1, social_type: 'instagram', social_value: '', consent: null },
         ];
         const { error: requestError } = await supabase.from('match_social_requests').insert(requests);
         if (requestError) console.error('Error creating social requests', requestError);
