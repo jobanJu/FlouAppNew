@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Load .env.local if it exists (for local dev)
+require('dotenv').config({ path: '.env.local' });
+
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
