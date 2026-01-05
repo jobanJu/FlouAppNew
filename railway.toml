@@ -5,3 +5,6 @@ dockerfile = "Dockerfile"
 [deploy]
 startCommand = "npm start"
 port = 8080
+restartPolicyMaxRetries = 5
+healthcheckPath = "/health"
+healthcheckTimeout = 30
