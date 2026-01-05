@@ -3,14 +3,14 @@ FROM node:20-alpine
 
 WORKDIR /app/backend
 
-# Copy backend package files
-COPY package*.json ./
+# Copy backend package files explicitly from subfolder
+COPY backend/package*.json ./
 
 # Install backend dependencies (tolerate lock mismatches)
 RUN npm install --omit=dev --no-audit --no-fund
 
-# Copy backend source
-COPY . .
+# Copy backend source explicitly from subfolder
+COPY backend/ .
 
 # Set production env
 ENV NODE_ENV=production
