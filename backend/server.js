@@ -119,10 +119,16 @@ try {
   });
 
   // Démarrer le serveur
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, () => {
     console.log(`✅ Backend FlouApp lancé sur le port ${PORT}`);
     console.log(`   http://0.0.0.0:${PORT}/health`);
+    console.log(`   API prêt à recevoir les requêtes`);
   });
+
+  // Attendre un peu puis afficher un message de confirmation
+  setTimeout(() => {
+    console.log(`⏰ Backend actif après 2 secondes de démarrage`);
+  }, 2000);
 
   // Gestion des erreurs non capturées
   process.on('uncaughtException', (err) => {
