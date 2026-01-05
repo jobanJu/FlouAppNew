@@ -15,7 +15,8 @@ COPY backend .
 # NOTE: Using env vars in Railway dashboard is preferred; this is a fallback when .env.production exists in repo.
 COPY backend/.env.production .env
 
-# Set PORT environment variable for Railway
+# Set NODE_ENV and PORT environment variables for Railway
+ENV NODE_ENV=production
 ENV PORT=8080
 
 # Expose port for backend (Railway uses 8080)

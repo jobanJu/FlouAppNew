@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 
 console.log('🚀 Démarrage du backend FlouApp...');
+
+// Charger .env si présent (production fallback) puis .env.local en dev
+require('dotenv').config({ path: '.env' });
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: '.env.local' });
+}
+
 console.log('Variables d\'environnement chargées:', {
   SUPABASE_URL: process.env.SUPABASE_URL ? '✓' : '✗',
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓' : '✗',
@@ -8,11 +15,6 @@ console.log('Variables d\'environnement chargées:', {
   LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY ? '✓' : '✗',
   PORT: process.env.PORT || 3001
 });
-
-// Charger .env.local en développement
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: '.env.local' });
-}
 
 try {
   const express = require('express');
