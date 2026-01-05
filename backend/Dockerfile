@@ -28,9 +28,9 @@ EXPOSE 8081
 # Install PM2 globally (optional, we also have local pm2)
 RUN npm install -g pm2@5
 
-# Health check (strictly uses dynamic PORT from env)
+# Health check (uses dynamic PORT with 8081 fallback)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "const p=process.env.PORT; if(!p){process.exit(1)}; require('http').get('http://127.0.0.1:'+p+'/health', r=>{if(r.statusCode!==200)process.exit(1)}).on('error',()=>process.exit(1))"
+  CMD node -e "const p=process.env.PORT||8081; require('http').get('http://127.0.0.1:'+p+'/health', r=>{if(r.statusCode!==200)process.exit(1)}).on('error',()=>process.exit(1))"
 
 # Start via docker-start wrapper (runs pm2-runtime and prints diagnostics)
 CMD ["./docker-start.sh"]
