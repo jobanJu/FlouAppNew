@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-// Load environment variables from Railway env vars (not .env.local)
-// Railway sets PORT automatically
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
+const { AccessToken, VideoGrant } = require('livekit-server-sdk');
 
 const app = express();
 app.use(cors());
@@ -16,12 +15,14 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const livekitUrl = process.env.LIVEKIT_URL || 'https://flouapp-mejnaydh.livekit.cloud';
 const livekitKey = process.env.LIVEKIT_API_KEY;
 const livekitSecret = process.env.LIVEKIT_API_SECRET;
+const PORT = process.env.PORT || 3001;
 
 console.log('Starting FlouApp Backend...');
-console.log('Supabase URL:', supabaseUrl ? 'configured' : 'MISSING');
-console.log('Supabase Key:', supabaseKey ? 'configured' : 'MISSING');
+console.log('Supabase URL:', supabaseUrl ? '✓ configured' : '✗ MISSING');
+console.log('Supabase Key:', supabaseKey ? '✓ configured' : '✗ MISSING');
 console.log('LiveKit URL:', livekitUrl);
-console.log('LiveKit Key:', livekitKey ? 'configured' : 'MISSING');
+console.log('LiveKit Key:', livekitKey ? '✓ configured' : '✗ MISSING');
+console.log('PORT:', PORT);
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -57,8 +58,6 @@ app.post('/api/livekit/token', async (req, res) => {
   }
 
   try {
-    const { AccessToken, VideoGrant } = require('livekit-server-sdk');
-
     const authHeader = req.headers.authorization || '';
     const token = authHeader.replace('Bearer ', '') || req.body?.accessToken;
 
@@ -92,8 +91,8 @@ app.post('/api/livekit/token', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+// Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ FlouApp Backend running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Health: http://0.0.0.0:${PORT}/health`);
 });
