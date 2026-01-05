@@ -5,8 +5,8 @@ WORKDIR /app/backend
 # Copy backend package files
 COPY backend/package*.json ./
 
-# Install backend dependencies
-RUN npm ci
+# Install backend dependencies (tolerate lock mismatches)
+RUN npm install --omit=dev --no-audit --no-fund
 
 # Copy backend source code
 COPY backend .
