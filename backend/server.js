@@ -26,6 +26,19 @@ try {
   app.use(cors());
   app.use(express.json());
 
+  // Maintenance mode middleware: return 503 for all endpoints except /health
+  if (process.env.MAINTENANCE && (process.env.MAINTENANCE === '1' || process.env.MAINTENANCE === 'true')) {
+    console.warn('🚧 Mode MAINTENANCE activé — toutes les routes publiques retourneront 503 (sauf /health)');
+  }
+  app.use((req, res, next) => {
+    const maintenance = process.env.MAINTENANCE === '1' || process.env.MAINTENANCE === 'true';
+    if (maintenance && req.path !== '/health') {
+      res.setHeader('Retry-After', '3600');
+      return res.status(503).json({ message: 'Service temporairement en maintenance', maintenance: true });
+    }
+    next();
+  });
+
   // Variables d'environnement
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -73,7 +86,8 @@ try {
   });
 
   app.get('/health', (req, res) => {
-    res.json({ status: 'ok', ready, timestamp: new Date().toISOString() });
+    const maintenance = process.env.MAINTENANCE === '1' || process.env.MAINTENANCE === 'true';
+    res.json({ status: maintenance ? 'maintenance' : 'ok', ready: maintenance ? false : ready, maintenance, timestamp: new Date().toISOString() });
   });
 
   app.get('/api/hello', (req, res) => {
