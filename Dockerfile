@@ -11,6 +11,10 @@ RUN npm ci
 # Copy backend source code
 COPY backend .
 
+# If a production env file is provided in the repo, copy it to .env so the app can read it in production.
+# NOTE: Using env vars in Railway dashboard is preferred; this is a fallback when .env.production exists in repo.
+COPY backend/.env.production .env
+
 # Set PORT environment variable for Railway
 ENV PORT=8080
 
