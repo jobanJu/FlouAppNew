@@ -25,6 +25,14 @@ try {
   const app = express();
   app.use(cors());
   app.use(express.json());
+  // Mount routers
+  try {
+    const updateMatchRouter = require('./update-match-status');
+    app.use(updateMatchRouter);
+    console.log('✓ Routeur update-match-status monté');
+  } catch (e) {
+    console.warn('⚠️ Impossible de monter update-match-status:', e?.message || e);
+  }
 
   // Maintenance mode middleware: return 503 for all endpoints except /health
   if (process.env.MAINTENANCE && (process.env.MAINTENANCE === '1' || process.env.MAINTENANCE === 'true')) {
