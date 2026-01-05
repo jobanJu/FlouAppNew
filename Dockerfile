@@ -19,4 +19,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:${PORT:-3001}/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
 # Start backend with npm start (which now runs server.js)
+# Force rebuild: 2026-01-05 00:12 UTC
 CMD ["npm", "start"]
