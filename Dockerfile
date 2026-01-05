@@ -29,5 +29,9 @@ RUN npm install -g pm2@5
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:8080/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Use pm2-runtime to run the app in a production-friendly supervisor
-CMD ["pm2-runtime", "npm", "--", "start"]
+# Copy start wrapper and use it as the container CMD
+COPY backend/docker-start.sh ./docker-start.sh
+RUN chmod +x ./docker-start.sh
+
+# Use the wrapper to print diagnostics then start pm2-runtime
+CMD ["./docker-start.sh"]
