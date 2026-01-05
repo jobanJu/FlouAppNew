@@ -12,5 +12,11 @@ echo "Listing /app/backend permissions:"
 ls -la /app || true
 ls -la /app/backend || true
 
+echo "Environment snapshot:"
+echo "  NODE_ENV=${NODE_ENV}"
+echo "  HOST=${HOST}"
+echo "  PORT=${PORT}"
+echo "  MAINTENANCE=${MAINTENANCE}"
+
 echo "Starting pm2-runtime with ecosystem.config.js"
 pm2-runtime ecosystem.config.js
