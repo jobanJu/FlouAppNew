@@ -32,11 +32,19 @@ try {
   }
   app.use((req, res, next) => {
     const maintenance = process.env.MAINTENANCE === '1' || process.env.MAINTENANCE === 'true';
-    if (maintenance && req.path !== '/health') {
-      res.setHeader('Retry-After', '3600');
-      return res.status(503).json({ message: 'Service temporairement en maintenance', maintenance: true });
+    if (!maintenance) return next();
+
+    // Always allow health
+    if (req.path === '/health') return next();
+
+    // For root and favicon, respond 200 with maintenance info to keep platform happy
+    if (req.path === '/' || req.path === '/favicon.ico') {
+      return res.status(200).json({ status: 'maintenance', maintenance: true, ok: false });
     }
-    next();
+
+    // All other routes: 503
+    res.setHeader('Retry-After', '3600');
+    return res.status(503).json({ message: 'Service temporairement en maintenance', maintenance: true });
   });
 
   // Variables d'environnement
