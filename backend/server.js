@@ -154,10 +154,11 @@ try {
     }
   });
 
-  // Démarrer le serveur
-  app.listen(PORT, () => {
-    console.log(`✅ Backend FlouApp lancé sur le port ${PORT}`);
-    console.log(`   http://0.0.0.0:${PORT}/health`);
+  // Démarrer le serveur (bind explicite sur 0.0.0.0)
+  const HOST = process.env.HOST || '0.0.0.0';
+  app.listen(PORT, HOST, () => {
+    console.log(`✅ Backend FlouApp lancé sur ${HOST}:${PORT}`);
+    console.log(`   http://${HOST}:${PORT}/health`);
     console.log(`   API prêt à recevoir les requêtes`);
   });
 

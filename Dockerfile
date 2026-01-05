@@ -18,6 +18,7 @@ COPY backend/.env.production .env
 # Set NODE_ENV and PORT environment variables for Railway
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV HOST=0.0.0.0
 
 # Expose port for backend (Railway uses 8080)
 EXPOSE 8080
