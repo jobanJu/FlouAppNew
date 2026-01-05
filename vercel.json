@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd backend && npm install",
+  "buildCommand": "echo 'API functions only'",
   "outputDirectory": ".",
   "functions": {
     "api/**/*.js": {
