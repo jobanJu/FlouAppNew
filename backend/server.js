@@ -42,7 +42,20 @@ try {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Routes simples
+  app.get('/api/debug', (req, res) => {
+    res.json({
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL ? 'SET' : 'MISSING',
+        SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'MISSING',
+        LIVEKIT_URL: process.env.LIVEKIT_URL ? 'SET' : 'MISSING',
+        LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY ? 'SET' : 'MISSING',
+        LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ? 'SET' : 'MISSING',
+        NODE_ENV: process.env.NODE_ENV || 'development',
+        PORT: process.env.PORT || 3001
+      }
+    });
+  });
+
   app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
