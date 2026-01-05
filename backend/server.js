@@ -32,6 +32,8 @@ try {
   const livekitSecret = process.env.LIVEKIT_API_SECRET;
   const PORT = process.env.PORT || 3001;
 
+  console.log(`🔌 Port: ${PORT}`);
+
   // Validation des variables critiques
   if (!supabaseUrl || !supabaseKey) {
     console.error('❌ Erreur: Supabase URL ou clé manquante!');
