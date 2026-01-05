@@ -34,15 +34,17 @@ try {
 
   console.log(`🔌 Port: ${PORT}`);
 
-  // Validation des variables critiques
+  // Validation des variables critiques — ne PAS quitter le process pour éviter des restarts en boucle
+  let supabase = null;
+  let ready = true;
+
   if (!supabaseUrl || !supabaseKey) {
-    console.error('❌ Erreur: Supabase URL ou clé manquante!');
-    process.exit(1);
+    console.warn('⚠️ Supabase URL ou clé manquante — démarrage en mode dégradé (routes dépendantes de Supabase renverront 503)');
+    ready = false;
+  } else {
+    supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('✓ Supabase configuré');
   }
-
-  console.log('✓ Supabase configuré');
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Root endpoint
   app.get('/', (req, res) => {
@@ -69,7 +71,7 @@ try {
   });
 
   app.get('/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', ready, timestamp: new Date().toISOString() });
   });
 
   app.get('/api/hello', (req, res) => {
@@ -97,6 +99,10 @@ try {
     }
 
     try {
+      if (!supabase) {
+        return res.status(503).json({ error: 'Service unavailable: Supabase not configured' });
+      }
+
       const authHeader = req.headers.authorization || '';
       const token = authHeader.replace('Bearer ', '') || req.body?.accessToken;
 
@@ -115,6 +121,10 @@ try {
       const roomName = req.body.roomName || `live-${userId}-${Date.now()}`;
       const canPublish = req.body.canPublish !== undefined ? !!req.body.canPublish : true;
       const canPublishData = req.body.canPublishData !== undefined ? !!req.body.canPublishData : true;
+
+      if (!livekitKey || !livekitSecret) {
+        return res.status(503).json({ error: 'Service unavailable: LiveKit keys not configured' });
+      }
 
       const at = new AccessToken(livekitKey, livekitSecret, { identity: userId, name: userName });
       const grant = new VideoGrant({ room: roomName, canPublish, canPublishData });
