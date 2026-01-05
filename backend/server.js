@@ -44,6 +44,16 @@ try {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  // Root endpoint
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: 'FlouApp Backend',
+      status: 'running',
+      port: PORT,
+      timestamp: new Date().toISOString()
+    });
+  });
+
   app.get('/api/debug', (req, res) => {
     res.json({
       env: {
