@@ -38,8 +38,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('./assets/images/homme1.jpeg') no-repeat center center/cover;
-      z-index: 0;
+      /* Utilisation d'un chemin absolu depuis la racine pour éviter les erreurs relatives */
+      background: url('/assets/images/homme1.jpeg') no-repeat center center;
+      background-size: cover;
+      z-index: -1; /* S'assurer qu'il est bien derrière tout le reste */
     }
 
     /* Overlay sombre global pour la lisibilité */
@@ -50,8 +52,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6); /* Ajuster l'opacité au besoin */
-      z-index: 1;
+      background: rgba(0, 0, 0, 0.6); 
+      z-index: 0; /* Juste au-dessus de l'image, mais derrière le contenu */
       pointer-events: none;
     }
 
