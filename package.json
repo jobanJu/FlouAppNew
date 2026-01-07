@@ -16,7 +16,5 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {
-    "firebase": "^12.7.0"
-  }
+  "dependencies": {}
 }
