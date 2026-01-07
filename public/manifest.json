@@ -1,0 +1,26 @@
+{
+  "name": "Flou - Et si l'essentiel se révélait avant le visage?",
+  "short_name": "Flou",
+  "description": "Application de rencontres où l'essentiel se révèle avant le visage. Photos déflouttées progressivement sur 3 jours.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a0033",
+  "theme_color": "#9333ea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/FLOU.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/FLOU-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["social", "lifestyle"],
+  "screenshots": []
+}

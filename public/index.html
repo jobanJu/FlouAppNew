@@ -4,6 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#9333ea">
+  <meta name="description" content="Et si l'essentiel se révélait avant le visage? Application de rencontres avec déflouttage progressif.">
+  
+  <!-- Icons -->
+  <link rel="icon" type="image/png" href="/FLOU.png">
+  <link rel="apple-touch-icon" href="/FLOU.png">
+  
+  <!-- iOS Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flou">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -868,6 +883,34 @@
       alert(`Chat avec ${name} - À implémenter prochainement !`);
     }
     window.logout = function() { supabase.auth.signOut().then(() => { currentUser = null; window.goToLanding(); }); }
+
+    // PWA Installation
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('PWA installable');
+    });
+
+    window.installPWA = async function() {
+      if (!deferredPrompt) {
+        alert('L\'application est déjà installée ou l\'installation n\'est pas disponible sur cet appareil.');
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response: ${outcome}`);
+      deferredPrompt = null;
+    }
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
 
     window.updateProgress();
   </script>
