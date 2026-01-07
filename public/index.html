@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flou - Rencontres</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #000000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px 0;
+      text-align: center;
+      color: white;
+    }
+
+    header img {
+      height: 180px;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Main Container */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Card Stack */
+    .card-stack {
+      position: relative;
+      height: 500px;
+      perspective: 1000px;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: grab;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .card:active {
+      cursor: grabbing;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 60%;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: white;
+    }
+
+    .card-info {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .card-details {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .card-bio {
+      font-size: 0.9rem;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-dislike {
+      background: white;
+      color: #fd0051;
+    }
+
+    .btn-dislike:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(253, 0, 81, 0.3);
+    }
+
+    .btn-like {
+      background: white;
+      color: #12d4ff;
+    }
+
+    .btn-like:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(18, 212, 255, 0.3);
+    }
+
+    .btn-super {
+      background: white;
+      color: #667eea;
+      width: 70px;
+      height: 70px;
+      font-size: 2rem;
+    }
+
+    .btn-super:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Stats */
+    .stats {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      color: white;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 40px;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+
+    .stat-item {
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .empty-state h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .card-stack {
+        height: 450px;
+      }
+
+      button {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+      }
+
+      .btn-super {
+        width: 65px;
+        height: 65px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img src="./assets/logos/logo3.png" alt="Flou Logo" onerror="this.style.display='none'">
+    <h1>Flou</h1>
+    <p>Découvrez de nouvelles connexions</p>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Card Stack -->
+    <div class="card-stack" id="cardStack">
+      <!-- Cards will be loaded here -->
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-dislike" id="btnDislike" title="Non">✕</button>
+      <button class="btn-super" id="btnSuper" title="Super">⭐</button>
+      <button class="btn-like" id="btnLike" title="Oui">♡</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value" id="usersCount">0</div>
+          <div class="stat-label">Utilisateurs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="matchesCount">0</div>
+          <div class="stat-label">Matches</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cardStack = document.getElementById('cardStack');
+    const btnLike = document.getElementById('btnLike');
+    const btnDislike = document.getElementById('btnDislike');
+    const btnSuper = document.getElementById('btnSuper');
+    const usersCountEl = document.getElementById('usersCount');
+    const matchesCountEl = document.getElementById('matchesCount');
+
+    let currentUsers = [];
+    let currentIndex = 0;
+
+    // Load users
+    async function loadUsers() {
+      try {
+        const response = await fetch('/users');
+        currentUsers = await response.json();
+        updateStats();
+        renderCard();
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    }
+
+    // Render current card
+    function renderCard() {
+      cardStack.innerHTML = '';
+
+      if (currentIndex >= currentUsers.length) {
+        cardStack.innerHTML = `
+          <div class="empty-state">
+            <h2>Pas de profils</h2>
+            <p>Revenez plus tard</p>
+          </div>
+        `;
+        return;
+      }
+
+      const user = currentUsers[currentIndex];
+      const genderEmoji = user.gender === 'F' ? '👩' : '👨';
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-image">${genderEmoji}</div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">${user.gender === 'F' ? 'Emma' : 'Luc'}, 25</div>
+            <div class="card-details">${user.orientation}</div>
+          </div>
+          <div class="card-bio">Passionné(e) de voyages et d'aventures 🌍</div>
+        </div>
+      `;
+      cardStack.appendChild(card);
+    }
+
+    // Actions
+    function likeCard() {
+      currentIndex++;
+      renderCard();
+    }
+
+    function dislikeCard() {
+      currentIndex++;
+      renderCard();
+    }
+
+    async function superCard() {
+      const user = currentUsers[currentIndex];
+      if (currentUsers.length > currentIndex + 1) {
+        const nextUser = currentUsers[currentIndex + 1];
+        try {
+          await fetch('/matches', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: `Match: ${user.gender} ↔ ${nextUser.gender}` })
+          });
+          updateStats();
+        } catch (error) {
+          console.error('Erreur:', error);
+        }
+      }
+      currentIndex++;
+      renderCard();
+    }
+
+    async function updateStats() {
+      try {
+        const users = await fetch('/users').then(r => r.json());
+        const matches = await fetch('/matches').then(r => r.json());
+        usersCountEl.textContent = users.length;
+        matchesCountEl.textContent = matches.length;
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    }
+
+    btnLike.addEventListener('click', likeCard);
+    btnDislike.addEventListener('click', dislikeCard);
+    btnSuper.addEventListener('click', superCard);
+
+    // Initial load
+    loadUsers();
+    setInterval(updateStats, 5000);
+  </script>
+</body>
+</html>
+

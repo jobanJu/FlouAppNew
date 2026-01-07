@@ -1,20 +1,10 @@
 {
   "name": "flouappnew",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-  "start": "node server.js"
-}
-,  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jobanJu/FlouAppNew.git"
+    "start": "node server.js",
+    "seed": "node seed.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jobanJu/FlouAppNew/issues"
-  },
-  "homepage": "https://github.com/jobanJu/FlouAppNew#readme"
+  "license": "ISC"
 }
