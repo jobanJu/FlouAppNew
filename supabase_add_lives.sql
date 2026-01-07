@@ -15,10 +15,22 @@ create table if not exists public.lives (
   description text,
   status text default 'waiting' check (status in ('waiting', 'active', 'ended')),
   max_participants integer default 4, -- 4 pour groupe, 1 pour date
+  room_url text, -- URL de la room Daily.co
   started_at timestamptz,
   ended_at timestamptz,
   created_at timestamptz default now()
 );
+
+-- Ajouter room_url si la table existe déjà
+do $$ 
+begin
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'lives' 
+                 and column_name = 'room_url') then
+    alter table public.lives add column room_url text;
+  end if;
+end $$;
 
 -- Index pour performance
 create index if not exists idx_lives_host on public.lives(host_id);
