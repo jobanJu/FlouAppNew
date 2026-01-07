@@ -5,494 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 
-    FIREBASE SDK (Version Modulaire via CDN)
-    Remplace les anciens scripts compat pour utiliser la syntaxe moderne demandée
-  -->
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-    html, body {
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    .page {
-      display: none;
-      min-height: 100vh;
-      /* background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);  <-- Ancien fond supprimé */
-      color: white;
-      position: relative; 
-      z-index: 10; /* Contenu au-dessus de l'image de fond */
-    }
-
-    /* GLOBAL BACKGROUND IMAGE */
     body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      /* Utilisation d'un chemin absolu depuis la racine pour éviter les erreurs relatives */
-      background: url('/assets/images/homme1.jpeg') no-repeat center center;
-      background-size: cover;
-      z-index: 1; /* S'assurer qu'il est bien derrière tout le reste */
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: url('/assets/images/homme1.jpeg') no-repeat center center; background-size: cover; z-index: 1;
     }
-
-    /* Overlay sombre global pour la lisibilité */
     body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6); 
-      z-index: 2; /* Juste au-dessus de l'image, mais derrière le contenu */
-      pointer-events: none;
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6); z-index: 2; pointer-events: none;
     }
 
+    .page { display: none; min-height: 100vh; color: white; position: relative; z-index: 10; }
+    .page.active { display: flex !important; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
 
-    .page.active {
-      display: flex !important;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+    .hero { text-align: center; width: 100%; max-width: 500px; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #landingPage img.bg-image { display: none; }
+    .logo-container { margin-bottom: 30px; display: flex; justify-content: center; align-items: center; z-index: 15; }
+    .logo-container img { max-width: 180px; height: auto; display: block; }
+    .hero h1 { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 300; margin-bottom: 20px; line-height: 1.6; opacity: 0.95; }
+    .button-group { display: flex; flex-direction: column; gap: 15px; margin-top: 50px; position: relative; z-index: 15; }
 
-    /* LANDING PAGE */
-    .hero {
-      text-align: center;
-      width: 100%;
-      max-width: 500px;
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+    .btn { padding: 14px 32px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; position: relative; z-index: 15; pointer-events: auto; }
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3); }
+    .btn-secondary { background: transparent; color: white; border: 2px solid white; }
+    .btn-secondary:hover { background: white; color: #000000; transform: translateY(-2px); }
 
-    #landingPage {
-      position: relative;
-      /* overflow: hidden; */ /* Retiré pour ne pas couper le flux */
-    }
+    .signup-form { width: 100%; max-width: 400px; }
+    .form-step { display: none; animation: fadeIn 0.3s ease; }
+    .form-step.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* L'overlay spécifique landingPage n'est plus nécessaire car on a un overlay global */
-    /*
-    #landingPage::before {
-      content: '';
-      ...
-    }
-    */
-    
-    /* L'image img.bg-image n'est plus nécessaire car elle est en background du body */
-    #landingPage img.bg-image {
-      display: none; 
-    }
+    .progress-bar { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; margin-bottom: 40px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #667eea; transition: width 0.3s ease; }
+    .form-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
+    .form-subtitle { font-size: 0.95rem; opacity: 0.8; margin-bottom: 30px; }
 
-    .logo-container {
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 15;
-    }
+    .form-input { width: 100%; padding: 12px 16px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: white; font-size: 1rem; margin-bottom: 20px; transition: all 0.3s ease; }
+    .form-input:focus { outline: none; border-color: #667eea; background: rgba(255, 255, 255, 0.1); }
+    .form-input::placeholder { color: rgba(255, 255, 255, 0.5); }
 
-    .logo-container img {
-      max-width: 180px;
-      height: auto;
-      display: block;
-    }
+    .choices { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+    .choice-btn { padding: 14px 20px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: transparent; color: white; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-align: left; }
+    .choice-btn:hover { border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.05); }
+    .choice-btn.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.15); }
 
-    .hero h1 {
-      font-size: clamp(1.5rem, 5vw, 2rem);
-      font-weight: 300;
-      margin-bottom: 20px;
-      line-height: 1.6;
-      opacity: 0.95;
-    }
+    .interests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
+    .interest-tag { padding: 10px 14px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 20px; background: transparent; color: white; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; text-align: center; }
+    .interest-tag:hover { border-color: rgba(255, 255, 255, 0.4); }
+    .interest-tag.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.15); }
 
-    .button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 50px;
-      position: relative;
-      z-index: 15;
-    }
+    .form-actions { display: flex; gap: 12px; margin-top: 40px; }
+    .btn-small { flex: 1; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    .btn-next { background: #667eea; color: white; }
+    .btn-next:hover { background: #5568d3; }
+    .btn-back { background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.2); }
+    .btn-back:hover { background: rgba(255, 255, 255, 0.15); }
 
-    .btn {
-      padding: 14px 32px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      position: relative;
-      z-index: 15;
-      pointer-events: auto;
-    }
+    .error-message { color: #ff6b6b; font-size: 0.9rem; margin-bottom: 20px; text-align: center; }
+    .success-message { text-align: center; padding: 40px 20px; }
+    .success-message h2 { font-size: 1.8rem; margin-bottom: 20px; }
+    .success-message p { opacity: 0.9; line-height: 1.6; }
 
-    .btn-primary {
-      background: #667eea;
-      color: white;
-    }
+    .matches-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; position: relative; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-bottom: 20px; }
+    .cards-stack { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 450px; }
+    .match-card { position: absolute; width: 100%; max-width: 360px; height: 100%; background: rgba(30, 30, 30, 0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); }
+    .card-image-area { flex: 2; background: #111; display: flex; justify-content: center; align-items: center; position: relative; background-size: cover; background-position: center; }
+    .card-blur-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(20px); background: rgba(0,0,0,0.2); z-index: 10; }
+    .card-info { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+    .card-name { font-size: 1.6rem; font-weight: 700; margin-bottom: 5px; }
+    .card-details { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+    .card-interests { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; overflow-y: auto; max-height: 80px; }
+    .mini-tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; background: rgba(255,255,255,0.1); white-space: nowrap; }
+    .card-actions { display: flex; justify-content: center; gap: 30px; padding: 20px; }
+    .action-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
+    .btn-pass { background: rgba(0,0,0,0.5); color: #ff6b6b; border: 2px solid #ff6b6b; }
+    .btn-like { background: rgba(0,0,0,0.5); color: #51cf66; border: 2px solid #51cf66; }
+    .action-btn:hover { transform: scale(1.1); }
+    .no-more-profiles { text-align: center; padding: 40px; }
 
-    .btn-primary:hover {
-      background: #5568d3;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: white;
-      border: 2px solid white;
-    }
-
-    .btn-secondary:hover {
-      background: white;
-      color: #000000;
-      transform: translateY(-2px);
-    }
-
-    /* SIGNUP FORM */
-    .signup-form {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .form-step {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .form-step.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
-      margin-bottom: 40px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: #667eea;
-      transition: width 0.3s ease;
-    }
-
-    .form-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .form-subtitle {
-      font-size: 0.95rem;
-      opacity: 0.8;
-      margin-bottom: 30px;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #667eea;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .form-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .choices {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .choice-btn {
-      padding: 14px 20px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      background: transparent;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: left;
-    }
-
-    .choice-btn:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .choice-btn.selected {
-      border-color: #667eea;
-      background: rgba(102, 126, 234, 0.15);
-    }
-
-    .interests-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    .interest-tag {
-      padding: 10px 14px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      background: transparent;
-      color: white;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    .interest-tag:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .interest-tag.selected {
-      border-color: #667eea;
-      background: rgba(102, 126, 234, 0.15);
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 40px;
-    }
-
-    .btn-small {
-      flex: 1;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-next {
-      background: #667eea;
-      color: white;
-    }
-
-    .btn-next:hover {
-      background: #5568d3;
-    }
-
-    .btn-back {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-back:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .error-message {
-      color: #ff6b6b;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .success-message {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .success-message h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-    }
-
-    .success-message p {
-      opacity: 0.9;
-      line-height: 1.6;
-    }
-
-    /* MATCHES PAGE STYLES */
-    .matches-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      margin-bottom: 20px;
-    }
-
-    .top-nav h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .cards-stack {
-      flex: 1;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 60vh;
-    }
-
-    .match-card {
-      position: absolute;
-      width: 100%;
-      max-width: 360px; /* Taille carte tinder classique */
-      height: 100%;
-      background: rgba(30, 30, 30, 0.95);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      border: 1px solid rgba(255,255,255,0.1);
-      /* animation: slideIn 0.3s ease; */
-    }
-
-    .card-image-area {
-      flex: 2;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      background-size: cover;
-      background-position: center;
-    }
-    
-    .card-blur-overlay {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        backdrop-filter: blur(20px);
-        background: rgba(0,0,0,0.2);
-        z-index: 10;
-    }
-
-    .card-info {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-name {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .card-details {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 10px;
-    }
-
-    .card-interests {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 15px;
-      overflow-y: auto;
-      max-height: 80px;
-    }
-
-    .mini-tag {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.1);
-      white-space: nowrap;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 20px;
-    }
-
-    .action-btn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-pass {
-      background: rgba(0,0,0,0.5);
-      color: #ff6b6b;
-      border: 2px solid #ff6b6b;
-    }
-
-    .btn-like {
-      background: rgba(0,0,0,0.5);
-      color: #51cf66;
-      border: 2px solid #51cf66;
-    }
-
-    .action-btn:hover {
-        transform: scale(1.1);
-    }
-
-    @media (max-width: 640px) {
-      .form-step, .hero {
-        width: 100%;
-        padding: 0;
-      }
-    }
+    @media (max-width: 640px) { .form-step, .hero { width: 100%; padding: 0; } }
   </style>
 </head>
 <body>
@@ -500,17 +96,11 @@
   <div id="landingPage" class="page active">
     <img src="./assets/images/homme1.jpeg" alt="Flou" class="bg-image">
     <div class="hero">
-      <div class="logo-container">
-        <img src="./assets/logos/logo3.png" alt="Flou Logo">
-      </div>
+      <div class="logo-container"><img src="./assets/logos/logo3.png" alt="Flou Logo"></div>
       <h1>Et si l'essentiel se révélait avant le visage ?</h1>
       <div class="button-group">
-        <button class="btn btn-primary" onclick="goToSignup()">
-          S'inscrire
-        </button>
-        <button class="btn btn-secondary" onclick="login()">
-          Connexion
-        </button>
+        <button class="btn btn-primary" onclick="goToSignup()">S'inscrire</button>
+        <button class="btn btn-secondary" onclick="login()">Connexion</button>
       </div>
     </div>
   </div>
@@ -518,22 +108,16 @@
   <!-- SIGNUP PAGE -->
   <div id="signupPage" class="page">
     <div class="signup-form">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-      <!-- Step 1: Prénom -->
       <div class="form-step active" data-step="1">
         <div class="form-title">Quel est ton prénom ?</div>
         <div class="form-subtitle">Commence par le commencement</div>
         <input type="text" class="form-input" id="firstName" placeholder="Ton prénom" maxlength="50">
         <div id="error1" class="error-message"></div>
-        <div class="form-actions">
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
-        </div>
+        <div class="form-actions"><button class="btn-small btn-next" onclick="nextStep()">Suivant</button></div>
       </div>
 
-      <!-- Step 2: Âge -->
       <div class="form-step" data-step="2">
         <div class="form-title">Quel est ton âge ?</div>
         <div class="form-subtitle">Flou est réservé aux personnes de 20 ans et plus</div>
@@ -545,13 +129,12 @@
         </div>
       </div>
 
-      <!-- Step 3: Localisation -->
       <div class="form-step" data-step="3">
         <div class="form-title">Où es-tu ?</div>
         <div class="form-subtitle">Active la localisation pour voir les profils autour de toi</div>
         <div style="display:flex; gap:10px; margin-bottom:15px;">
-           <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;">
-           <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;">📍</button>
+          <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;">
+          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;">📍</button>
         </div>
         <div id="error3" class="error-message"></div>
         <div class="form-actions">
@@ -560,7 +143,6 @@
         </div>
       </div>
 
-      <!-- Step 4: Genre -->
       <div class="form-step" data-step="4">
         <div class="form-title">Quel est ton genre ?</div>
         <div class="form-subtitle">Simplement pour te connaître</div>
@@ -575,7 +157,6 @@
         </div>
       </div>
 
-      <!-- Step 5: Sexualité -->
       <div class="form-step" data-step="5">
         <div class="form-title">Quelle est ta sexualité ?</div>
         <div class="form-subtitle">Juste pour qu'on se comprenne</div>
@@ -591,7 +172,6 @@
         </div>
       </div>
 
-      <!-- Step 6: Centres d'intérêt -->
       <div class="form-step" data-step="6">
         <div class="form-title">Tes intérêts ?</div>
         <div class="form-subtitle">Sélectionne au minimum 5 (max 10 conseillé)</div>
@@ -600,19 +180,19 @@
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
           <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
-       <!-- Step 7: Photo (Nouveau) -->
+        </div>
+      </div>
+
       <div class="form-step" data-step="7">
         <div class="form-title">Ta photo ?</div>
         <div class="form-subtitle">Sélectionne une photo de toi (elle sera floutée au début)</div>
         <div style="text-align:center; margin-bottom:20px;">
-             <!-- Preview container -->
-            <div id="photoPreviewContainer" style="width:150px; height:150px; border-radius:10px; background:rgba(255,255,255,0.1); margin:0 auto 20px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 2px dashed rgba(255,255,255,0.3);">
-                <span id="photoPlaceholder" style="font-size:3rem; opacity:0.5;">📷</span>
-                <img id="photoPreview" src="" alt="Aperçu" style="width:100%; height:100%; object-fit:cover; display:none;">
-            </div>
-            
-            <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
-            <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">Choisir une photo</button>
+          <div id="photoPreviewContainer" style="width:150px; height:150px; border-radius:10px; background:rgba(255,255,255,0.1); margin:0 auto 20px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 2px dashed rgba(255,255,255,0.3);">
+            <span id="photoPlaceholder" style="font-size:3rem; opacity:0.5;">📷</span>
+            <img id="photoPreview" src="" alt="Aperçu" style="width:100%; height:100%; object-fit:cover; display:none;">
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
+          <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">Choisir une photo</button>
         </div>
         <div id="error7" class="error-message"></div>
         <div class="form-actions">
@@ -621,7 +201,6 @@
         </div>
       </div>
 
-      <!-- Step 8: Email (Renommé de 7 -> 8) -->
       <div class="form-step" data-step="8">
         <div class="form-title">Ton email ?</div>
         <div class="form-subtitle">Pour te connecter ensuite</div>
@@ -633,16 +212,12 @@
         </div>
       </div>
 
-      <!-- Step 9: Mot de passe (Renommé de 8 -> 9) -->
       <div class="form-step" data-step="9">
         <div class="form-title">Crée un mot de passe</div>
         <div class="form-subtitle">Minimum 6 caractères</div>
         <input type="password" class="form-input" id="password" placeholder="Mot de passe" minlength="6">
         <input type="password" class="form-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" style="margin-top: -10px;">
-        <div id="error9m-subtitle">Minimum 6 caractères</div>
-        <input type="password" class="form-input" id="password" placeholder="Mot de passe" minlength="6">
-        <input type="password" class="form-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" style="margin-top: -10px;">
-        <div id="error8" class="error-message"></div>
+        <div id="error9" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
           <button class="btn-small btn-next" onclick="submitForm()">Créer mon compte</button>
@@ -658,11 +233,9 @@
         <div style="font-size: 2rem; margin-bottom: 20px;">🔓</div>
         <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Connexion</h2>
       </div>
-      
       <input type="email" class="form-input" id="loginEmail" placeholder="ton@email.com">
       <input type="password" class="form-input" id="loginPassword" placeholder="Mot de passe" style="margin-top: -10px;">
       <div id="loginError" class="error-message"></div>
-      
       <div class="form-actions" style="margin-top: 30px;">
         <button class="btn-small btn-back" onclick="goToLanding()">Retour</button>
         <button class="btn-small btn-next" onclick="doLogin()">Se connecter</button>
@@ -683,32 +256,25 @@
   <div id="matchesPage" class="page">
     <div class="matches-container">
       <div class="top-nav">
-          <div style="font-size:1.5rem; font-weight:bold;">Flou.</div>
-          <button style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;" onclick="logout()">🚪</button>
+        <div style="font-size:1.5rem; font-weight:bold;">Flou.</div>
+        <button style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;" onclick="logout()">🚪</button>
       </div>
-      
       <div class="cards-stack" id="cardsStack">
-          <!-- Les cartes seront injectées ici par JS -->
-          <div class="no-more-profiles" style="text-align:center;">
-              <p style="margin-bottom:10px;">Chargement des profils...</p>
-          </div>
+        <div class="no-more-profiles"><p>Chargement des profils...</p></div>
       </div>
-      
       <div class="card-actions">
-           <button class="action-btn btn-pass" onclick="handleSwipe('pass')">✕</button>
-           <button class="action-btn btn-like" onclick="handleSwipe('like')">❤</button>
+        <button class="action-btn btn-pass" onclick="handleSwipe('pass')">✕</button>
+        <button class="action-btn btn-like" onclick="handleSwipe('like')">❤</button>
       </div>
     </div>
   </div>
 
   <script type="module">
-    // Importation des modules Firebase via CDN (Exactement comme demandé)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDocs, query, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-    // CONFIGURATION FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyBUsyng1I9UxTXvxcjcrhoRk29vTKZJEag",
       authDomain: "flou-app-a03dc.firebaseapp.com",
@@ -718,482 +284,158 @@
       appId: "1:94838358120:web:5be247dcfd496f620ebbdd"
     };
 
-    // Initialisation
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    colocation: null, // {lat, lng}
-      gender: '',
-      sexuality: '',
-      interests: [],
-      photoFile: null,
-      email: '',
-      password: ''
-    };
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
+    const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
+
+    let formData = { firstName: '', age: '', city: '', location: null, gender: '', sexuality: '', interests: [], photoFile: null, email: '', password: '' };
     let currentStep = 1;
-    const totalSteps = 9; // Augmenté de 8 à 9 pour le formulaire
-    const interests = [
-      "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
-      "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
-      "Yoga", "Méditiation", "Gaming", "Musée", "Théâtre", "Concert",
-      "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals",
-      "Vélo", "Surf", "Ski", "Fitness", "Poésie", "Dessin",
-      "Animation", "Architecture", "Jardin", "Cuisine asiatique", "Fitness", "Méditation",
-      "Psychologie", "Philosophie", "Histoire", "Géographie", "Astronomie", "Écologie",
-      "Design", "Marketing", "Finance", "Entrepreneuriat", "Science", "Technologie"
-    ];
+    const totalSteps = 9;
+    let potentialMatches = [];
+    let currentMatchIndex = 0;
 
-    let formData = {
-      firstName: '',
-      age: '',
-      city: '',
-      gender: '',
-      sexuality: '',
-      interests: [],
-      email: '',
-      pFonction Geolocalisation
-    window.geolocateUser = function() {
-        const btn = document.querySelector('button[onclick="geolocateUser()"]');
-        if (!navigator.geolocation) {
-             alert("La géolocalisation n'est pas supportée par ton navigateur");
-             return;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const landing = document.getElementById('landingPage');
+        const login = document.getElementById('loginPage');
+        if (landing.classList.contains('active') || login.classList.contains('active')) {
+          window.goToMatches();
         }
-        
-        btn.textContent = "⌛";
-        
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                formData.location = { lat, lng };
-                
-                // Optionnel : Reverse Geocoding pour trouver la ville (Ici simulation ou API externe)
-                // Pour faire simple et ne pas utiliser d'API externe payante (Google Maps), 
-                // on va juste dire "Position trouvée" et laisser l'user taper la ville s'il veut être précis,
-                // ou on pourrait interroger une API OpenSource.
-                
-                // Essayons d'appeler l'API gratuite 'api-adresse.data.gouv.fr' si c'est en France, ou OSM
-                try {
-                    const res = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${lng}&lat=${lat}`);
-                    const data = await res.json();
-                    if(data.features && data.features.length > 0) {
-                        const city = data.features[0].properties.city;
-                        document.getElementById('city').value = city;
-                    }
-                } catch(e) {
-                    console.log("Erreur reverse geocoding", e);
-                }
-
-                btn.textContent = "✅";
-                document.getElementById('error3').textContent = "";
-            },
-            (error) => {
-                console.error(error);
-                alert("Impossible de récupérer la position : " + error.message);
-                btn.textContent = "📍";
-            }
-        );
-    }
-    
-    // Fonction Photo Upload
-    window.handleFileSelect = function(input) {
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            
-            // Check size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-        // On exige soit une ville saisie, soit une géoloc réussie (mais on stocke la ville saisie)
-        if (!city && !formData.location) {
-          if (error) error.textContent = 'Veuillez entrer une ville ou utiliser la localisation
-                return;
-            }
-            
-            formData.photoFile = file;
-            
-            // Preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('photoPreview').src = e.target.result;
-                document.getElementById('photoPreview').style.display = 'block';
-                document.getElementById('photoPlaceholder').style.display = 'none';
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // assword: ''
-    };
-
-    let currentStep = 1;
-    const totalSteps = 8;
-    
-    // É// Validation Photo
-        if (!formData.photoFile) {
-            if (error) error.textContent = 'Une photo est obligatoire !';
-            return false;
-        }
-      } else if (step === 8) {
-        // Validation Email
-        const email = document.getElementById('email').value.trim();
-        if (!email || !email.includes('@')) {
-          if (error) error.textContent = 'Veuillez entrer un email valide';
-          return false;
-        }
-        formData.email = email;
-      } else if (step === 9) {
-        // Validation Password
-            console.log("Utilisateur connecté:", user.uid);
-            // Si on est sur l'écran landing ou login, on redirige vers matches
-            const landing = document.getElementById('landingPage');
-            const login = document.getElementById('loginPage');
-            if (landing.classList.contains('active') || login.classList.contains('active')) {
-                window.goToMatches();
-            }
-        } else {
-            console.log("Utilisateur déconnecté");
-            window.goToLanding();
-        }
+      }
     });
 
-    // -- FONCTIONS UTILITAIRES --
-
-    window.updateProgress = function() {
-      const progress = (currentStep / totalSteps) * 100;
-      const el = document.getElementById('progressFill');
-      if (el) el.style.width = progress + '%';
+    window.geolocateUser = function() {
+      const btn = document.querySelector('button[onclick="geolocateUser()"]');
+      if (!navigator.geolocation) { alert("Géolocalisation non supportée"); return; }
+      btn.textContent = "⌛";
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          formData.location = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          try {
+            const res = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${pos.coords.longitude}&lat=${pos.coords.latitude}`);
+            const data = await res.json();
+            if (data.features?.length > 0) document.getElementById('city').value = data.features[0].properties.city || '';
+          } catch(e) {}
+          btn.textContent = "✅";
+        },
+        (err) => { alert("Erreur: " + err.message); btn.textContent = "📍"; }
+      );
     }
 
+    window.handleFileSelect = function(input) {
+      if (input.files?.[0]) {
+        const file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) { alert("Photo trop lourde (max 5Mo)"); input.value = ""; return; }
+        formData.photoFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('photoPreview').src = e.target.result;
+          document.getElementById('photoPreview').style.display = 'block';
+          document.getElementById('photoPlaceholder').style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    window.updateProgress = function() { document.getElementById('progressFill').style.width = (currentStep / totalSteps) * 100 + '%'; }
     window.showStep = function(step) {
       document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-      const target = document.querySelector(`[data-step="${step}"]`);
-      if (target) target.classList.add('active');
+      document.querySelector(`[data-step="${step}"]`)?.classList.add('active');
       window.updateProgress();
-      window.scrollTo(0, 0);
     }
-
-    window.nextStep = function() {
-      if (!window.validateStep(currentStep)) return;
-      if (currentStep < totalSteps) {
-        currentStep++;
-        window.showStep(currentStep);
-      }
-    }
-
-    window.prevStep = function() {
-      if (currentStep > 1) {
-        currentStep--;
-        window.showStep(currentStep);
-      }
-    }
+    window.nextStep = function() { if (!window.validateStep(currentStep)) return; if (currentStep < totalSteps) { currentStep++; window.showStep(currentStep); } }
+    window.prevStep = function() { if (currentStep > 1) { currentStep--; window.showStep(currentStep); } }
 
     window.validateStep = function(step) {
       const error = document.getElementById(`error${step}`);
       if (error) error.textContent = '';
-
-      if (step === 1) {
-        const name = document.getElementById('firstName').value.trim();
-        if (name.length < 2) {
-          if (error) error.textContent = 'Le prénom doit avoir au moins 2 caractères';
-          return false;
-        }
-        formData.firstName = name;
-      } else if (step === 2) {
-        const age = parseInt(document.getElementById('age').value);
-        if (!age || age < 20) {
-          if (error) error.textContent = 'Flou est réservé aux personnes de 20 ans et plus';
-          return false;
-        }
-        formData.age = age;
-      } else if (step === 3) {
-        const city = document.getElementById('city').value.trim();
-        if (!city) {
-          if (error) error.textContent = 'Veuillez entrer une ville';
-          return false;
-        }
-        formData.city = city;
-      } else if (step === 4) {
-        if (!formData.gender) {
-          if (error) error.textContent = 'Veuillez sélectionner un genre';
-          return false;
-        }
-      } else if (step === 5) {
-        if (!formData.sexuality) {
-          if (error) error.textContent = 'Veuillez sélectionner une sexualité';
-          return false;
-        }
-      } else if (step === 6) {
-        if (formData.interests.length < 5) {
-          if (error) error.textContent = 'Sélectionne au minimum 5 intérêts';
-          return false;
-        }
-        if (formData.interests.length > 10) {
-          if (error) error.textContent = 'Maximum 10 intérêts conseillé';
-          return false;
-        }
-      } else if (step === 7) {
-        const email = document.getElementById('email').value.trim();
-        if (!email || !email.includes('@')) {
-          if (error) error.textContent = 'Veuillez entrer un email valide';
-          return false;
-        }
-        formData.email = email;
-      } else if (step === 8) {
-        const password = document.getElementById('password').value;
-        const passwordConfirm = document.getElementById('passwordConfirm').value;
-        if (password.length < 6) {
-          if (error) error.textContent = 'Le mot de passe doit avoir minimum 6 caractères';
-          return false;
-        }
-        if (password !== passwordConfirm) {
-          if (error) error.textContent = 'Les mots de passe ne correspondent pas';
-          return false;
-        }
-        formData.password = password;
-      }
-
+      if (step === 1) { const n = document.getElementById('firstName').value.trim(); if (n.length < 2) { if (error) error.textContent = 'Prénom trop court'; return false; } formData.firstName = n; }
+      else if (step === 2) { const a = parseInt(document.getElementById('age').value); if (!a || a < 20) { if (error) error.textContent = '20 ans minimum'; return false; } formData.age = a; }
+      else if (step === 3) { const c = document.getElementById('city').value.trim(); if (!c && !formData.location) { if (error) error.textContent = 'Entre une ville'; return false; } formData.city = c; }
+      else if (step === 4) { if (!formData.gender) { if (error) error.textContent = 'Sélectionne un genre'; return false; } }
+      else if (step === 5) { if (!formData.sexuality) { if (error) error.textContent = 'Sélectionne une option'; return false; } }
+      else if (step === 6) { if (formData.interests.length < 5) { if (error) error.textContent = 'Au moins 5 intérêts'; return false; } }
+      else if (step === 7) { if (!formData.photoFile) { if (error) error.textContent = 'Photo obligatoire'; return false; } }
+      else if (step === 8) { const e = document.getElementById('email').value.trim(); if (!e || !e.includes('@')) { if (error) error.textContent = 'Email invalide'; return false; } formData.email = e; }
+      else if (step === 9) { const p = document.getElementById('password').value, pc = document.getElementById('passwordConfirm').value; if (p.length < 6) { if (error) error.textContent = 'Mot de passe trop court'; return false; } if (p !== pc) { if (error) error.textContent = 'Mots de passe différents'; return false; } formData.password = p; }
       return true;
     }
 
     window.selectChoice = function(btn, field, value) {
       document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      btn.setAttribute('data-field', field);
-      formData[field] = value;
+      btn.classList.add('selected'); btn.setAttribute('data-field', field); formData[field] = value;
     }
-
     window.toggleInterest = function(btn, interest) {
-      if (formData.interests.includes(interest)) {
-        formData.interests = formData.interests.filter(i => i !== interest);
-        btLOGIQUE MATCHES --
-    
-    window.goToMatches = function() {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('matchesPage').classList.add('active');
-        window.loadMatches();
+      if (formData.interests.includes(interest)) { formData.interests = formData.interests.filter(i => i !== interest); btn.classList.remove('selected'); }
+      else { if (formData.interests.length < 10) { formData.interests.push(interest); btn.classList.add('selected'); } }
     }
-
-    window.loadMatches = async function() {
-        const stack = document.getElementById('cardsStack');
-        stack.innerHTML = '<div class="no-more-profiles"><p>Recherche de profils...</p></div>';
-        
-        try {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            // Récupérer tous les utilisateurs (Pour l'instant, on filtre juste soi-même en JS)
-            // Dans une vraie app, on filtrerait mieux via Firestore (genre, orientation, ville...)
-            const q = query(collection(db, "users"), limit(20));
-            const querySnapshot = await getDocs(q);
-            9)) return;
-
-      try {
-         // UI Loading
-         const btn = document.querySelector('button[onclick="submitForm()"]');
-         const originalText = btn ? btn.textContent : "Valider";
-         if (btn) {
-             btn.textContent = "Création du compte...";
-             btn.disabled = true;
-         }
-
-         // 1. Création Auth
-         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-         const user = userCredential.user;
-         console.log('✅ User Auth:', user.uid);
-
-         // 2. Upload Photo vers Firebase Storage
-         let photoUrl = "";
-         if (formData.photoFile) {
-             btn.textContent = "Envoi de la photo...";
-             const storageRef = ref(storage, 'user_photos/' + user.uid);
-             await uploadBytes(storageRef, formData.photoFile);
-             photoUrl = await getDownloadURL(storageRef);
-             console.log('✅ Photo Uploaded:', photoUrl);
-         }
-
-         // 3. Firestore Document
-         btn.textContent = "Finalisation...";
-         await setDoc(doc(db, "users", user.uid), {
-            firstname: formData.firstName,
-            age: parseInt(formData.age),
-            city: formData.city,
-            location: formData.location, // Peut être null si pas de géoloc
-            gender: formData.gender,
-            sexuality: formData.sexuality,
-            interests: formData.interests,
-            email: formData.email,
-            photoUrl: photoUrl, // Nouvelle URL
-            createdAt: serverTimestamp()
-         });
-         console.log('✅ Firestore OK');
-         
-         document.getElementById('signupPage').classList.remove('active');
-         document.getElementById('successPage').classList.add('active');
-
-      } catch (error) {
-        console.error('Erreur Inscription:', error);
-        alert('Erreur: ' + error.message);
-        const errorDiv = document.getElementById('error9
-        if (error) error.textContent = 'Email et mot de passe requis';
-        return;
-      }
-
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('✅ Connecté:', userCredential.user.uid);
-        
-        // Plus besoin d'alert, la redirection se fait via onAuthStateChanged
-        // window.goToMatches(); s="card-name">${profile.firstname}, ${profile.age} ans</div>
-                    <div class="card-details">📍 ${profile.city || 'Non renseigné'}</div>
-                    <div class="card-interests">
-                        ${tagsHtml}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        stack.innerHTML = cardHtml;
-    }
-
-    window.handleSwipe = function(action) {
-        if (currentMatchIndex >= potentialMatches.length) return;
-        
-        // Animation simple (logique à enrichir plus tard avec hammer.js ou autre pour le tactile)
-        console.log(`Action: ${action} sur ${potentialMatches[currentMatchIndex].firstname}`);
-
-        // TODO: Enregistrer le like/pass dans Firestore
-
-        // Passer au suivant
-        currentMatchIndex++;
-        window.renderCurrentMatch();
-    }
-    
-    window.logout = function() {
-        signOut(auth).then(() => {
-            alert('Déconnecté');
-        }).catch((error) => {
-            console.error('Erreur déconnexion', error);
-        });
-    }
-
-    // -- n.classList.remove('selected');
-      } else {
-        if (formData.interests.length < 10) {
-          formData.interests.push(interest);
-          btn.classList.add('selected');
-        }
-      }
-    }
-
     window.renderInterests = function() {
       const grid = document.getElementById('interestsGrid');
-      if (grid) {
-        grid.innerHTML = interests.map(interest => `
-          <button class="interest-tag" onclick="toggleInterest(this, '${interest}')">
-            ${interest}
-          </button>
-        `).join('');
-      }
+      if (grid) grid.innerHTML = interests.map(i => `<button class="interest-tag" onclick="toggleInterest(this, '${i}')">${i}</button>`).join('');
     }
 
-    // -- FONCTIONS FIREBASE --
-    
     window.submitForm = async function() {
-      if (!window.validateStep(8)) return;
-
+      if (!window.validateStep(9)) return;
+      const btn = document.querySelector('button[onclick="submitForm()"]');
       try {
-         // UI Loading
-         const btn = document.querySelector('button[onclick="submitForm()"]');
-         const originalText = btn ? btn.textContent : "Valider";
-         if (btn) {
-             btn.textContent = "Inscription...";
-             btn.disabled = true;
-         }
-
-         // 1. Création Auth
-         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-         const user = userCredential.user;
-         console.log('✅ User Auth:', user.uid);
-
-         // 2. Firestore Document
-         await setDoc(doc(db, "users", user.uid), {
-            firstname: formData.firstName,
-            age: parseInt(formData.age),
-            city: formData.city,
-            gender: formData.gender,
-            sexuality: formData.sexuality,
-            interests: formData.interests,
-            email: formData.email,
-            createdAt: serverTimestamp()
-         });
-         console.log('✅ Firestore OK');
-         
-         document.getElementById('signupPage').classList.remove('active');
-         document.getElementById('successPage').classList.add('active');
-
-      } catch (error) {
-        console.error('Erreur Inscription:', error);
-        alert('Erreur: ' + error.message);
-        const errorDiv = document.getElementById('error8');
-        if (errorDiv) errorDiv.textContent = error.message;
-        
-        const btn = document.querySelector('button[onclick="submitForm()"]');
-        if (btn) {
-            btn.textContent = "Créer mon compte";
-            btn.disabled = false;
+        btn.textContent = "Création..."; btn.disabled = true;
+        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        const user = userCredential.user;
+        let photoUrl = "";
+        if (formData.photoFile) {
+          btn.textContent = "Envoi photo...";
+          const storageRef = ref(storage, 'user_photos/' + user.uid);
+          await uploadBytes(storageRef, formData.photoFile);
+          photoUrl = await getDownloadURL(storageRef);
         }
-      }
+        btn.textContent = "Finalisation...";
+        await setDoc(doc(db, "users", user.uid), { firstname: formData.firstName, age: formData.age, city: formData.city, location: formData.location, gender: formData.gender, sexuality: formData.sexuality, interests: formData.interests, email: formData.email, photoUrl, createdAt: serverTimestamp() });
+        document.getElementById('signupPage').classList.remove('active');
+        document.getElementById('successPage').classList.add('active');
+      } catch (error) { console.error(error); alert('Erreur: ' + error.message); btn.textContent = "Créer mon compte"; btn.disabled = false; }
     }
 
     window.doLogin = async function() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      const error = document.getElementById('loginError');
+      const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value, error = document.getElementById('loginError');
       if (error) error.textContent = '';
+      if (!email || !password) { if (error) error.textContent = 'Email et mot de passe requis'; return; }
+      try { await signInWithEmailAndPassword(auth, email, password); } catch (err) { if (error) error.textContent = err.message; }
+    }
 
-      if (!email || !password) {
-        if (error) error.textContent = 'Email et mot de passe requis';
-        return;
-      }
+    window.goToSignup = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('signupPage').classList.add('active'); currentStep = 1; window.showStep(1); window.renderInterests(); }
+    window.goToLanding = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('landingPage').classList.add('active'); }
+    window.login = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('loginPage').classList.add('active'); }
+    window.goToMatches = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('matchesPage').classList.add('active'); window.loadMatches(); }
 
+    window.loadMatches = async function() {
+      const stack = document.getElementById('cardsStack');
+      stack.innerHTML = '<div class="no-more-profiles"><p>Recherche...</p></div>';
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('✅ Connecté:', userCredential.user.uid);
-        
-        alert('Connexion réussie !');
-        window.goToLanding();
-
-      } catch (err) {
-        console.error('❌ Erreur connexion:', err.message);
-        if (error) error.textContent = "Erreur: " + err.message;
-      }
+        const user = auth.currentUser; if (!user) return;
+        const q = query(collection(db, "users"), limit(20));
+        const snapshot = await getDocs(q);
+        potentialMatches = [];
+        snapshot.forEach((d) => { if (d.id !== user.uid) potentialMatches.push({ id: d.id, ...d.data() }); });
+        currentMatchIndex = 0;
+        window.renderCurrentMatch();
+      } catch (error) { stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
     }
 
-    // Navigation de base
-    window.goToSignup = function() {
-      const landing = document.getElementById('landingPage');
-      const signup = document.getElementById('signupPage');
-      if (landing) landing.classList.remove('active');
-      if (signup) signup.classList.add('active');
-      currentStep = 1;
-      window.showStep(1);
-      window.renderInterests();
+    window.renderCurrentMatch = function() {
+      const stack = document.getElementById('cardsStack');
+      if (currentMatchIndex >= potentialMatches.length) { stack.innerHTML = '<div class="no-more-profiles"><p>Plus de profils</p><button class="btn-small btn-back" onclick="loadMatches()">Recharger</button></div>'; return; }
+      const p = potentialMatches[currentMatchIndex];
+      const tags = (p.interests || []).map(t => `<span class="mini-tag">${t}</span>`).join('');
+      const bg = p.photoUrl || '/assets/images/homme1.jpeg';
+      stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}');"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
-    window.goToLanding = function() {
-      const login = document.getElementById('loginPage');
-      const landing = document.getElementById('landingPage');
-      if (login) login.classList.remove('active');
-      if (landing) landing.classList.add('active');
-    }
+    window.handleSwipe = function(action) { if (currentMatchIndex >= potentialMatches.length) return; currentMatchIndex++; window.renderCurrentMatch(); }
+    window.logout = function() { signOut(auth).then(() => window.goToLanding()); }
 
-    window.login = function() {
-      const landing = document.getElementById('landingPage');
-      const loginPage = document.getElementById('loginPage');
-      if (landing) landing.classList.remove('active');
-      if (loginPage) loginPage.classList.add('active');
-    }
-
-    // Init
     window.updateProgress();
   </script>
 </body>
