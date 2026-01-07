@@ -497,17 +497,41 @@
   <script>
     // CONFIG SUPABASE
     let supabase = null;
-    
-    // Attendre le chargement de Supabase
-    if (window.supabase) {
-      supabase = window.supabase.createClient(
-        'https://gwkeeoivdasllibfluaw.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3a2Vlb2l2ZGFzbGxpYmZsdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTAxNjEsImV4cCI6MjA4MzM2NjE2MX0.xF7CVdOThjNc49i0DgHkxJn27PyndtWHZLIDV_0Oas0'
-      );
-      console.log('✅ Supabase OK');
-    } else {
-      console.log('⚠️ Supabase en attente...');
+
+    function initSupabase() {
+      if (window.supabase) {
+        try {
+          supabase = window.supabase.createClient(
+            'https://gwkeeoivdasllibfluaw.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3a2Vlb2l2ZGFzbGxpYmZsdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTAxNjEsImV4cCI6MjA4MzM2NjE2MX0.xF7CVdOThjNc49i0DgHkxJn27PyndtWHZLIDV_0Oas0'
+          );
+          console.log('✅ Supabase connecté');
+        } catch (e) {
+          console.error('Erreur init Supabase:', e);
+        }
+      }
     }
+
+    // Tentative d'initialisation immédiate
+    initSupabase();
+
+    // Et boucle de vérification au cas où le script charge lentement
+    let attempts = 0;
+    const checkSupabase = setInterval(() => {
+      if (supabase) {
+        clearInterval(checkSupabase);
+        return;
+      }
+      attempts++;
+      if (window.supabase) {
+        initSupabase();
+        if (supabase) clearInterval(checkSupabase);
+      }
+      if (attempts > 10) { // Arrêt après 5 secondes
+        clearInterval(checkSupabase);
+        console.error('❌ Impossible de charger Supabase');
+      }
+    }, 500);
 
     const interests = [
       "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
@@ -652,35 +676,41 @@
       if (!validateStep(8)) return;
 
       try {
+        if (!supabase) {
+          throw new Error("Supabase n'est pas chargé. Rafraîchis la page.");
+        }
+
         // Sauvegarder en localStorage d'abord
         localStorage.setItem('flouUserProfile', JSON.stringify(formData));
-        console.log('✅ Données sauvegardées localement');
         
-        // Puis essayer Supabase si dispo
-        if (supabase) {
-          const { data, error: authError } = await supabase.auth.signUp({
-            email: formData.email,
-            password: formData.password
-          });
-          if (!authError && data.user) {
-            await supabase.from('profiles').insert([{
-              user_id: data.user.id,
-              firstname: formData.firstName,
-              age: parseInt(formData.age),
-              city: formData.city,
-              gender: formData.gender,
-              sexuality: formData.sexuality,
-              interests: formData.interests
-            }]);
-            console.log('✅ Profil créé dans Supabase');
-          }
+        const { data, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password
+        });
+
+        if (authError) throw authError;
+
+        if (data.user) {
+          const { error: profileError } = await supabase.from('profiles').insert([{
+            user_id: data.user.id,
+            firstname: formData.firstName,
+            age: parseInt(formData.age),
+            city: formData.city,
+            gender: formData.gender,
+            sexuality: formData.sexuality,
+            interests: formData.interests
+          }]);
+
+          if (profileError) throw profileError;
         }
         
-        // Afficher succès
+        console.log('✅ Compte créé avec succès');
+        // Afficher succès SEULEMENT si tout s'est bien passé
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
       } catch (error) {
         console.error('Erreur:', error);
+        alert('Erreur: ' + (error.message || error.error_description || error));
         document.getElementById('error8').textContent = error.message;
       }
     }
