@@ -272,12 +272,12 @@
   <script type="module">
     import { Client, Account, Databases, Storage, ID, Query } from 'https://cdn.jsdelivr.net/npm/appwrite@14.0.1/+esm';
 
-    // ⚠️ CONFIGURATION APPWRITE - À REMPLIR APRÈS CRÉATION DU PROJET
-    const APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'; // Ton endpoint Appwrite
-    const APPWRITE_PROJECT_ID = 'TON_PROJECT_ID_ICI'; // Récupère depuis Appwrite dashboard
-    const DATABASE_ID = 'flou-database'; // À créer dans Appwrite
-    const USERS_COLLECTION_ID = 'users'; // À créer dans Appwrite
-    const BUCKET_ID = 'user-photos'; // À créer dans Appwrite Storage
+    // Configuration Appwrite
+    const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
+    const APPWRITE_PROJECT_ID = '695e9a63003479b9d8fb';
+    const DATABASE_ID = 'flou-database';
+    const USERS_COLLECTION_ID = 'users';
+    const BUCKET_ID = 'user-photos';
 
     const client = new Client()
       .setEndpoint(APPWRITE_ENDPOINT)
