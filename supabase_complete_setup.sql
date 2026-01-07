@@ -40,7 +40,7 @@ create table if not exists public.users (
   latitude float,
   longitude float,
   gender text not null check (gender in ('Homme', 'Femme')),
-  sexuality text not check (sexuality in ('Hétérosexuel', 'Gay', 'Lesbienne', 'Bisexuel')),
+  sexuality text not null check (sexuality in ('Hétérosexuel', 'Gay', 'Lesbienne', 'Bisexuel')),
   interests text[] not null,
   email text unique not null,
   photo_url text,
