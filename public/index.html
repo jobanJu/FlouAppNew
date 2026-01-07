@@ -686,24 +686,34 @@
     }
 
     function goToSignup() {
-      console.log('goToSignup called');
-      document.getElementById('landingPage').classList.remove('active');
-      document.getElementById('signupPage').classList.add('active');
-      currentStep = 1;
-      showStep(1);
-      renderInterests();
+      console.log('✅ CLIC S\'INSCRIRE');
+      const landing = document.getElementById('landingPage');
+      const signup = document.getElementById('signupPage');
+      if (landing) landing.classList.remove('active');
+      if (signup) signup.classList.add('active');
+      try {
+        currentStep = 1;
+        showStep(1);
+        renderInterests();
+      } catch(e) {
+        console.error('Erreur:', e);
+      }
     }
 
     function goToLanding() {
-      console.log('goToLanding called');
-      document.getElementById('loginPage').classList.remove('active');
-      document.getElementById('landingPage').classList.add('active');
+      console.log('✅ RETOUR LANDING');
+      const login = document.getElementById('loginPage');
+      const landing = document.getElementById('landingPage');
+      if (login) login.classList.remove('active');
+      if (landing) landing.classList.add('active');
     }
 
     function login() {
-      console.log('login called');
-      document.getElementById('landingPage').classList.remove('active');
-      document.getElementById('loginPage').classList.add('active');
+      console.log('✅ CLIC CONNEXION');
+      const landing = document.getElementById('landingPage');
+      const loginPage = document.getElementById('loginPage');
+      if (landing) landing.classList.remove('active');
+      if (loginPage) loginPage.classList.add('active');
     }
 
     async function doLogin() {
