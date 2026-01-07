@@ -27,7 +27,7 @@
       /* background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);  <-- Ancien fond supprimé */
       color: white;
       position: relative; 
-      z-index: 2; /* Contenu au-dessus de l'image de fond */
+      z-index: 10; /* Contenu au-dessus de l'image de fond */
     }
 
     /* GLOBAL BACKGROUND IMAGE */
@@ -41,7 +41,7 @@
       /* Utilisation d'un chemin absolu depuis la racine pour éviter les erreurs relatives */
       background: url('/assets/images/homme1.jpeg') no-repeat center center;
       background-size: cover;
-      z-index: -1; /* S'assurer qu'il est bien derrière tout le reste */
+      z-index: 1; /* S'assurer qu'il est bien derrière tout le reste */
     }
 
     /* Overlay sombre global pour la lisibilité */
@@ -53,7 +53,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.6); 
-      z-index: 0; /* Juste au-dessus de l'image, mais derrière le contenu */
+      z-index: 2; /* Juste au-dessus de l'image, mais derrière le contenu */
       pointer-events: none;
     }
 
