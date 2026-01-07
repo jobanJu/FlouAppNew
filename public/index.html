@@ -252,6 +252,16 @@
     </div>
   </div>
 
+  <!-- EMAIL CONFIRMATION PAGE -->
+  <div id="emailConfirmPage" class="page">
+    <div class="success-message">
+      <h2>📧 Vérifie ton email</h2>
+      <p>Un email de confirmation a été envoyé à <strong id="confirmEmail"></strong></p>
+      <p style="margin-top:20px; opacity:0.8;">Clique sur le lien dans l'email pour activer ton compte.</p>
+      <button class="btn btn-secondary" onclick="goToLanding()" style="margin-top:30px;">Retour</button>
+    </div>
+  </div>
+
   <!-- MATCHES PAGE -->
   <div id="matchesPage" class="page">
     <div class="matches-container">
@@ -289,13 +299,30 @@
 
     // Check auth state on load
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (session?.user?.email_confirmed_at) {
         currentUser = session.user;
         const landing = document.getElementById('landingPage');
         const login = document.getElementById('loginPage');
         if (landing.classList.contains('active') || login.classList.contains('active')) {
           window.goToMatches();
         }
+      }
+    });
+
+    // Listen for auth state changes (email confirmation)
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+        currentUser = session.user;
+        // Check if user profile exists
+        supabase.from('users').select('id').eq('id', session.user.id).single()
+          .then(({ data, error }) => {
+            if (error || !data) {
+              // Create profile if doesn't exist
+              window.createUserProfile(session.user);
+            } else {
+              window.goToMatches();
+            }
+          });
       }
     });
 
@@ -376,33 +403,20 @@
       if (grid) grid.innerHTML = interests.map(i => `<button class="interest-tag" onclick="toggleInterest(this, '${i}')">${i}</button>`).join('');
     }
 
-    window.submitForm = async function() {
-      if (!window.validateStep(9)) return;
-      const btn = document.querySelector('button[onclick="submitForm()"]');
+    window.createUserProfile = async function(user) {
       try {
-        btn.textContent = "Création..."; btn.disabled = true;
-        
-        const { data: { user }, error: authError } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: { data: { firstname: formData.firstName } }
-        });
-        if (authError) throw authError;
-        currentUser = user;
-        
         let photoUrl = null;
         if (formData.photoFile) {
-          btn.textContent = "Envoi photo...";
           const fileName = `${user.id}_${Date.now()}.${formData.photoFile.name.split('.').pop()}`;
           const { data: fileData, error: uploadError } = await supabase.storage
             .from('user-photos')
             .upload(fileName, formData.photoFile);
-          if (uploadError) throw uploadError;
-          const { data: { publicUrl } } = supabase.storage.from('user-photos').getPublicUrl(fileName);
-          photoUrl = publicUrl;
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage.from('user-photos').getPublicUrl(fileName);
+            photoUrl = publicUrl;
+          }
         }
         
-        btn.textContent = "Finalisation...";
         const { error: dbError } = await supabase.from('users').insert({
           id: user.id,
           firstname: formData.firstName,
@@ -416,11 +430,50 @@
           email: formData.email,
           photo_url: photoUrl
         });
-        if (dbError) throw dbError;
         
-        document.getElementById('signupPage').classList.remove('active');
-        document.getElementById('successPage').classList.add('active');
-      } catch (error) { console.error(error); alert('Erreur: ' + error.message); btn.textContent = "Créer mon compte"; btn.disabled = false; }
+        if (!dbError) {
+          document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+          document.getElementById('successPage').classList.add('active');
+        }
+      } catch (error) {
+        console.error('Profile creation error:', error);
+      }
+    }
+
+    window.submitForm = async function() {
+      if (!window.validateStep(9)) return;
+      const btn = document.querySelector('button[onclick="submitForm()"]');
+      try {
+        btn.textContent = "Création..."; btn.disabled = true;
+        
+        const { data: { user }, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: { firstname: formData.firstName },
+            emailRedirectTo: window.location.origin
+          }
+        });
+        if (authError) throw authError;
+        
+        // If email confirmation is disabled, user is confirmed immediately
+        if (user?.email_confirmed_at) {
+          btn.textContent = "Finalisation...";
+          await window.createUserProfile(user);
+        } else {
+          // Show email confirmation page
+          document.getElementById('confirmEmail').textContent = formData.email;
+          document.getElementById('signupPage').classList.remove('active');
+          document.getElementById('emailConfirmPage').classList.add('active');
+        }
+        
+        btn.textContent = "Créer mon compte"; btn.disabled = false;
+      } catch (error) { 
+        console.error(error); 
+        alert('Erreur: ' + error.message); 
+        btn.textContent = "Créer mon compte"; 
+        btn.disabled = false; 
+      }
     }
 
     window.doLogin = async function() {

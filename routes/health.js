@@ -1,9 +1,8 @@
-function handleHealth(req, res, pathname, method, sendJson) {
-  if (method === "GET" && pathname === "/health") {
-    sendJson(res, 200, { status: "ok" });
+module.exports = (req, res, parsedUrl) => {
+  if (req.method === "GET" && parsedUrl.pathname === "/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "ok" }));
     return true;
   }
   return false;
-}
-
-module.exports = { handleHealth };
+};
