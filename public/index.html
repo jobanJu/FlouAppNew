@@ -212,8 +212,8 @@
     @media (max-width: 640px) { .form-step, .hero { width: 100%; padding: 0; } .matches-grid { grid-template-columns: 1fr; } }
   </style>
   
-  <!-- Daily.co SDK pour audio/vidéo -->
-  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+  <!-- Jitsi Meet SDK pour audio/vidéo (GRATUIT & ILLIMITÉ) -->
+  <script src="https://meet.jit.si/external_api.js"></script>
 </head>
 <body>
   <!-- LANDING PAGE -->
@@ -990,10 +990,9 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
 
-    // Daily.co configuration
-    const DAILY_API_KEY = 'TU_API_KEY_DAILY_ICI'; // À remplacer avec ta clé API Daily.co
-    let dailyCallObject = null;
-    let currentRoomUrl = null;
+    // Jitsi Meet configuration (100% GRATUIT - pas d'API Key nécessaire !)
+    let jitsiAPI = null;
+    let currentRoomName = null;
 
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
 
@@ -1825,130 +1824,115 @@
     // LIVE FUNCTIONS
     // ================================
 
-    // Daily.co - Créer une room vidéo
-    async function createDailyRoom(roomName) {
-      try {
-        const response = await fetch('https://api.daily.co/v1/rooms', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${DAILY_API_KEY}`
-          },
-          body: JSON.stringify({
-            name: `flou-live-${Date.now()}`,
-            properties: {
-              max_participants: 10,
-              enable_chat: false,
-              enable_screenshare: false,
-              enable_recording: false
-            }
-          })
-        });
-
-        if (!response.ok) {
-          // Si pas d'API key, utiliser mode test
-          console.warn('Daily API key manquante, utilisation du mode test');
-          return { url: `https://flou.daily.co/test-${Date.now()}` };
-        }
-
-        const room = await response.json();
-        return room;
-      } catch (error) {
-        console.error('Erreur création room Daily:', error);
-        // Fallback en mode test
-        return { url: `https://flou.daily.co/test-${Date.now()}` };
-      }
+    // Jitsi Meet - Créer une room vidéo (GRATUIT - pas besoin d'API !)
+    function createJitsiRoom(roomName) {
+      // Génère un nom de room unique
+      const uniqueRoomName = `flou-live-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      return {
+        roomName: uniqueRoomName,
+        url: `https://meet.jit.si/${uniqueRoomName}`
+      };
     }
 
-    // Daily.co - Rejoindre une room et afficher les vidéos
-    async function joinDailyRoom(roomUrl, userName) {
-      try {
-        // Créer l'objet Daily call
-        dailyCallObject = window.DailyIframe.createCallObject({
-          audioSource: true,
-          videoSource: true
-        });
-
-        // Événements Daily
-        dailyCallObject
-          .on('joined-meeting', handleJoinedMeeting)
-          .on('participant-joined', handleParticipantUpdate)
-          .on('participant-updated', handleParticipantUpdate)
-          .on('participant-left', handleParticipantUpdate)
-          .on('error', handleDailyError);
-
-        // Rejoindre la room
-        await dailyCallObject.join({
-          url: roomUrl,
-          userName: userName
-        });
-
-        console.log('✅ Connecté à la room Daily');
-
-      } catch (error) {
-        console.error('Erreur connexion Daily:', error);
-        alert('Erreur de connexion vidéo. Vérifie ta connexion internet.');
-      }
-    }
-
-    function handleJoinedMeeting(event) {
-      console.log('Meeting rejoint:', event);
-      updateVideoTracks();
-    }
-
-    function handleParticipantUpdate(event) {
-      console.log('Participant mis à jour:', event);
-      updateVideoTracks();
-    }
-
-    function handleDailyError(error) {
-      console.error('Erreur Daily:', error);
-    }
-
-    // Afficher les vidéos des participants avec flou
-    function updateVideoTracks() {
-      const participants = dailyCallObject.participants();
+    // Jitsi Meet - Rejoindre une room et afficher les vidéos
+    function joinJitsiRoom(roomName, userName) {
+      // Container pour Jitsi
       const videoArea = document.getElementById('liveVideoArea');
-      
-      videoArea.innerHTML = '';
+      videoArea.innerHTML = '<div id="jitsi-container" style="width:100%; height:100%; display:none;"></div>';
 
-      Object.values(participants).forEach(participant => {
-        const videoBox = document.createElement('div');
-        videoBox.className = 'live-video-box';
-        videoBox.id = `video-${participant.session_id}`;
-
-        // Créer l'élément vidéo
-        const video = document.createElement('video');
-        video.autoplay = true;
-        video.playsInline = true;
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.objectFit = 'cover';
-        video.style.filter = 'blur(25px)'; // FLOU PERMANENT
-
-        // Attacher le track vidéo
-        if (participant.video && participant.videoTrack) {
-          video.srcObject = new MediaStream([participant.videoTrack]);
+      const domain = 'meet.jit.si';
+      const options = {
+        roomName: roomName,
+        width: '100%',
+        height: '100%',
+        parentNode: document.getElementById('jitsi-container'),
+        userInfo: {
+          displayName: userName
+        },
+        configOverwrite: {
+          startWithAudioMuted: false,
+          startWithVideoMuted: false,
+          disableDeepLinking: true,
+          enableNoisyMicDetection: false,
+          prejoinPageEnabled: false, // Pas de page de prévisualisation
+          toolbarButtons: [], // Pas de boutons de toolbar
+          enableWelcomePage: false,
+          enableClosePage: false
+        },
+        interfaceConfigOverwrite: {
+          SHOW_JITSI_WATERMARK: false,
+          SHOW_WATERMARK_FOR_GUESTS: false,
+          SHOW_BRAND_WATERMARK: false,
+          DISABLE_VIDEO_BACKGROUND: true,
+          TOOLBAR_BUTTONS: [], // Masquer tous les boutons
+          filmStripOnly: false,
+          VERTICAL_FILMSTRIP: false
         }
+      };
 
-        // Nom du participant
-        const nameTag = document.createElement('div');
-        nameTag.className = 'live-video-name';
-        nameTag.textContent = `${participant.user_name || 'Anonyme'} ${participant.local ? '(Toi)' : ''}`;
+      jitsiAPI = new JitsiMeetExternalAPI(domain, options);
 
-        videoBox.appendChild(video);
-        videoBox.appendChild(nameTag);
-        videoArea.appendChild(videoBox);
+      // Appliquer le flou sur les vidéos
+      jitsiAPI.addListener('videoConferenceJoined', () => {
+        console.log('✅ Connecté à Jitsi');
+        applyBlurToVideos();
+        
+        // Afficher le container
+        document.getElementById('jitsi-container').style.display = 'block';
+      });
+
+      jitsiAPI.addListener('participantJoined', () => {
+        console.log('Participant rejoint');
+        setTimeout(applyBlurToVideos, 500);
+      });
+
+      jitsiAPI.addListener('videoMuteStatusChanged', () => {
+        setTimeout(applyBlurToVideos, 300);
       });
     }
 
-    // Quitter la room Daily
-    async function leaveDailyRoom() {
-      if (dailyCallObject) {
-        await dailyCallObject.leave();
-        await dailyCallObject.destroy();
-        dailyCallObject = null;
+    // Appliquer le flou sur toutes les vidéos Jitsi
+    function applyBlurToVideos() {
+      const iframe = document.querySelector('#jitsi-container iframe');
+      if (!iframe) return;
+
+      try {
+        // Injecter du CSS dans l'iframe Jitsi pour flouter les vidéos
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        let style = iframeDoc.getElementById('flou-blur-style');
+        
+        if (!style) {
+          style = iframeDoc.createElement('style');
+          style.id = 'flou-blur-style';
+          style.innerHTML = `
+            video {
+              filter: blur(25px) !important;
+              -webkit-filter: blur(25px) !important;
+            }
+            .videocontainer video {
+              filter: blur(25px) !important;
+            }
+          `;
+          iframeDoc.head.appendChild(style);
+        }
+      } catch (e) {
+        console.log('Impossible d\'appliquer le flou via iframe (CORS), utilisation du CSS externe');
       }
+
+      // Appliquer le flou sur le container
+      const container = document.getElementById('jitsi-container');
+      if (container) {
+        container.style.filter = 'blur(25px)';
+      }
+    }
+
+    // Quitter la room Jitsi
+    function leaveJitsiRoom() {
+      if (jitsiAPI) {
+        jitsiAPI.dispose();
+        jitsiAPI = null;
+      }
+      document.getElementById('liveVideoArea').innerHTML = '';
     }
 
     let currentLiveId = null;
@@ -2003,10 +1987,10 @@
       }
 
       try {
-        // Créer une room Daily.co
-        const dailyRoom = await createDailyRoom(title);
+        // Créer une room Jitsi (GRATUIT - pas d'API nécessaire !)
+        const jitsiRoom = createJitsiRoom(title);
         
-        // Créer le Live avec l'URL de la room
+        // Créer le Live avec le nom de la room
         const { data: live, error: liveError } = await supabase
           .from('lives')
           .insert({
@@ -2016,7 +2000,7 @@
             description: description,
             max_participants: selectedLiveType === 'groupe' ? 4 : 1,
             status: 'waiting',
-            room_url: dailyRoom.url // Stocker l'URL Daily
+            room_url: jitsiRoom.roomName // Stocker le nom de la room Jitsi
           })
           .select()
           .single();
@@ -2037,7 +2021,7 @@
 
         currentLiveId = live.id;
         currentLiveType = selectedLiveType;
-        currentRoomUrl = dailyRoom.url;
+        currentRoomName = jitsiRoom.roomName;
 
         // Rediriger vers la salle appropriée
         if (selectedLiveType === 'groupe') {
@@ -2142,7 +2126,7 @@
         if (error) throw error;
 
         document.getElementById('liveRoomTitle').textContent = live.title;
-        currentRoomUrl = live.room_url;
+        currentRoomName = live.room_url;
 
         // Récupérer le pseudo de l'utilisateur
         const { data: myParticipant } = await supabase
@@ -2152,9 +2136,9 @@
           .eq('user_id', currentUser.id)
           .single();
 
-        // Rejoindre la room Daily.co
-        if (currentRoomUrl && myParticipant?.pseudo) {
-          await joinDailyRoom(currentRoomUrl, myParticipant.pseudo);
+        // Rejoindre la room Jitsi
+        if (currentRoomName && myParticipant?.pseudo) {
+          joinJitsiRoom(currentRoomName, myParticipant.pseudo);
         }
 
         // Charger les participants
@@ -2290,10 +2274,10 @@
     }
 
     window.toggleMic = function() {
-      if (!dailyCallObject) return;
+      if (!jitsiAPI) return;
       
       isMuted = !isMuted;
-      dailyCallObject.setLocalAudio(!isMuted);
+      jitsiAPI.executeCommand('toggleAudio');
       
       const micBtn = document.getElementById('micBtn');
       if (isMuted) {
@@ -2549,8 +2533,8 @@
       if (!currentLiveId) return;
 
       try {
-        // Quitter la room Daily
-        await leaveDailyRoom();
+        // Quitter la room Jitsi
+        leaveJitsiRoom();
         
         // Mettre à jour left_at
         await supabase
@@ -2575,7 +2559,7 @@
 
         currentLiveId = null;
         currentLiveType = null;
-        currentRoomUrl = null;
+        currentRoomName = null;
         switchView('live');
 
       } catch (error) {
