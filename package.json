@@ -7,10 +7,16 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["dating", "app"],
+  "keywords": [
+    "dating",
+    "app"
+  ],
   "author": "",
   "license": "ISC",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "firebase": "^12.7.0"
   }
 }
