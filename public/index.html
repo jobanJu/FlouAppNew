@@ -433,6 +433,38 @@
     window.login = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('loginPage').classList.add('active'); }
     window.goToMatches = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('matchesPage').classList.add('active'); window.loadMatches(); }
 
+    window.isCompatible = function(myProfile, otherProfile) {
+      const myGender = myProfile.gender;
+      const mySexuality = myProfile.sexuality;
+      const otherGender = otherProfile.gender;
+      const otherSexuality = otherProfile.sexuality;
+
+      // Bisexuel(le) peut voir tout le monde compatible avec son genre
+      if (mySexuality === 'Bisexuel') {
+        if (otherSexuality === 'Hétérosexuel') return myGender !== otherGender;
+        if (otherSexuality === 'Homosexuel') return myGender === otherGender;
+        if (otherSexuality === 'Bisexuel') return true;
+      }
+
+      // Hétérosexuel(le)
+      if (mySexuality === 'Hétérosexuel') {
+        if (myGender !== otherGender) {
+          return otherSexuality === 'Hétérosexuel' || otherSexuality === 'Bisexuel';
+        }
+        return false;
+      }
+
+      // Homosexuel(le)
+      if (mySexuality === 'Homosexuel') {
+        if (myGender === otherGender) {
+          return otherSexuality === 'Homosexuel' || otherSexuality === 'Bisexuel';
+        }
+        return false;
+      }
+
+      return false;
+    }
+
     window.loadMatches = async function() {
       const stack = document.getElementById('cardsStack');
       stack.innerHTML = '<div class="no-more-profiles"><p>Recherche...</p></div>';
@@ -441,13 +473,25 @@
           const { data: { session } } = await supabase.auth.getSession();
           if (session) currentUser = session.user;
         }
-        const { data, error } = await supabase
+        
+        // Récupère le profil de l'utilisateur connecté
+        const { data: myProfile, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+        if (profileError) throw profileError;
+
+        // Récupère tous les profils sauf le mien
+        const { data: allProfiles, error } = await supabase
           .from('users')
           .select('*')
           .neq('id', currentUser.id)
-          .limit(20);
+          .limit(100);
         if (error) throw error;
-        potentialMatches = data || [];
+
+        // Filtre selon la compatibilité
+        potentialMatches = (allProfiles || []).filter(profile => window.isCompatible(myProfile, profile));
         currentMatchIndex = 0;
         window.renderCurrentMatch();
       } catch (error) { console.error(error); stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
