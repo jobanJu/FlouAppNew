@@ -1987,8 +1987,11 @@
       }
 
       try {
+        console.log('Création du Live...', { title, type: selectedLiveType, pseudo });
+        
         // Créer une room Jitsi (GRATUIT - pas d'API nécessaire !)
         const jitsiRoom = createJitsiRoom(title);
+        console.log('Room Jitsi créée:', jitsiRoom);
         
         // Créer le Live avec le nom de la room
         const { data: live, error: liveError } = await supabase
@@ -1997,7 +2000,7 @@
             host_id: currentUser.id,
             type: selectedLiveType,
             title: title,
-            description: description,
+            description: description || null,
             max_participants: selectedLiveType === 'groupe' ? 4 : 1,
             status: 'waiting',
             room_url: jitsiRoom.roomName // Stocker le nom de la room Jitsi
@@ -2005,7 +2008,12 @@
           .select()
           .single();
 
-        if (liveError) throw liveError;
+        if (liveError) {
+          console.error('Erreur insertion Live:', liveError);
+          throw liveError;
+        }
+        
+        console.log('Live créé:', live);
 
         // Ajouter l'hôte comme participant
         const { error: participantError } = await supabase
@@ -2017,7 +2025,12 @@
             pseudo: pseudo
           });
 
-        if (participantError) throw participantError;
+        if (participantError) {
+          console.error('Erreur ajout participant:', participantError);
+          throw participantError;
+        }
+
+        console.log('Participant ajouté');
 
         currentLiveId = live.id;
         currentLiveType = selectedLiveType;
@@ -2031,8 +2044,9 @@
         }
 
       } catch (error) {
-        console.error('Erreur création Live:', error);
-        alert('Erreur lors de la création du Live');
+        console.error('Erreur création Live complète:', error);
+        console.error('Détails:', error.message, error.hint, error.details);
+        alert('Erreur lors de la création du Live:\n' + (error.message || error.hint || 'Erreur inconnue. Vérifie que le script SQL est exécuté dans Supabase.'));
       }
     }
 
