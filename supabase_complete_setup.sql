@@ -44,6 +44,8 @@ create table if not exists public.users (
   interests text[] not null,
   email text unique not null,
   photo_url text,
+  catchphrase text,
+  bio text,
   brumes_balance integer default 10,
   subscription_tier text default 'classique' check (subscription_tier in ('classique', 'kama', 'cupidon')),
   subscription_start timestamptz,
@@ -84,6 +86,20 @@ begin
                  and column_name = 'subscription_start') then
     alter table public.users add column subscription_start timestamptz;
   end if;
+  
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'catchphrase') then
+    alter table public.users add column catchphrase text;
+  end if;
+  
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'bio') then
+    alter table public.users add column bio text;
+  end if;
 end $$;
 
 -- Index pour performance
@@ -93,6 +109,11 @@ create index if not exists idx_users_location on public.users(latitude, longitud
 
 -- RLS pour users
 alter table public.users enable row level security;
+
+-- Drop policies existantes
+drop policy if exists "Anyone can view users profiles" on public.users;
+drop policy if exists "Users can create their profile" on public.users;
+drop policy if exists "Users can update their own profile" on public.users;
 
 -- Tout le monde peut lire les profils (pour le matching)
 create policy "Anyone can view users profiles"
@@ -133,6 +154,10 @@ create index if not exists idx_matches_status on public.matches(status);
 -- RLS pour matches
 alter table public.matches enable row level security;
 
+-- Drop policies existantes
+drop policy if exists "Users can view their matches" on public.matches;
+drop policy if exists "Users can create matches" on public.matches;
+
 create policy "Users can view their matches"
 on public.matches for select
 to authenticated
@@ -163,6 +188,11 @@ create index if not exists idx_messages_created on public.messages(created_at de
 
 -- RLS pour messages
 alter table public.messages enable row level security;
+
+-- Drop policies existantes
+drop policy if exists "Users can view their messages" on public.messages;
+drop policy if exists "Users can send messages" on public.messages;
+drop policy if exists "Users can mark messages as read" on public.messages;
 
 create policy "Users can view their messages"
 on public.messages for select
