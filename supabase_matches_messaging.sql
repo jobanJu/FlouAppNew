@@ -87,3 +87,18 @@ create trigger on_new_like
   before insert on matches
   for each row
   execute function check_mutual_match();
+
+-- 4. PROFILS DE TEST
+-- Insère 3 profils de test (tu dois d'abord créer les comptes auth manuellement ou utiliser ces UUIDs fictifs)
+
+-- Note: Ces UUID sont fictifs. Pour des vrais profils de test, tu dois:
+-- 1. Créer les comptes via l'interface Supabase Auth ou signup
+-- 2. Récupérer leurs vrais UUID depuis auth.users
+-- 3. Les utiliser dans ces INSERT
+
+-- Exemple avec des UUID fictifs (remplace par de vrais UUID auth.users):
+insert into users (id, firstname, age, city, latitude, longitude, gender, sexuality, interests, email, photo_url) values
+  ('11111111-1111-1111-1111-111111111111', 'Sophie', 25, 'Paris', 48.8566, 2.3522, 'Femme', 'Hétérosexuel', ARRAY['Voyage', 'Cuisine', 'Musique'], 'sophie.test@flou.app', 'https://i.pravatar.cc/300?img=47'),
+  ('22222222-2222-2222-2222-222222222222', 'Marc', 28, 'Lyon', 45.7640, 4.8357, 'Homme', 'Hétérosexuel', ARRAY['Sport', 'Cinéma', 'Gaming'], 'marc.test@flou.app', 'https://i.pravatar.cc/300?img=12'),
+  ('33333333-3333-3333-3333-333333333333', 'Julie', 23, 'Marseille', 43.2965, 5.3698, 'Femme', 'Bisexuel', ARRAY['Art', 'Lecture', 'Yoga'], 'julie.test@flou.app', 'https://i.pravatar.cc/300?img=38')
+on conflict (id) do nothing;
