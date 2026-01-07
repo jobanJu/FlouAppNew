@@ -759,9 +759,13 @@
       `).join('');
     }
 
-    // Init
-    updateProgress();
-    showStep(1);
+    // Init - avec protection
+    try {
+      updateProgress();
+      showStep(1);
+    } catch(e) {
+      console.error('Erreur init:', e);
+    }
   </script>
 </body>
 </html>
