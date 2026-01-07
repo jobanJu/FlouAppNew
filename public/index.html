@@ -2054,11 +2054,7 @@
       try {
         const { data: lives, error } = await supabase
           .from('lives')
-          .select(`
-            *,
-            live_participants (count),
-            users!lives_host_id_fkey (firstname)
-          `)
+          .select('*, live_participants(count)')
           .in('status', ['waiting', 'active'])
           .order('created_at', { ascending: false });
 
@@ -2071,14 +2067,14 @@
         }
 
         livesList.innerHTML = lives.map(live => {
-          const participantCount = live.live_participants?.length || 0;
+          const participantCount = live.live_participants?.[0]?.count || 0;
           return `
             <div class="live-item" onclick="joinExistingLive('${live.id}', '${live.type}')">
               <div class="live-item-header">
                 <div class="live-item-title">${live.title}</div>
                 <div class="live-badge ${live.status}">${live.status === 'active' ? '🔴 En direct' : '⏳ En attente'}</div>
               </div>
-              <div class="live-item-host">Par ${live.users?.firstname || 'Anonyme'}</div>
+              <div class="live-item-host">Par Anonyme</div>
               ${live.description ? `<div style="font-size:0.85rem; opacity:0.7; margin-bottom:8px;">${live.description}</div>` : ''}
               <div class="live-item-stats">
                 <span>${live.type === 'groupe' ? '👥 Groupe' : '💕 Date'}</span>
