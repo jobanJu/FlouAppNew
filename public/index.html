@@ -160,9 +160,9 @@
       <div class="form-step" data-step="5">
         <div class="form-title">Quelle est ta sexualité ?</div>
         <div class="form-subtitle">Juste pour qu'on se comprenne</div>
-        <div class="choices">
+        <div class="choices" id="sexualityChoices">
           <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Hétérosexuel')">Hétérosexuel</button>
-          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Homosexuel')">Homosexuel</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Gay')" id="gayBtn">Gay</button>
           <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Bisexuel')">Bisexuel</button>
         </div>
         <div id="error5" class="error-message"></div>
@@ -338,7 +338,14 @@
       document.querySelector(`[data-step="${step}"]`)?.classList.add('active');
       window.updateProgress();
     }
-    window.nextStep = function() { if (!window.validateStep(currentStep)) return; if (currentStep < totalSteps) { currentStep++; window.showStep(currentStep); } }
+    window.nextStep = function() { 
+      if (!window.validateStep(currentStep)) return; 
+      if (currentStep === 4 && formData.gender) {
+        const gayBtn = document.getElementById('gayBtn');
+        if (gayBtn) gayBtn.textContent = formData.gender === 'Homme' ? 'Gay' : 'Lesbienne';
+      }
+      if (currentStep < totalSteps) { currentStep++; window.showStep(currentStep); } 
+    }
     window.prevStep = function() { if (currentStep > 1) { currentStep--; window.showStep(currentStep); } }
 
     window.validateStep = function(step) {
@@ -442,7 +449,7 @@
       // Bisexuel(le) peut voir tout le monde compatible avec son genre
       if (mySexuality === 'Bisexuel') {
         if (otherSexuality === 'Hétérosexuel') return myGender !== otherGender;
-        if (otherSexuality === 'Homosexuel') return myGender === otherGender;
+        if (otherSexuality === 'Gay' || otherSexuality === 'Lesbienne') return myGender === otherGender;
         if (otherSexuality === 'Bisexuel') return true;
       }
 
@@ -454,10 +461,10 @@
         return false;
       }
 
-      // Homosexuel(le)
-      if (mySexuality === 'Homosexuel') {
+      // Gay / Lesbienne
+      if (mySexuality === 'Gay' || mySexuality === 'Lesbienne') {
         if (myGender === otherGender) {
-          return otherSexuality === 'Homosexuel' || otherSexuality === 'Bisexuel';
+          return otherSexuality === 'Gay' || otherSexuality === 'Lesbienne' || otherSexuality === 'Bisexuel';
         }
         return false;
       }
