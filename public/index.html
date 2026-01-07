@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FIREBASE SDK (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <!-- 
+    FIREBASE SDK (Version Modulaire via CDN)
+    Remplace les anciens scripts compat pour utiliser la syntaxe moderne demandée
+  -->
   <style>
     * {
       margin: 0;
@@ -497,8 +497,13 @@
     </div>
   </div>
 
-  <script>
-    // CONFIG FIREBASE
+  <script type="module">
+    // Importation des modules Firebase via CDN (Exactement comme demandé)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // CONFIGURATION FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyBUsyng1I9UxTXvxcjcrhoRk29vTKZJEag",
       authDomain: "flou-app-a03dc.firebaseapp.com",
@@ -508,18 +513,17 @@
       appId: "1:94838358120:web:5be247dcfd496f620ebbdd"
     };
 
-    let auth = null;
-    let db = null;
+    // Initialisation
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    console.log('🔥 Firebase Initialisé (Mode Module)');
 
-    try {
-      firebase.initializeApp(firebaseConfig);
-      auth = firebase.auth();
-      db = firebase.firestore();
-      console.log('🔥 Firebase Initialisé');
-    } catch(e) {
-       console.error('Erreur Init Firebase (As-tu mis les bonnes clés ?)', e);
-    }
+    // ⚠️ IMPORTANT :
+    // Comme nous sommes dans un module (type="module"), les fonctions ne sont pas globales par défaut.
+    // Nous devons les attacher explicitement à "window" pour que les onclick="..." du HTML fonctionnent.
 
+    // Variables globales pour le formulaire
     const interests = [
       "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
       "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
@@ -544,82 +548,86 @@
 
     let currentStep = 1;
     const totalSteps = 8;
+    
+    // -- FONCTIONS UTILITAIRES --
 
-    function updateProgress() {
+    window.updateProgress = function() {
       const progress = (currentStep / totalSteps) * 100;
-      document.getElementById('progressFill').style.width = progress + '%';
+      const el = document.getElementById('progressFill');
+      if (el) el.style.width = progress + '%';
     }
 
-    function showStep(step) {
+    window.showStep = function(step) {
       document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-      document.querySelector(`[data-step="${step}"]`).classList.add('active');
-      updateProgress();
+      const target = document.querySelector(`[data-step="${step}"]`);
+      if (target) target.classList.add('active');
+      window.updateProgress();
       window.scrollTo(0, 0);
     }
 
-    function nextStep() {
-      if (!validateStep(currentStep)) return;
+    window.nextStep = function() {
+      if (!window.validateStep(currentStep)) return;
       if (currentStep < totalSteps) {
         currentStep++;
-        showStep(currentStep);
+        window.showStep(currentStep);
       }
     }
 
-    function prevStep() {
+    window.prevStep = function() {
       if (currentStep > 1) {
         currentStep--;
-        showStep(currentStep);
+        window.showStep(currentStep);
       }
     }
 
-    function validateStep(step) {
+    window.validateStep = function(step) {
       const error = document.getElementById(`error${step}`);
-      error.textContent = '';
+      if (error) error.textContent = '';
 
       if (step === 1) {
         const name = document.getElementById('firstName').value.trim();
         if (name.length < 2) {
-          error.textContent = 'Le prénom doit avoir au moins 2 caractères';
+          if (error) error.textContent = 'Le prénom doit avoir au moins 2 caractères';
           return false;
         }
         formData.firstName = name;
       } else if (step === 2) {
         const age = parseInt(document.getElementById('age').value);
         if (!age || age < 20) {
-          error.textContent = 'Flou est réservé aux personnes de 20 ans et plus';
+          if (error) error.textContent = 'Flou est réservé aux personnes de 20 ans et plus';
           return false;
         }
         formData.age = age;
       } else if (step === 3) {
         const city = document.getElementById('city').value.trim();
         if (!city) {
-          error.textContent = 'Veuillez entrer une ville';
+          if (error) error.textContent = 'Veuillez entrer une ville';
           return false;
         }
         formData.city = city;
       } else if (step === 4) {
         if (!formData.gender) {
-          error.textContent = 'Veuillez sélectionner un genre';
+          if (error) error.textContent = 'Veuillez sélectionner un genre';
           return false;
         }
       } else if (step === 5) {
         if (!formData.sexuality) {
-          error.textContent = 'Veuillez sélectionner une sexualité';
+          if (error) error.textContent = 'Veuillez sélectionner une sexualité';
           return false;
         }
       } else if (step === 6) {
         if (formData.interests.length < 5) {
-          error.textContent = 'Sélectionne au minimum 5 intérêts';
+          if (error) error.textContent = 'Sélectionne au minimum 5 intérêts';
           return false;
         }
         if (formData.interests.length > 10) {
-          error.textContent = 'Maximum 10 intérêts conseillé';
+          if (error) error.textContent = 'Maximum 10 intérêts conseillé';
           return false;
         }
       } else if (step === 7) {
         const email = document.getElementById('email').value.trim();
         if (!email || !email.includes('@')) {
-          error.textContent = 'Veuillez entrer un email valide';
+          if (error) error.textContent = 'Veuillez entrer un email valide';
           return false;
         }
         formData.email = email;
@@ -627,11 +635,11 @@
         const password = document.getElementById('password').value;
         const passwordConfirm = document.getElementById('passwordConfirm').value;
         if (password.length < 6) {
-          error.textContent = 'Le mot de passe doit avoir minimum 6 caractères';
+          if (error) error.textContent = 'Le mot de passe doit avoir minimum 6 caractères';
           return false;
         }
         if (password !== passwordConfirm) {
-          error.textContent = 'Les mots de passe ne correspondent pas';
+          if (error) error.textContent = 'Les mots de passe ne correspondent pas';
           return false;
         }
         formData.password = password;
@@ -640,14 +648,14 @@
       return true;
     }
 
-    function selectChoice(btn, field, value) {
+    window.selectChoice = function(btn, field, value) {
       document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       btn.setAttribute('data-field', field);
       formData[field] = value;
     }
 
-    function toggleInterest(btn, interest) {
+    window.toggleInterest = function(btn, interest) {
       if (formData.interests.includes(interest)) {
         formData.interests = formData.interests.filter(i => i !== interest);
         btn.classList.remove('selected');
@@ -659,24 +667,38 @@
       }
     }
 
-    async function submitForm() {
-      if (!validateStep(8)) return;
+    window.renderInterests = function() {
+      const grid = document.getElementById('interestsGrid');
+      if (grid) {
+        grid.innerHTML = interests.map(interest => `
+          <button class="interest-tag" onclick="toggleInterest(this, '${interest}')">
+            ${interest}
+          </button>
+        `).join('');
+      }
+    }
+
+    // -- FONCTIONS FIREBASE --
+    
+    window.submitForm = async function() {
+      if (!window.validateStep(8)) return;
 
       try {
-         // Indiquer le chargement
+         // UI Loading
          const btn = document.querySelector('button[onclick="submitForm()"]');
-         const originalText = btn.textContent;
-         btn.textContent = "Inscription...";
-         btn.disabled = true;
+         const originalText = btn ? btn.textContent : "Valider";
+         if (btn) {
+             btn.textContent = "Inscription...";
+             btn.disabled = true;
+         }
 
-         // 1. Création compte Auth
-         const userCredential = await auth.createUserWithEmailAndPassword(formData.email, formData.password);
+         // 1. Création Auth
+         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
          const user = userCredential.user;
-         console.log('✅ User Auth créé:', user.uid);
+         console.log('✅ User Auth:', user.uid);
 
-         // 2. Création profil Firestore
-         // On utilise 'users' comme collection
-         await db.collection('users').doc(user.uid).set({
+         // 2. Firestore Document
+         await setDoc(doc(db, "users", user.uid), {
             firstname: formData.firstName,
             age: parseInt(formData.age),
             city: formData.city,
@@ -684,97 +706,78 @@
             sexuality: formData.sexuality,
             interests: formData.interests,
             email: formData.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: serverTimestamp()
          });
-         console.log('✅ Profil Firestore sauvegardé');
+         console.log('✅ Firestore OK');
          
-         // Succès
-        document.getElementById('signupPage').classList.remove('active');
-        document.getElementById('successPage').classList.add('active');
+         document.getElementById('signupPage').classList.remove('active');
+         document.getElementById('successPage').classList.add('active');
 
       } catch (error) {
         console.error('Erreur Inscription:', error);
         alert('Erreur: ' + error.message);
-        document.getElementById('error8').textContent = error.message;
+        const errorDiv = document.getElementById('error8');
+        if (errorDiv) errorDiv.textContent = error.message;
         
-        // Reset bouton
         const btn = document.querySelector('button[onclick="submitForm()"]');
-        btn.textContent = "Créer mon compte";
-        btn.disabled = false;
+        if (btn) {
+            btn.textContent = "Créer mon compte";
+            btn.disabled = false;
+        }
       }
     }
 
-    function goToSignup() {
-      console.log('✅ CLIC S\'INSCRIRE');
+    window.doLogin = async function() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const error = document.getElementById('loginError');
+      if (error) error.textContent = '';
+
+      if (!email || !password) {
+        if (error) error.textContent = 'Email et mot de passe requis';
+        return;
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('✅ Connecté:', userCredential.user.uid);
+        
+        alert('Connexion réussie !');
+        window.goToLanding();
+
+      } catch (err) {
+        console.error('❌ Erreur connexion:', err.message);
+        if (error) error.textContent = "Erreur: " + err.message;
+      }
+    }
+
+    // Navigation de base
+    window.goToSignup = function() {
       const landing = document.getElementById('landingPage');
       const signup = document.getElementById('signupPage');
       if (landing) landing.classList.remove('active');
       if (signup) signup.classList.add('active');
-      try {
-        currentStep = 1;
-        showStep(1);
-        renderInterests();
-      } catch(e) {
-        console.error('Erreur:', e);
-      }
+      currentStep = 1;
+      window.showStep(1);
+      window.renderInterests();
     }
 
-    function goToLanding() {
-      console.log('✅ RETOUR LANDING');
+    window.goToLanding = function() {
       const login = document.getElementById('loginPage');
       const landing = document.getElementById('landingPage');
       if (login) login.classList.remove('active');
       if (landing) landing.classList.add('active');
     }
 
-    function login() {
-      console.log('✅ CLIC CONNEXION');
+    window.login = function() {
       const landing = document.getElementById('landingPage');
       const loginPage = document.getElementById('loginPage');
       if (landing) landing.classList.remove('active');
       if (loginPage) loginPage.classList.add('active');
     }
 
-    async function doLogin() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      const error = document.getElementById('loginError');
-      error.textContent = '';
-
-      if (!email || !password) {
-        error.textContent = 'Email et mot de passe requis';
-        return;
-      }
-
-      try {
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        console.log('✅ Connecté:', userCredential.user.uid);
-        
-        alert('Connexion réussie !');
-        goToLanding();
-
-      } catch (err) {
-        console.error('❌ Erreur connexion:', err.message);
-        error.textContent = "Erreur: " + err.message;
-      }
-    }
-
-    function renderInterests() {
-      const grid = document.getElementById('interestsGrid');
-      grid.innerHTML = interests.map(interest => `
-        <button class="interest-tag" onclick="toggleInterest(this, '${interest}')">
-          ${interest}
-        </button>
-      `).join('');
-    }
-
-    // Init - avec protection
-    try {
-      updateProgress();
-      showStep(1);
-    } catch(e) {
-      console.error('Erreur init:', e);
-    }
+    // Init
+    window.updateProgress();
   </script>
 </body>
 </html>
