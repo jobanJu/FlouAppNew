@@ -398,10 +398,61 @@
           <div style="font-weight:600; margin-bottom:10px; opacity:0.9;">Intérêts</div>
           <div id="profileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
         </div>
+        <button class="btn btn-primary" onclick="switchView('editProfile')" style="width:100%; margin-top:20px;">
+          ✏️ Modifier mon profil
+        </button>
         <button id="installBtn" class="btn btn-primary" onclick="installPWA()" style="width:100%; margin-top:20px; display:none;">
           📱 Installer Flou sur mon téléphone
         </button>
         <button class="btn btn-secondary" onclick="logout()" style="width:100%; margin-top:20px;">Déconnexion</button>
+      </div>
+    </div>
+
+    <!-- Vue Édition Profil -->
+    <div id="editProfileView" class="app-view">
+      <div class="profile-container">
+        <div style="display:flex; align-items:center; margin-bottom:30px;">
+          <button onclick="switchView('profile')" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding:0; margin-right:15px;">←</button>
+          <h2 style="font-size:1.5rem; font-weight:700; margin:0;">Modifier mon profil</h2>
+        </div>
+        
+        <div class="profile-info" style="margin-bottom:20px;">
+          <div style="font-weight:600; margin-bottom:15px;">Photo de profil</div>
+          <div style="text-align:center; margin-bottom:15px;">
+            <img id="editProfilePhoto" src="" alt="Photo" style="width:120px; height:120px; border-radius:50%; object-fit:cover; filter:blur(0px);">
+          </div>
+          <input type="file" id="editPhotoInput" accept="image/*" style="display:none;" onchange="previewEditPhoto()">
+          <button class="btn btn-secondary" onclick="document.getElementById('editPhotoInput').click()" style="width:100%;">
+            📷 Changer la photo
+          </button>
+        </div>
+
+        <div class="profile-info" style="margin-bottom:20px;">
+          <div style="margin-bottom:15px;">
+            <label style="display:block; opacity:0.7; margin-bottom:8px;">Prénom</label>
+            <input type="text" id="editFirstname" class="form-input" placeholder="Prénom" style="margin:0;">
+          </div>
+          <div style="margin-bottom:15px;">
+            <label style="display:block; opacity:0.7; margin-bottom:8px;">Âge</label>
+            <input type="number" id="editAge" class="form-input" placeholder="Âge" min="20" max="100" style="margin:0;">
+          </div>
+          <div style="margin-bottom:15px;">
+            <label style="display:block; opacity:0.7; margin-bottom:8px;">Ville</label>
+            <input type="text" id="editCity" class="form-input" placeholder="Ville" style="margin:0;">
+          </div>
+        </div>
+
+        <div class="profile-info" style="margin-bottom:20px;">
+          <div style="font-weight:600; margin-bottom:15px;">Intérêts (5 minimum)</div>
+          <div id="editInterestsGrid" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveProfile()" style="width:100%; margin-bottom:10px;">
+          💾 Enregistrer les modifications
+        </button>
+        <button class="btn btn-secondary" onclick="switchView('profile')" style="width:100%;">
+          Annuler
+        </button>
       </div>
     </div>
 
@@ -668,6 +719,9 @@
         document.getElementById('profileView').classList.add('active');
         document.querySelector('.nav-item:nth-child(4)').classList.add('active');
         window.loadProfile();
+      } else if (view === 'editProfile') {
+        document.getElementById('editProfileView').classList.add('active');
+        window.loadEditProfile();
       }
     }
 
@@ -879,6 +933,120 @@
         const interestsContainer = document.getElementById('profileInterests');
         interestsContainer.innerHTML = data.interests.map(i => `<span class="mini-tag">${i}</span>`).join('');
       } catch (error) { console.error('Load profile error:', error); }
+    }
+
+    // LOAD EDIT PROFILE
+    let editProfileData = {};
+    let newPhotoFile = null;
+
+    window.loadEditProfile = async function() {
+      if (!currentUser) return;
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+        
+        if (error) throw error;
+        
+        editProfileData = { ...data };
+        
+        document.getElementById('editFirstname').value = data.firstname;
+        document.getElementById('editAge').value = data.age;
+        document.getElementById('editCity').value = data.city || '';
+        
+        if (data.photo_url) {
+          document.getElementById('editProfilePhoto').src = data.photo_url;
+        }
+        
+        // Render interests as toggleable tags
+        const grid = document.getElementById('editInterestsGrid');
+        grid.innerHTML = interests.map(interest => {
+          const isSelected = data.interests.includes(interest);
+          return `<span class="interest-tag ${isSelected ? 'selected' : ''}" onclick="toggleEditInterest(this, '${interest}')">${interest}</span>`;
+        }).join('');
+      } catch (error) { console.error('Load edit profile error:', error); }
+    }
+
+    window.toggleEditInterest = function(element, interest) {
+      element.classList.toggle('selected');
+      if (element.classList.contains('selected')) {
+        if (!editProfileData.interests.includes(interest)) {
+          editProfileData.interests.push(interest);
+        }
+      } else {
+        editProfileData.interests = editProfileData.interests.filter(i => i !== interest);
+      }
+    }
+
+    window.previewEditPhoto = function() {
+      const input = document.getElementById('editPhotoInput');
+      const file = input.files[0];
+      if (file) {
+        newPhotoFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('editProfilePhoto').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    window.saveProfile = async function() {
+      if (!currentUser) return;
+      
+      const firstname = document.getElementById('editFirstname').value.trim();
+      const age = parseInt(document.getElementById('editAge').value);
+      const city = document.getElementById('editCity').value.trim();
+      
+      if (!firstname || !age || age < 20 || editProfileData.interests.length < 5) {
+        alert('Vérifie que tous les champs sont remplis et que tu as au moins 5 intérêts sélectionnés.');
+        return;
+      }
+      
+      try {
+        let photoUrl = editProfileData.photo_url;
+        
+        // Upload new photo if changed
+        if (newPhotoFile) {
+          const fileExt = newPhotoFile.name.split('.').pop();
+          const fileName = `${currentUser.id}-${Date.now()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('user-photos')
+            .upload(fileName, newPhotoFile, { upsert: true });
+          
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('user-photos')
+            .getPublicUrl(fileName);
+          
+          photoUrl = publicUrl;
+        }
+        
+        // Update profile in database
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({
+            firstname: firstname,
+            age: age,
+            city: city,
+            interests: editProfileData.interests,
+            photo_url: photoUrl
+          })
+          .eq('id', currentUser.id);
+        
+        if (updateError) throw updateError;
+        
+        alert('✅ Profil mis à jour avec succès !');
+        newPhotoFile = null;
+        window.switchView('profile');
+      } catch (error) {
+        console.error('Save profile error:', error);
+        alert('Erreur lors de la mise à jour : ' + error.message);
+      }
     }
 
     // OPEN CHAT (placeholder)
