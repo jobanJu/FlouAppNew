@@ -689,6 +689,7 @@
     }
 
     function goToSignup() {
+      console.log('goToSignup called');
       document.getElementById('landingPage').classList.remove('active');
       document.getElementById('signupPage').classList.add('active');
       currentStep = 1;
@@ -697,11 +698,13 @@
     }
 
     function goToLanding() {
+      console.log('goToLanding called');
       document.getElementById('loginPage').classList.remove('active');
       document.getElementById('landingPage').classList.add('active');
     }
 
     function login() {
+      console.log('login called');
       document.getElementById('landingPage').classList.remove('active');
       document.getElementById('loginPage').classList.add('active');
     }
