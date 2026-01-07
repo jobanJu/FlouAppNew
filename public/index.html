@@ -723,7 +723,8 @@
       const p = potentialMatches[currentMatchIndex];
       const tags = (p.interests || []).map(t => `<span class="mini-tag">${t}</span>`).join('');
       const bg = p.photo_url || '/assets/images/homme1.jpeg';
-      stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}');"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
+      // Profils à découvrir = toujours blur max (pas encore de match)
+      stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}'); filter: blur(40px);"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
     window.handleSwipe = async function(action) {
@@ -756,6 +757,39 @@
       window.renderCurrentMatch();
     }
 
+    // CALCULER LE NIVEAU DE BLUR SELON RÈGLES
+    window.getBlurLevel = async function(matchId, matchedAt) {
+      if (!matchedAt) return 40; // Pas encore matché = blur max
+      
+      const matchDate = new Date(matchedAt);
+      const now = new Date();
+      const daysSinceMatch = Math.floor((now - matchDate) / (1000 * 60 * 60 * 24));
+      
+      // Jour 3+ : déflouttage complet
+      if (daysSinceMatch >= 2) return 0;
+      
+      // Jour 2 : vérifier si 3 messages échangés
+      if (daysSinceMatch >= 1) {
+        try {
+          const { data: messages, error } = await supabase
+            .from('messages')
+            .select('id')
+            .eq('match_id', matchId)
+            .eq('sender_id', currentUser.id);
+          
+          if (!error && messages && messages.length >= 3) {
+            return 15; // Blur partiel après 3 messages
+          }
+        } catch (err) {
+          console.error('Error counting messages:', err);
+        }
+        return 40; // Jour 2 mais pas assez de messages
+      }
+      
+      // Jour 1 : blur maximal
+      return 40;
+    }
+
     // LOAD MY MATCHES
     window.loadMyMatches = async function() {
       if (!currentUser) return;
@@ -774,18 +808,21 @@
           return;
         }
         
-        grid.innerHTML = data.map(m => {
+        const matchesWithBlur = await Promise.all(data.map(async m => {
           const user = m.users;
+          const blurLevel = await window.getBlurLevel(m.id, m.matched_at);
           return `
             <div class="match-item" onclick="openChat('${user.id}', '${user.firstname}')">
-              <img src="${user.photo_url || '/assets/images/homme1.jpeg'}" class="match-item-img" alt="${user.firstname}">
+              <img src="${user.photo_url || '/assets/images/homme1.jpeg'}" class="match-item-img" alt="${user.firstname}" style="filter: blur(${blurLevel}px);">
               <div class="match-item-info">
                 <div class="match-item-name">${user.firstname}, ${user.age}</div>
                 <div class="match-item-preview">💬 Dites-vous bonjour !</div>
               </div>
             </div>
           `;
-        }).join('');
+        }));
+        
+        grid.innerHTML = matchesWithBlur.join('');
         
         // Update badge
         const badge = document.getElementById('matchesBadge');
@@ -815,7 +852,10 @@
         document.getElementById('profileSexuality').textContent = data.sexuality;
         
         if (data.photo_url) {
-          document.getElementById('profilePhoto').src = data.photo_url;
+          const profilePhoto = document.getElementById('profilePhoto');
+          profilePhoto.src = data.photo_url;
+          // Mon propre profil = pas de blur
+          profilePhoto.style.filter = 'blur(0px)';
         }
         
         const interestsContainer = document.getElementById('profileInterests');

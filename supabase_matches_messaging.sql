@@ -7,6 +7,7 @@ create table if not exists matches (
   user_id uuid references auth.users not null,
   liked_user_id uuid references auth.users not null,
   status text default 'pending' check (status in ('pending', 'matched')),
+  matched_at timestamptz, -- Date du match mutuel pour calcul de déflouttage
   created_at timestamptz default now(),
   unique(user_id, liked_user_id)
 );
@@ -67,7 +68,7 @@ returns trigger as $$
 begin
   -- Check if the liked user already liked back
   update matches
-  set status = 'matched'
+  set status = 'matched', matched_at = now()
   where user_id = new.liked_user_id 
     and liked_user_id = new.user_id 
     and status = 'pending';
@@ -75,6 +76,7 @@ begin
   -- Mark current like as matched if mutual
   if found then
     new.status = 'matched';
+    new.matched_at = now();
   end if;
   
   return new;
