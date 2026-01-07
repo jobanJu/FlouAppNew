@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase retiré -->
+  <!-- FIREBASE SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
     * {
       margin: 0;
@@ -495,6 +498,30 @@
   </div>
 
   <script>
+    // CONFIG FIREBASE
+    // ⚠️ REMPLACE CES VALEURS PAR CELLES DE TA CONSOLE FIREBASE ⚠️
+    // (Project Settings > General > Your apps > SDK setup and configuration > CDN)
+    const firebaseConfig = {
+       apiKey: "REMPLACE_MOI_API_KEY",
+       authDomain: "ton-projet.firebaseapp.com",
+       projectId: "ton-projet-id",
+       storageBucket: "ton-projet.appspot.com",
+       messagingSenderId: "123456789",
+       appId: "1:123456789:web:abcdef"
+    };
+
+    let auth = null;
+    let db = null;
+
+    try {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+      console.log('🔥 Firebase Initialisé');
+    } catch(e) {
+       console.error('Erreur Init Firebase (As-tu mis les bonnes clés ?)', e);
+    }
+
     const interests = [
       "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
       "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
@@ -635,34 +662,47 @@
     }
 
     async function submitForm() {
-      // Version locale uniquement
-      if (!validateStep(8)) {
-        alert('Validation échouée. Vérifie les champs.');
-        return;
-      }
+      if (!validateStep(8)) return;
 
       try {
-        // Simuler un délai réseau
-        const btn = document.querySelector('button[onclick="submitForm()"]');
-        const originalText = btn.textContent;
-        btn.textContent = "Création en cours...";
-        btn.disabled = true;
+         // Indiquer le chargement
+         const btn = document.querySelector('button[onclick="submitForm()"]');
+         const originalText = btn.textContent;
+         btn.textContent = "Inscription...";
+         btn.disabled = true;
 
-        await new Promise(r => setTimeout(r, 1000));
+         // 1. Création compte Auth
+         const userCredential = await auth.createUserWithEmailAndPassword(formData.email, formData.password);
+         const user = userCredential.user;
+         console.log('✅ User Auth créé:', user.uid);
 
-        // Sauvegarde locale
-        localStorage.setItem('flouUserProfile', JSON.stringify(formData));
-        console.log('✅ Profil sauvegardé via localStorage');
-
+         // 2. Création profil Firestore
+         // On utilise 'users' comme collection
+         await db.collection('users').doc(user.uid).set({
+            firstname: formData.firstName,
+            age: parseInt(formData.age),
+            city: formData.city,
+            gender: formData.gender,
+            sexuality: formData.sexuality,
+            interests: formData.interests,
+            email: formData.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+         });
+         console.log('✅ Profil Firestore sauvegardé');
+         
+         // Succès
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
-        
-        btn.textContent = originalText;
-        btn.disabled = false;
-        
+
       } catch (error) {
-        console.error('Erreur:', error);
+        console.error('Erreur Inscription:', error);
         alert('Erreur: ' + error.message);
+        document.getElementById('error8').textContent = error.message;
+        
+        // Reset bouton
+        const btn = document.querySelector('button[onclick="submitForm()"]');
+        btn.textContent = "Créer mon compte";
+        btn.disabled = false;
       }
     }
 
@@ -709,20 +749,15 @@
       }
 
       try {
-        // Simulation de connexion
-        // On vérifie juste si un profil existe en local pour la démo
-        const savedProfile = localStorage.getItem('flouUserProfile');
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log('✅ Connecté:', userCredential.user.uid);
         
-        console.log('✅ Connexion simulée réussie');
-        alert('Connexion réussie (Mode Demo) ! Prépare-toi à découvrir des connexions authentiques 💜');
-        
-        // Redirection vers la "landing" ou une autre page une fois connecté
-        // Pour l'instant on retourne à l'accueil
+        alert('Connexion réussie !');
         goToLanding();
 
       } catch (err) {
         console.error('❌ Erreur connexion:', err.message);
-        error.textContent = err.message;
+        error.textContent = "Erreur: " + err.message;
       }
     }
 
