@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0;
@@ -390,8 +391,52 @@
         <div id="error6" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 7: Email -->
+      <div class="form-step" data-step="7">
+        <div class="form-title">Ton email ?</div>
+        <div class="form-subtitle">Pour te connecter ensuite</div>
+        <input type="email" class="form-input" id="email" placeholder="ton@email.com">
+        <div id="error7" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 8: Mot de passe -->
+      <div class="form-step" data-step="8">
+        <div class="form-title">Crée un mot de passe</div>
+        <div class="form-subtitle">Minimum 6 caractères</div>
+        <input type="password" class="form-input" id="password" placeholder="Mot de passe" minlength="6">
+        <input type="password" class="form-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" style="margin-top: -10px;">
+        <div id="error8" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
           <button class="btn-small btn-next" onclick="submitForm()">Créer mon compte</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="page">
+    <div class="signup-form" style="max-width: 400px;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div style="font-size: 2rem; margin-bottom: 20px;">🔓</div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Connexion</h2>
+      </div>
+      
+      <input type="email" class="form-input" id="loginEmail" placeholder="ton@email.com">
+      <input type="password" class="form-input" id="loginPassword" placeholder="Mot de passe" style="margin-top: -10px;">
+      <div id="loginError" class="error-message"></div>
+      
+      <div class="form-actions" style="margin-top: 30px;">
+        <button class="btn-small btn-back" onclick="goToLanding()">Retour</button>
+        <button class="btn-small btn-next" onclick="doLogin()">Se connecter</button>
       </div>
     </div>
   </div>
@@ -405,6 +450,17 @@
   </div>
 
   <script>
+    // CONFIG SUPABASE - À METTRE À JOUR AVEC TES CLÉS
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_KEY = 'your-anon-key';
+    let supabase = null;
+
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (e) {
+      console.log('Supabase non configuré');
+    }
+
     const interests = [
       "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
       "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
@@ -422,11 +478,13 @@
       city: '',
       gender: '',
       sexuality: '',
-      interests: []
+      interests: [],
+      email: '',
+      password: ''
     };
 
     let currentStep = 1;
-    const totalSteps = 6;
+    const totalSteps = 8;
 
     function updateProgress() {
       const progress = (currentStep / totalSteps) * 100;
@@ -499,10 +557,31 @@
           error.textContent = 'Maximum 10 intérêts conseillé';
           return false;
         }
+      } else if (step === 7) {
+        const email = document.getElementById('email').value.trim();
+        if (!email || !email.includes('@')) {
+          error.textContent = 'Veuillez entrer un email valide';
+          return false;
+        }
+        formData.email = email;
+      } else if (step === 8) {
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('passwordConfirm').value;
+        if (password.length < 6) {
+          error.textContent = 'Le mot de passe doit avoir minimum 6 caractères';
+          return false;
+        }
+        if (password !== passwordConfirm) {
+          error.textContent = 'Les mots de passe ne correspondent pas';
+          return false;
+        }
+        formData.password = password;
       }
 
       return true;
     }
+
+    function selectChoice(btn, field, value) {
       document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       btn.setAttribute('data-field', field);
@@ -521,22 +600,96 @@
       }
     }
 
-    function submitForm() {
-      if (!validateStep(6)) {
-        return;
+    async function submitForm() {
+      if (!validateStep(8)) return;
+
+      // Créer l'utilisateur avec Supabase
+      if (supabase) {
+        try {
+          const { data, error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password
+          });
+
+          if (error) {
+            document.getElementById('error8').textContent = error.message;
+            return;
+          }
+
+          // Sauvegarder le profil utilisateur
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([{
+              user_id: data.user.id,
+              firstName: formData.firstName,
+              age: formData.age,
+              city: formData.city,
+              gender: formData.gender,
+              sexuality: formData.sexuality,
+              interests: formData.interests
+            }]);
+
+          if (profileError) throw profileError;
+
+          document.getElementById('signupPage').classList.remove('active');
+          document.getElementById('successPage').classList.add('active');
+        } catch (error) {
+          document.getElementById('error8').textContent = error.message;
+        }
+      } else {
+        // Sans Supabase, juste afficher le succès
+        document.getElementById('signupPage').classList.remove('active');
+        document.getElementById('successPage').classList.add('active');
       }
-      document.getElementById('signupPage').classList.remove('active');
-      document.getElementById('successPage').classList.add('active');
     }
 
     function goToSignup() {
       document.getElementById('landingPage').classList.remove('active');
       document.getElementById('signupPage').classList.add('active');
+      currentStep = 1;
+      showStep(1);
       renderInterests();
     }
 
+    function goToLanding() {
+      document.getElementById('loginPage').classList.remove('active');
+      document.getElementById('landingPage').classList.add('active');
+    }
+
     function login() {
-      alert('Fonctionnalité à venir');
+      document.getElementById('landingPage').classList.remove('active');
+      document.getElementById('loginPage').classList.add('active');
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const error = document.getElementById('loginError');
+      error.textContent = '';
+
+      if (!email || !password) {
+        error.textContent = 'Email et mot de passe requis';
+        return;
+      }
+
+      if (supabase) {
+        try {
+          const { data, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (signInError) throw signInError;
+
+          alert('Connexion réussie ! Prépare-toi à découvrir des connexions authentiques 💜');
+          goToLanding();
+        } catch (err) {
+          error.textContent = err.message;
+        }
+      } else {
+        alert('Supabase non configuré. Connexion simulée.');
+        goToLanding();
+      }
     }
 
     function renderInterests() {
