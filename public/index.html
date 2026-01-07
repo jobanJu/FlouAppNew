@@ -517,7 +517,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    console.log('🔥 Firebase Initialisé (Mode Module)');
+    console.log('🔥 Firebase Initialisé avec apiKey:', firebaseConfig.apiKey); // DEBUG POUR VÉRIFIER LA CLÉ
 
     // ⚠️ IMPORTANT :
     // Comme nous sommes dans un module (type="module"), les fonctions ne sont pas globales par défaut.
