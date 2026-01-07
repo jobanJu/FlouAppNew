@@ -342,11 +342,8 @@
       <!-- Step 3: Localisation -->
       <div class="form-step" data-step="3">
         <div class="form-title">Où es-tu ?</div>
-        <div class="form-subtitle">Nous utilisons ta géolocalisation</div>
-        <button class="choice-btn" onclick="getLocation()" style="width: 100%; margin-bottom: 20px;">
-          📍 Utiliser ma géolocalisation
-        </button>
-        <input type="text" class="form-input" id="city" placeholder="Ou saisir ta ville">
+        <div class="form-subtitle">Saisir ta ville</div>
+        <input type="text" class="form-input" id="city" placeholder="Saisis ta ville">
         <div id="error3" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
@@ -393,17 +390,6 @@
         <div id="error6" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
-        </div>
-      </div>
-
-      <!-- Step 7: Validation -->
-      <div class="form-step" data-step="7">
-        <div class="form-title">On est prêt ? 🚀</div>
-        <div class="form-subtitle">Vérifie tes informations</div>
-        <div id="summaryInfo" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: left; font-size: 0.95rem;"></div>
-        <div class="form-actions">
-          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
           <button class="btn-small btn-next" onclick="submitForm()">Créer mon compte</button>
         </div>
       </div>
@@ -440,7 +426,7 @@
     };
 
     let currentStep = 1;
-    const totalSteps = 7;
+    const totalSteps = 6;
 
     function updateProgress() {
       const progress = (currentStep / totalSteps) * 100;
@@ -517,8 +503,6 @@
 
       return true;
     }
-
-    function selectChoice(btn, field, value) {
       document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       btn.setAttribute('data-field', field);
@@ -537,42 +521,8 @@
       }
     }
 
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
-              .then(res => res.json())
-              .then(data => {
-                document.getElementById('city').value = data.address.city || data.address.town || 'Localisation obtenue';
-              })
-              .catch(() => {
-                document.getElementById('city').value = 'Localisation obtenue';
-              });
-          },
-          error => {
-            alert('Accès à la géolocalisation refusé. Saisis ta ville manuellement.');
-          }
-        );
-      }
-    }
-
-    function showSummary() {
-      const summary = `
-        <strong>Prénom:</strong> ${formData.firstName}<br>
-        <strong>Âge:</strong> ${formData.age} ans<br>
-        <strong>Ville:</strong> ${formData.city}<br>
-        <strong>Genre:</strong> ${formData.gender}<br>
-        <strong>Sexualité:</strong> ${formData.sexuality}<br>
-        <strong>Intérêts:</strong> ${formData.interests.join(', ')}
-      `;
-      document.getElementById('summaryInfo').innerHTML = summary;
-    }
-
     function submitForm() {
-      if (!validateStep(7)) {
-        showSummary();
+      if (!validateStep(6)) {
         return;
       }
       document.getElementById('signupPage').classList.remove('active');
