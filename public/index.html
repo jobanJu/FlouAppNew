@@ -673,7 +673,13 @@
     }
 
     async function submitForm() {
-      if (!validateStep(8)) return;
+      // DEBUG: Vérifier que le bouton fonctionne
+      alert('1. Début inscription...');
+
+      if (!validateStep(8)) {
+        alert('Validation échouée. Vérifie les champs.');
+        return;
+      }
 
       try {
         if (!supabase) {
@@ -683,6 +689,7 @@
         // Sauvegarder en localStorage d'abord
         localStorage.setItem('flouUserProfile', JSON.stringify(formData));
         
+        alert('2. Envoi vers Supabase Auth...');
         const { data, error: authError } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password
@@ -691,6 +698,7 @@
         if (authError) throw authError;
 
         if (data.user) {
+          alert('3. Auth OK. Création profil...');
           const { error: profileError } = await supabase.from('profiles').insert([{
             user_id: data.user.id,
             firstname: formData.firstName,
@@ -701,16 +709,22 @@
             interests: formData.interests
           }]);
 
-          if (profileError) throw profileError;
+          if (profileError) {
+             alert('ERREUR PROFIL: ' + JSON.stringify(profileError));
+             throw profileError;
+          }
+        } else {
+             alert('Attention: Pas de user renvoyé (Email confirmation ?)');
         }
         
+        alert('4. Tout est Terminé !');
         console.log('✅ Compte créé avec succès');
-        // Afficher succès SEULEMENT si tout s'est bien passé
+        
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
       } catch (error) {
         console.error('Erreur:', error);
-        alert('Erreur: ' + (error.message || error.error_description || error));
+        alert('ERREUR CRITIQUE: ' + (error.message || error.error_description || JSON.stringify(error)));
         document.getElementById('error8').textContent = error.message;
       }
     }
