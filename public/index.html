@@ -26,7 +26,7 @@
     }
 
     .page.active {
-      display: flex;
+      display: flex !important;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -60,6 +60,7 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.3);
       z-index: 5;
+      pointer-events: none;
     }
 
     #landingPage img.bg-image {
@@ -70,11 +71,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 1;
-    }
-
-    #landingPage .page {
-      position: relative;
-      z-index: 10;
+      pointer-events: none;
     }
 
     .logo-container {
@@ -82,21 +79,13 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 15;
     }
 
     .logo-container img {
       max-width: 180px;
       height: auto;
       display: block;
-    }
-
-    .logo-container {
-      margin-bottom: 30px;
-    }
-
-    .logo-container img {
-      max-width: 180px;
-      height: auto;
     }
 
     .hero h1 {
@@ -112,6 +101,8 @@
       flex-direction: column;
       gap: 15px;
       margin-top: 50px;
+      position: relative;
+      z-index: 15;
     }
 
     .btn {
@@ -124,6 +115,9 @@
       transition: all 0.3s ease;
       text-decoration: none;
       display: inline-block;
+      position: relative;
+      z-index: 15;
+      pointer-events: auto;
     }
 
     .btn-primary {
