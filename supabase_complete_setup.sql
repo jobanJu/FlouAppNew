@@ -40,10 +40,13 @@ create table if not exists public.users (
   latitude float,
   longitude float,
   gender text not null check (gender in ('Homme', 'Femme')),
-  sexuality text not null check (sexuality in ('Hétérosexuel', 'Gay', 'Lesbienne', 'Bisexuel')),
+  sexuality text not check (sexuality in ('Hétérosexuel', 'Gay', 'Lesbienne', 'Bisexuel')),
   interests text[] not null,
   email text unique not null,
   photo_url text,
+  brumes_balance integer default 10,
+  subscription_tier text default 'classique' check (subscription_tier in ('classique', 'kama', 'cupidon')),
+  subscription_start timestamptz,
   created_at timestamptz default now()
 );
 
@@ -55,6 +58,31 @@ begin
                  and table_name = 'users' 
                  and column_name = 'interests') then
     alter table public.users add column interests text[] not null default '{}';
+  end if;
+end $$;
+
+-- Ajouter les colonnes pour la monétisation si elles n'existent pas
+do $$ 
+begin
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'brumes_balance') then
+    alter table public.users add column brumes_balance integer default 10;
+  end if;
+  
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'subscription_tier') then
+    alter table public.users add column subscription_tier text default 'classique' check (subscription_tier in ('classique', 'kama', 'cupidon'));
+  end if;
+  
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'subscription_start') then
+    alter table public.users add column subscription_start timestamptz;
   end if;
 end $$;
 
