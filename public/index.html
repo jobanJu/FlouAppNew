@@ -1854,8 +1854,8 @@
           startWithVideoMuted: false,
           disableDeepLinking: true,
           enableNoisyMicDetection: false,
-          prejoinPageEnabled: false, // Pas de page de prévisualisation
-          toolbarButtons: [], // Pas de boutons de toolbar
+          prejoinPageEnabled: true, // Activer la page de prévisualisation pour demander permissions
+          toolbarButtons: ['microphone', 'camera', 'hangup', 'chat', 'settings'], // Garder les boutons essentiels
           enableWelcomePage: false,
           enableClosePage: false
         },
@@ -1864,9 +1864,14 @@
           SHOW_WATERMARK_FOR_GUESTS: false,
           SHOW_BRAND_WATERMARK: false,
           DISABLE_VIDEO_BACKGROUND: true,
-          TOOLBAR_BUTTONS: [], // Masquer tous les boutons
+          TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'chat', 'settings'],
           filmStripOnly: false,
           VERTICAL_FILMSTRIP: false
+        },
+        // Demander les permissions dès le chargement
+        devices: {
+          audioInput: undefined, // Permet à Jitsi de sélectionner le micro
+          videoInput: undefined  // Permet à Jitsi de sélectionner la caméra
         }
       };
 
