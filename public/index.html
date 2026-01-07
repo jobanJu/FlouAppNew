@@ -1992,55 +1992,90 @@
       }
 
       try {
-        console.log('Création du Live...', { title, type: selectedLiveType, pseudo });
+        console.log('🔍 DIAGNOSTIC: Début création Live...');
+        console.log('📝 Données:', { 
+          title, 
+          type: selectedLiveType, 
+          pseudo,
+          currentUser: currentUser?.id,
+          authenticated: !!currentUser
+        });
+
+        // Vérifier que l'utilisateur est connecté
+        if (!currentUser) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session) {
+            alert('Tu dois être connecté pour créer un Live');
+            return;
+          }
+          currentUser = session.user;
+          console.log('✅ Session récupérée:', currentUser.id);
+        }
         
         // Créer une room Jitsi (GRATUIT - pas d'API nécessaire !)
+        console.log('🎥 Création room Jitsi...');
         const jitsiRoom = createJitsiRoom(title);
-        console.log('Room Jitsi créée:', jitsiRoom);
+        console.log('✅ Room Jitsi créée:', jitsiRoom);
         
         // Créer le Live avec le nom de la room
+        console.log('💾 Insertion dans Supabase...');
+        const liveData = {
+          host_id: currentUser.id,
+          type: selectedLiveType,
+          title: title,
+          description: description || null,
+          max_participants: selectedLiveType === 'groupe' ? 4 : 1,
+          status: 'waiting',
+          room_url: jitsiRoom.roomName
+        };
+        console.log('📤 Données à insérer:', liveData);
+
         const { data: live, error: liveError } = await supabase
           .from('lives')
-          .insert({
-            host_id: currentUser.id,
-            type: selectedLiveType,
-            title: title,
-            description: description || null,
-            max_participants: selectedLiveType === 'groupe' ? 4 : 1,
-            status: 'waiting',
-            room_url: jitsiRoom.roomName // Stocker le nom de la room Jitsi
-          })
+          .insert(liveData)
           .select()
           .single();
 
         if (liveError) {
-          console.error('Erreur insertion Live:', liveError);
+          console.error('❌ ERREUR insertion Live:', liveError);
+          console.error('Code:', liveError.code);
+          console.error('Message:', liveError.message);
+          console.error('Details:', liveError.details);
+          console.error('Hint:', liveError.hint);
           throw liveError;
         }
         
-        console.log('Live créé:', live);
+        console.log('✅ Live créé avec succès:', live);
 
         // Ajouter l'hôte comme participant
+        console.log('👤 Ajout du participant hôte...');
+        const participantData = {
+          live_id: live.id,
+          user_id: currentUser.id,
+          role: 'host',
+          pseudo: pseudo
+        };
+        console.log('📤 Données participant:', participantData);
+
         const { error: participantError } = await supabase
           .from('live_participants')
-          .insert({
-            live_id: live.id,
-            user_id: currentUser.id,
-            role: 'host',
-            pseudo: pseudo
-          });
+          .insert(participantData);
 
         if (participantError) {
-          console.error('Erreur ajout participant:', participantError);
+          console.error('❌ ERREUR ajout participant:', participantError);
+          console.error('Code:', participantError.code);
+          console.error('Message:', participantError.message);
+          console.error('Details:', participantError.details);
           throw participantError;
         }
 
-        console.log('Participant ajouté');
+        console.log('✅ Participant ajouté avec succès');
 
         currentLiveId = live.id;
         currentLiveType = selectedLiveType;
         currentRoomName = jitsiRoom.roomName;
 
+        console.log('🚀 Redirection vers le Live...');
         // Rediriger vers la salle appropriée
         if (selectedLiveType === 'groupe') {
           await joinLiveRoom(live.id);
@@ -2049,8 +2084,13 @@
         }
 
       } catch (error) {
-        console.error('Erreur création Live complète:', error);
-        console.error('Détails:', error.message, error.hint, error.details);
+        console.error('💥 ERREUR GLOBALE création Live:', error);
+        console.error('Type:', error.constructor.name);
+        console.error('Message:', error.message);
+        console.error('Code:', error.code);
+        console.error('Hint:', error.hint);
+        console.error('Details:', error.details);
+        console.error('Stack:', error.stack);
         alert('Erreur lors de la création du Live:\n' + (error.message || error.hint || 'Erreur inconnue. Vérifie que le script SQL est exécuté dans Supabase.'));
       }
     }
