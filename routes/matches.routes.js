@@ -1,5 +1,8 @@
 const matchesController = require("../controllers/matches.controller");
 
-module.exports = (req, res, pathname) => {
-  return matchesController(req, res, pathname);
+module.exports = (req, res, parsedUrl) => {
+  if (parsedUrl.pathname.startsWith("/matches")) {
+    return matchesController(req, res, parsedUrl);
+  }
+  return false;
 };

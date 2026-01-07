@@ -3,8 +3,4 @@ PORT: 3000
 Public dir: /home/jj755403/FlouAppNew/public
 ✅ Server running on port 3000
 ✅ http://localhost:3000
-Request: GET /matches
-Request: POST /users
-Request: POST /matches
-Request: GET /matches
-Request: GET /
+Request: /

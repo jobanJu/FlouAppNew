@@ -3,11 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-// Import routes
-const healthRoute = require("./routes/health");
-const usersRoutes = require("./routes/users.routes");
-const matchesRoutes = require("./routes/matches.routes");
-
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, "public");
 
@@ -26,23 +21,14 @@ function send(res, status, content, type = "text/plain") {
 
 const server = http.createServer((req, res) => {
   try {
-    const parsedUrl = url.parse(req.url, true);
+    const parsedUrl = url.parse(req.url);
     let pathname = parsedUrl.pathname;
 
-    console.log("Request:", req.method, pathname);
+    console.log("Request:", pathname);
 
     // HEALTH CHECK (Railway)
     if (pathname === "/health" || pathname === "/status") {
       return send(res, 200, JSON.stringify({ status: "ok" }), "application/json");
-    }
-
-    // API ROUTES
-    if (pathname === "/users" || pathname.startsWith("/users/")) {
-      return usersRoutes(req, res, pathname);
-    }
-
-    if (pathname === "/matches" || pathname.startsWith("/matches/")) {
-      return matchesRoutes(req, res, pathname);
     }
 
     // ROOT → index.html
@@ -101,5 +87,4 @@ process.on("SIGINT", () => {
     process.exit(0);
   });
 });
-
 
