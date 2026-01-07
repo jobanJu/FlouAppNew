@@ -74,6 +74,10 @@ create index if not exists idx_transactions_created on public.transactions(creat
 -- RLS pour transactions
 alter table public.transactions enable row level security;
 
+-- Drop policies existantes si elles existent
+drop policy if exists "Users can view their transactions" on public.transactions;
+drop policy if exists "Users can create their transactions" on public.transactions;
+
 -- Les utilisateurs peuvent voir leurs propres transactions
 create policy "Users can view their transactions"
 on public.transactions for select
