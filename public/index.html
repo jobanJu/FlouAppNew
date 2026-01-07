@@ -6,57 +6,61 @@
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html, body {
-      height: 100%;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
-    
-    .hero {
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .page {
+      display: none;
       min-height: 100vh;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      color: white;
+    }
+
+    .page.active {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    }
-
-    .logo-container {
-      margin-bottom: 40px;
-    }
-
-    .logo-container img {
-      max-width: 150px;
-      height: auto;
-    }
-
-    .hero-content {
-      text-align: center;
-      color: white;
-      width: 100%;
-      max-width: 400px;
       padding: 20px;
     }
 
-    .hero-content h1 {
-      font-size: clamp(2.5rem, 8vw, 3.5rem);
-      font-weight: 700;
-      margin: 0 0 15px 0;
+    /* LANDING PAGE */
+    .hero {
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
     }
 
-    .hero-content p {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      opacity: 0.95;
-      margin: 0 0 50px 0;
+    .logo-container {
+      margin-bottom: 30px;
+    }
+
+    .logo-container img {
+      max-width: 180px;
+      height: auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 300;
+      margin-bottom: 20px;
       line-height: 1.6;
-      font-weight: 500;
+      opacity: 0.95;
     }
 
     .button-group {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      width: 100%;
+      margin-top: 50px;
     }
 
     .btn {
@@ -94,40 +98,208 @@
       transform: translateY(-2px);
     }
 
+    /* SIGNUP FORM */
+    .signup-form {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #667eea;
+      transition: width 0.3s ease;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .form-subtitle {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .choice-btn {
+      padding: 14px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .choice-btn:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .choice-btn.selected {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.15);
+    }
+
+    .interests-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .interest-tag {
+      padding: 10px 14px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      background: transparent;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .interest-tag:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .interest-tag.selected {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.15);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .btn-small {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-next {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-next:hover {
+      background: #5568d3;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-message h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .success-message p {
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
     @media (max-width: 640px) {
-      .hero-content {
-        padding: 20px;
-      }
-
-      .logo-container {
-        margin-bottom: 30px;
-      }
-
-      .hero-content h1 {
-        font-size: 2rem;
-      }
-
-      .hero-content p {
-        font-size: 1rem;
-        margin-bottom: 40px;
+      .form-step, .hero {
+        width: 100%;
+        padding: 0;
       }
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <!-- Logo -->
-    <div class="logo-container">
-      <img src="./assets/logos/logo3.png" alt="Flou Logo" onerror="this.style.display='none'">
-    </div>
-
-    <!-- Content -->
-    <div class="hero-content">
-      <p>Et si l'essentiel se révélait avant le visage ?</p>
-      
-      <!-- Buttons -->
+  <!-- LANDING PAGE -->
+  <div id="landingPage" class="page active">
+    <div class="hero">
+      <div class="logo-container">
+        <img src="./assets/logos/logo3.png" alt="Flou Logo">
+      </div>
+      <h1>Et si l'essentiel se révélait avant le visage ?</h1>
       <div class="button-group">
-        <button class="btn btn-primary" onclick="startApp()">
+        <button class="btn btn-primary" onclick="goToSignup()">
           Commencer
         </button>
         <button class="btn btn-secondary" onclick="login()">
@@ -137,14 +309,298 @@
     </div>
   </div>
 
+  <!-- SIGNUP PAGE -->
+  <div id="signupPage" class="page">
+    <div class="signup-form">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <!-- Step 1: Prénom -->
+      <div class="form-step active" data-step="1">
+        <div class="form-title">Quel est ton prénom ?</div>
+        <div class="form-subtitle">Commence par le commencement</div>
+        <input type="text" class="form-input" id="firstName" placeholder="Ton prénom" maxlength="50">
+        <div id="error1" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Âge -->
+      <div class="form-step" data-step="2">
+        <div class="form-title">Quel est ton âge ?</div>
+        <div class="form-subtitle">Flou est réservé aux personnes de 20 ans et plus</div>
+        <input type="number" class="form-input" id="age" placeholder="Ton âge" min="20" max="100">
+        <div id="error2" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Localisation -->
+      <div class="form-step" data-step="3">
+        <div class="form-title">Où es-tu ?</div>
+        <div class="form-subtitle">Nous utilisons ta géolocalisation</div>
+        <button class="choice-btn" onclick="getLocation()" style="width: 100%; margin-bottom: 20px;">
+          📍 Utiliser ma géolocalisation
+        </button>
+        <input type="text" class="form-input" id="city" placeholder="Ou saisir ta ville">
+        <div id="error3" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Genre -->
+      <div class="form-step" data-step="4">
+        <div class="form-title">Quel est ton genre ?</div>
+        <div class="form-subtitle">Simplement pour te connaître</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Homme')">👨 Homme</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Femme')">👩 Femme</button>
+        </div>
+        <div id="error4" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Sexualité -->
+      <div class="form-step" data-step="5">
+        <div class="form-title">Quelle est ta sexualité ?</div>
+        <div class="form-subtitle">Juste pour qu'on se comprenne</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Hétérosexuel')">Hétérosexuel</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Homosexuel')">Homosexuel</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Bisexuel')">Bisexuel</button>
+        </div>
+        <div id="error5" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Centres d'intérêt -->
+      <div class="form-step" data-step="6">
+        <div class="form-title">Tes intérêts ?</div>
+        <div class="form-subtitle">Sélectionne au minimum 5 (max 10 conseillé)</div>
+        <div class="interests-grid" id="interestsGrid"></div>
+        <div id="error6" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Step 7: Validation -->
+      <div class="form-step" data-step="7">
+        <div class="form-title">On est prêt ? 🚀</div>
+        <div class="form-subtitle">Vérifie tes informations</div>
+        <div id="summaryInfo" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: left; font-size: 0.95rem;"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="submitForm()">Créer mon compte</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS PAGE -->
+  <div id="successPage" class="page">
+    <div class="success-message">
+      <h2>Bienvenue sur Flou ! 💜</h2>
+      <p>Ton profil a été créé avec succès.<br>Prépare-toi à découvrir des connexions authentiques.</p>
+    </div>
+  </div>
+
   <script>
-    function startApp() {
-      alert('Fonctionnalité à venir');
+    const interests = [
+      "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
+      "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
+      "Yoga", "Méditiation", "Gaming", "Musée", "Théâtre", "Concert",
+      "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals",
+      "Vélo", "Surf", "Ski", "Fitness", "Poésie", "Dessin",
+      "Animation", "Architecture", "Jardin", "Cuisine asiatique", "Fitness", "Méditation",
+      "Psychologie", "Philosophie", "Histoire", "Géographie", "Astronomie", "Écologie",
+      "Design", "Marketing", "Finance", "Entrepreneuriat", "Science", "Technologie"
+    ];
+
+    let formData = {
+      firstName: '',
+      age: '',
+      city: '',
+      gender: '',
+      sexuality: '',
+      interests: []
+    };
+
+    let currentStep = 1;
+    const totalSteps = 7;
+
+    function updateProgress() {
+      const progress = (currentStep / totalSteps) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+    }
+
+    function showStep(step) {
+      document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+      document.querySelector(`[data-step="${step}"]`).classList.add('active');
+      updateProgress();
+      window.scrollTo(0, 0);
+    }
+
+    function nextStep() {
+      if (!validateStep(currentStep)) return;
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function validateStep(step) {
+      const error = document.getElementById(`error${step}`);
+      error.textContent = '';
+
+      if (step === 1) {
+        const name = document.getElementById('firstName').value.trim();
+        if (name.length < 2) {
+          error.textContent = 'Le prénom doit avoir au moins 2 caractères';
+          return false;
+        }
+        formData.firstName = name;
+      } else if (step === 2) {
+        const age = parseInt(document.getElementById('age').value);
+        if (!age || age < 20) {
+          error.textContent = 'Flou est réservé aux personnes de 20 ans et plus';
+          return false;
+        }
+        formData.age = age;
+      } else if (step === 3) {
+        const city = document.getElementById('city').value.trim();
+        if (!city) {
+          error.textContent = 'Veuillez entrer une ville';
+          return false;
+        }
+        formData.city = city;
+      } else if (step === 4) {
+        if (!formData.gender) {
+          error.textContent = 'Veuillez sélectionner un genre';
+          return false;
+        }
+      } else if (step === 5) {
+        if (!formData.sexuality) {
+          error.textContent = 'Veuillez sélectionner une sexualité';
+          return false;
+        }
+      } else if (step === 6) {
+        if (formData.interests.length < 5) {
+          error.textContent = 'Sélectionne au minimum 5 intérêts';
+          return false;
+        }
+        if (formData.interests.length > 10) {
+          error.textContent = 'Maximum 10 intérêts conseillé';
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function selectChoice(btn, field, value) {
+      document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      btn.setAttribute('data-field', field);
+      formData[field] = value;
+    }
+
+    function toggleInterest(btn, interest) {
+      if (formData.interests.includes(interest)) {
+        formData.interests = formData.interests.filter(i => i !== interest);
+        btn.classList.remove('selected');
+      } else {
+        if (formData.interests.length < 10) {
+          formData.interests.push(interest);
+          btn.classList.add('selected');
+        }
+      }
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude } = position.coords;
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+              .then(res => res.json())
+              .then(data => {
+                document.getElementById('city').value = data.address.city || data.address.town || 'Localisation obtenue';
+              })
+              .catch(() => {
+                document.getElementById('city').value = 'Localisation obtenue';
+              });
+          },
+          error => {
+            alert('Accès à la géolocalisation refusé. Saisis ta ville manuellement.');
+          }
+        );
+      }
+    }
+
+    function showSummary() {
+      const summary = `
+        <strong>Prénom:</strong> ${formData.firstName}<br>
+        <strong>Âge:</strong> ${formData.age} ans<br>
+        <strong>Ville:</strong> ${formData.city}<br>
+        <strong>Genre:</strong> ${formData.gender}<br>
+        <strong>Sexualité:</strong> ${formData.sexuality}<br>
+        <strong>Intérêts:</strong> ${formData.interests.join(', ')}
+      `;
+      document.getElementById('summaryInfo').innerHTML = summary;
+    }
+
+    function submitForm() {
+      if (!validateStep(7)) {
+        showSummary();
+        return;
+      }
+      document.getElementById('signupPage').classList.remove('active');
+      document.getElementById('successPage').classList.add('active');
+    }
+
+    function goToSignup() {
+      document.getElementById('landingPage').classList.remove('active');
+      document.getElementById('signupPage').classList.add('active');
+      renderInterests();
     }
 
     function login() {
       alert('Fonctionnalité à venir');
     }
+
+    function renderInterests() {
+      const grid = document.getElementById('interestsGrid');
+      grid.innerHTML = interests.map(interest => `
+        <button class="interest-tag" onclick="toggleInterest(this, '${interest}')">
+          ${interest}
+        </button>
+      `).join('');
+    }
+
+    // Init
+    updateProgress();
+    showStep(1);
   </script>
 </body>
 </html>
