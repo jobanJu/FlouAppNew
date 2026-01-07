@@ -270,23 +270,13 @@
   </div>
 
   <script type="module">
-    import { Client, Account, Databases, Storage, ID, Query } from 'https://cdn.jsdelivr.net/npm/appwrite@14.0.1/+esm';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    // Configuration Appwrite
-    const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
-    const APPWRITE_PROJECT_ID = '695e9a63003479b9d8fb';
-    const DATABASE_ID = 'flou-database';
-    const USERS_COLLECTION_ID = 'users';
-    const BUCKET_ID = 'user-photos';
-
-    const client = new Client()
-      .setEndpoint(APPWRITE_ENDPOINT)
-      .setProject(APPWRITE_PROJECT_ID);
-
-    const account = new Account(client);
-    const databases = new Databases(client);
-    const storage = new Storage(client);
-
+    // Configuration Supabase
+    const SUPABASE_URL = 'TON_SUPABASE_URL'; // ex: https://xxxxx.supabase.co
+    const SUPABASE_ANON_KEY = 'TON_SUPABASE_ANON_KEY';
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
 
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
@@ -298,16 +288,16 @@
     let currentMatchIndex = 0;
 
     // Check auth state on load
-    account.get()
-      .then(user => {
-        currentUser = user;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        currentUser = session.user;
         const landing = document.getElementById('landingPage');
         const login = document.getElementById('loginPage');
         if (landing.classList.contains('active') || login.classList.contains('active')) {
           window.goToMatches();
         }
-      })
-      .catch(() => currentUser = null);
+      }
+    });
 
     window.geolocateUser = function() {
       const btn = document.querySelector('button[onclick="geolocateUser()"]');
@@ -384,32 +374,42 @@
       const btn = document.querySelector('button[onclick="submitForm()"]');
       try {
         btn.textContent = "Création..."; btn.disabled = true;
-        // Create account
-        const user = await account.create(ID.unique(), formData.email, formData.password, formData.firstName);
-        // Login immediately
-        await account.createEmailPasswordSession(formData.email, formData.password);
+        
+        const { data: { user }, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: { data: { firstname: formData.firstName } }
+        });
+        if (authError) throw authError;
         currentUser = user;
         
-        let photoFileId = null;
+        let photoUrl = null;
         if (formData.photoFile) {
           btn.textContent = "Envoi photo...";
-          const file = await storage.createFile(BUCKET_ID, ID.unique(), formData.photoFile);
-          photoFileId = file.$id;
+          const fileName = `${user.id}_${Date.now()}.${formData.photoFile.name.split('.').pop()}`;
+          const { data: fileData, error: uploadError } = await supabase.storage
+            .from('user-photos')
+            .upload(fileName, formData.photoFile);
+          if (uploadError) throw uploadError;
+          const { data: { publicUrl } } = supabase.storage.from('user-photos').getPublicUrl(fileName);
+          photoUrl = publicUrl;
         }
         
         btn.textContent = "Finalisation...";
-        await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, user.$id, {
+        const { error: dbError } = await supabase.from('users').insert({
+          id: user.id,
           firstname: formData.firstName,
           age: formData.age,
           city: formData.city,
-          latitude: formData.location?.lat || null,
-          longitude: formData.location?.lng || null,
+          latitude: formData.location?.lat,
+          longitude: formData.location?.lng,
           gender: formData.gender,
           sexuality: formData.sexuality,
           interests: formData.interests,
           email: formData.email,
-          photoFileId: photoFileId
+          photo_url: photoUrl
         });
+        if (dbError) throw dbError;
         
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
@@ -421,8 +421,9 @@
       if (error) error.textContent = '';
       if (!email || !password) { if (error) error.textContent = 'Email et mot de passe requis'; return; }
       try {
-        await account.createEmailPasswordSession(email, password);
-        currentUser = await account.get();
+        const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+        if (loginError) throw loginError;
+        currentUser = data.user;
         window.goToMatches();
       } catch (err) { if (error) error.textContent = err.message; }
     }
@@ -436,12 +437,17 @@
       const stack = document.getElementById('cardsStack');
       stack.innerHTML = '<div class="no-more-profiles"><p>Recherche...</p></div>';
       try {
-        if (!currentUser) currentUser = await account.get();
-        const response = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
-          Query.limit(20),
-          Query.notEqual('$id', currentUser.$id)
-        ]);
-        potentialMatches = response.documents;
+        if (!currentUser) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) currentUser = session.user;
+        }
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .neq('id', currentUser.id)
+          .limit(20);
+        if (error) throw error;
+        potentialMatches = data || [];
         currentMatchIndex = 0;
         window.renderCurrentMatch();
       } catch (error) { console.error(error); stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
@@ -452,12 +458,12 @@
       if (currentMatchIndex >= potentialMatches.length) { stack.innerHTML = '<div class="no-more-profiles"><p>Plus de profils</p><button class="btn-small btn-back" onclick="loadMatches()">Recharger</button></div>'; return; }
       const p = potentialMatches[currentMatchIndex];
       const tags = (p.interests || []).map(t => `<span class="mini-tag">${t}</span>`).join('');
-      const bg = p.photoFileId ? `${APPWRITE_ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${p.photoFileId}/preview?width=400&height=600` : '/assets/images/homme1.jpeg';
+      const bg = p.photo_url || '/assets/images/homme1.jpeg';
       stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}');"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
     window.handleSwipe = function(action) { if (currentMatchIndex >= potentialMatches.length) return; currentMatchIndex++; window.renderCurrentMatch(); }
-    window.logout = function() { account.deleteSession('current').then(() => { currentUser = null; window.goToLanding(); }); }
+    window.logout = function() { supabase.auth.signOut().then(() => { currentUser = null; window.goToLanding(); }); }
 
     window.updateProgress();
   </script>
