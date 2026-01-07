@@ -11,8 +11,8 @@
   <meta name="description" content="Et si l'essentiel se révélait avant le visage? Application de rencontres avec déflouttage progressif.">
   
   <!-- Icons -->
-  <link rel="icon" type="image/png" href="/FLOU.png">
-  <link rel="apple-touch-icon" href="/FLOU.png">
+  <link rel="icon" type="image/png" href="/assets/logos/FLOU.png">
+  <link rel="apple-touch-icon" href="/assets/logos/FLOU.png">
   
   <!-- iOS Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -398,6 +398,9 @@
           <div style="font-weight:600; margin-bottom:10px; opacity:0.9;">Intérêts</div>
           <div id="profileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
         </div>
+        <button id="installBtn" class="btn btn-primary" onclick="installPWA()" style="width:100%; margin-top:20px; display:none;">
+          📱 Installer Flou sur mon téléphone
+        </button>
         <button class="btn btn-secondary" onclick="logout()" style="width:100%; margin-top:20px;">Déconnexion</button>
       </div>
     </div>
@@ -889,6 +892,9 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
+      // Afficher le bouton d'installation
+      const installBtn = document.getElementById('installBtn');
+      if (installBtn) installBtn.style.display = 'block';
       console.log('PWA installable');
     });
 
@@ -900,6 +906,9 @@
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       console.log(`User response: ${outcome}`);
+      if (outcome === 'accepted') {
+        document.getElementById('installBtn').style.display = 'none';
+      }
       deferredPrompt = null;
     }
 
