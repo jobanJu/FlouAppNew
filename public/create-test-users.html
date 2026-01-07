@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer profils de test - Flou</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: white; font-family: sans-serif; }
+    .container { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); max-width: 600px; }
+    .btn { background: white; color: #667eea; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin: 5px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .log { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 20px; max-height: 300px; overflow-y: auto; font-size: 0.9em; font-family: monospace; }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+    .info { color: #60a5fa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">🧪 Créer profils de test</h1>
+    <p style="opacity: 0.9; margin-bottom: 30px;">Crée automatiquement 3 profils de test pour l'app Flou</p>
+    
+    <button class="btn" id="createBtn" onclick="createTestProfiles()">
+      Créer les 3 profils de test
+    </button>
+    <button class="btn" onclick="window.location.href='/'">
+      ← Retour à l'app
+    </button>
+    
+    <div class="log" id="log"></div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    
+    const supabase = createClient(
+      'https://lqzsgugobujvweeuxves.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxxenNndWdvYnVqdndlZXV4dmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMDkyNzAsImV4cCI6MjA1MTY4NTI3MH0.Y8kTrU-zCsZcXgJWOGPZQ7rMJxgJuF2spC0C3BVzp40'
+    );
+
+    window.supabase = supabase;
+
+    function log(message, type = 'info') {
+      const logDiv = document.getElementById('log');
+      const timestamp = new Date().toLocaleTimeString();
+      const className = type;
+      logDiv.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    window.createTestProfiles = async function() {
+      const btn = document.getElementById('createBtn');
+      btn.disabled = true;
+      btn.textContent = 'Création en cours...';
+      document.getElementById('log').innerHTML = '';
+      
+      const testProfiles = [
+        {
+          email: 'sophie.test@flou.app',
+          password: 'Test1234!',
+          firstname: 'Sophie',
+          age: 25,
+          city: 'Paris',
+          latitude: 48.8566,
+          longitude: 2.3522,
+          gender: 'Femme',
+          sexuality: 'Hétérosexuel',
+          interests: ['Voyage', 'Cuisine', 'Musique', 'Photographie'],
+          photo_url: 'https://i.pravatar.cc/400?img=47'
+        },
+        {
+          email: 'marc.test@flou.app',
+          password: 'Test1234!',
+          firstname: 'Marc',
+          age: 28,
+          city: 'Lyon',
+          latitude: 45.7640,
+          longitude: 4.8357,
+          gender: 'Homme',
+          sexuality: 'Hétérosexuel',
+          interests: ['Sport', 'Cinéma', 'Gaming', 'Technologie'],
+          photo_url: 'https://i.pravatar.cc/400?img=12'
+        },
+        {
+          email: 'julie.test@flou.app',
+          password: 'Test1234!',
+          firstname: 'Julie',
+          age: 23,
+          city: 'Marseille',
+          latitude: 43.2965,
+          longitude: 5.3698,
+          gender: 'Femme',
+          sexuality: 'Bisexuel',
+          interests: ['Art', 'Lecture', 'Yoga', 'Nature'],
+          photo_url: 'https://i.pravatar.cc/400?img=38'
+        }
+      ];
+
+      let successCount = 0;
+
+      for (const profile of testProfiles) {
+        try {
+          log(`📝 Création du compte pour ${profile.firstname}...`, 'info');
+          
+          // Créer le compte auth
+          const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: profile.email,
+            password: profile.password,
+            options: {
+              data: { firstname: profile.firstname },
+              emailRedirectTo: window.location.origin
+            }
+          });
+
+          if (authError) {
+            // Si l'utilisateur existe déjà, essayer de se connecter pour récupérer l'UUID
+            if (authError.message.includes('already registered')) {
+              log(`⚠️ ${profile.firstname}: compte existe déjà, récupération...`, 'info');
+              
+              const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+                email: profile.email,
+                password: profile.password
+              });
+              
+              if (signInError) {
+                log(`❌ ${profile.firstname}: impossible de récupérer le compte`, 'error');
+                continue;
+              }
+              
+              // Mettre à jour le profil existant
+              const { error: updateError } = await supabase.from('users').update({
+                firstname: profile.firstname,
+                age: profile.age,
+                city: profile.city,
+                latitude: profile.latitude,
+                longitude: profile.longitude,
+                gender: profile.gender,
+                sexuality: profile.sexuality,
+                interests: profile.interests,
+                photo_url: profile.photo_url
+              }).eq('id', signInData.user.id);
+              
+              if (updateError) {
+                log(`❌ ${profile.firstname}: erreur mise à jour - ${updateError.message}`, 'error');
+              } else {
+                log(`✅ ${profile.firstname}: profil mis à jour!`, 'success');
+                successCount++;
+              }
+              
+              await supabase.auth.signOut();
+              continue;
+            }
+            
+            log(`❌ ${profile.firstname}: ${authError.message}`, 'error');
+            continue;
+          }
+
+          if (!authData.user) {
+            log(`❌ ${profile.firstname}: pas d'utilisateur créé`, 'error');
+            continue;
+          }
+
+          log(`👤 ${profile.firstname}: compte auth créé (${authData.user.id})`, 'success');
+          
+          // Attendre un peu pour que le compte soit bien créé
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Insérer le profil dans la table users
+          const { error: dbError } = await supabase.from('users').insert({
+            id: authData.user.id,
+            firstname: profile.firstname,
+            age: profile.age,
+            city: profile.city,
+            latitude: profile.latitude,
+            longitude: profile.longitude,
+            gender: profile.gender,
+            sexuality: profile.sexuality,
+            interests: profile.interests,
+            email: profile.email,
+            photo_url: profile.photo_url
+          });
+
+          if (dbError) {
+            log(`❌ ${profile.firstname}: erreur DB - ${dbError.message}`, 'error');
+          } else {
+            log(`✅ ${profile.firstname}: profil complet créé!`, 'success');
+            successCount++;
+          }
+          
+          // Se déconnecter pour créer le prochain
+          await supabase.auth.signOut();
+          
+        } catch (error) {
+          log(`❌ ${profile.firstname}: ${error.message}`, 'error');
+        }
+      }
+
+      log(`\n🎉 Terminé! ${successCount}/${testProfiles.length} profils créés avec succès`, successCount === testProfiles.length ? 'success' : 'info');
+      btn.disabled = false;
+      btn.textContent = 'Créer les 3 profils de test';
+    }
+  </script>
+</body>
+</html>
