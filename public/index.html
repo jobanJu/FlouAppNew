@@ -2172,17 +2172,24 @@
         }
 
         // Charger les infos du Live
+        console.log('📥 Chargement infos du Live:', liveId);
         const { data: live, error } = await supabase
           .from('lives')
-          .select('*, users!lives_host_id_fkey(firstname)')
+          .select('*')
           .eq('id', liveId)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('❌ Erreur chargement Live:', error);
+          throw error;
+        }
+
+        console.log('✅ Live chargé:', live);
 
         document.getElementById('liveRoomTitle').textContent = live.title;
         currentRoomName = live.room_url;
 
+        console.log('👤 Récupération pseudo utilisateur...');
         // Récupérer le pseudo de l'utilisateur
         const { data: myParticipant } = await supabase
           .from('live_participants')
@@ -2191,9 +2198,14 @@
           .eq('user_id', currentUser.id)
           .single();
 
+        console.log('✅ Pseudo récupéré:', myParticipant?.pseudo);
+
         // Rejoindre la room Jitsi
         if (currentRoomName && myParticipant?.pseudo) {
+          console.log('🎥 Connexion à Jitsi:', { room: currentRoomName, pseudo: myParticipant.pseudo });
           joinJitsiRoom(currentRoomName, myParticipant.pseudo);
+        } else {
+          console.error('❌ Impossible de rejoindre Jitsi:', { currentRoomName, pseudo: myParticipant?.pseudo });
         }
 
         // Charger les participants
