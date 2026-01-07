@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flou - Rencontres</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0;
@@ -494,7 +495,18 @@
   </div>
 
   <script>
-    // CONFIG - Sans Supabase pour l'instant
+    // CONFIG SUPABASE
+    const SUPABASE_URL = 'https://gwkeeoivdasllibfluaw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3a2Vlb2l2ZGFzbGxpYmZsdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTAxNjEsImV4cCI6MjA4MzM2NjE2MX0.xF7CVdOThjNc49i0DgHkxJn27PyndtWHZLIDV_0Oas0';
+    
+    let supabase = null;
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✅ Supabase initialisé');
+    } catch (e) {
+      console.error('❌ Erreur Supabase:', e);
+    }
+
     const interests = [
       "Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine",
       "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse",
@@ -638,15 +650,47 @@
       if (!validateStep(8)) return;
 
       try {
-        // Sauvegarder les données en localStorage
-        localStorage.setItem('flouUserProfile', JSON.stringify(formData));
-        console.log('Profil sauvegardé:', formData);
+        if (!supabase) {
+          throw new Error('Supabase non disponible');
+        }
+
+        // 1. Créer l'utilisateur avec Supabase Auth
+        const { data, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password
+        });
+
+        if (authError) {
+          throw new Error(authError.message);
+        }
+
+        console.log('✅ User créé:', data.user.id);
+
+        // 2. Sauvegarder le profil dans la table profiles
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([{
+            user_id: data.user.id,
+            firstName: formData.firstName,
+            age: parseInt(formData.age),
+            city: formData.city,
+            gender: formData.gender,
+            sexuality: formData.sexuality,
+            interests: formData.interests
+          }]);
+
+        if (profileError) {
+          throw new Error('Profil: ' + profileError.message);
+        }
+
+        console.log('✅ Profil sauvegardé');
         
-        // Afficher la page de succès
+        // 3. Afficher la page de succès
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
       } catch (error) {
-        document.getElementById('error8').textContent = 'Erreur lors de la sauvegarde: ' + error.message;
+        console.error('❌ Erreur:', error.message);
+        document.getElementById('error8').textContent = error.message;
       }
     }
 
@@ -682,13 +726,26 @@
         return;
       }
 
-      // Vérifier les données sauvegardées
-      const saved = JSON.parse(localStorage.getItem('flouUserProfile') || '{}');
-      if (saved.email === email && saved.password === password) {
+      try {
+        if (!supabase) {
+          throw new Error('Supabase non disponible');
+        }
+
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (signInError) {
+          throw new Error(signInError.message);
+        }
+
+        console.log('✅ Connexion réussie:', data.user.id);
         alert('Connexion réussie ! Prépare-toi à découvrir des connexions authentiques 💜');
         goToLanding();
-      } else {
-        error.textContent = 'Email ou mot de passe incorrect';
+      } catch (err) {
+        console.error('❌ Erreur connexion:', err.message);
+        error.textContent = err.message;
       }
     }
 
