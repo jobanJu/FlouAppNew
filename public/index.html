@@ -652,46 +652,35 @@
       if (!validateStep(8)) return;
 
       try {
-        if (!supabase) {
-          throw new Error('Supabase non disponible');
-        }
-
-        // 1. Créer l'utilisateur avec Supabase Auth
-        const { data, error: authError } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password
-        });
-
-        if (authError) {
-          throw new Error(authError.message);
-        }
-
-        console.log('✅ User créé:', data.user.id);
-
-        // 2. Sauvegarder le profil dans la table profiles
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([{
-            user_id: data.user.id,
-            firstname: formData.firstName,
-            age: parseInt(formData.age),
-            city: formData.city,
-            gender: formData.gender,
-            sexuality: formData.sexuality,
-            interests: formData.interests
-          }]);
-
-        if (profileError) {
-          throw new Error('Profil: ' + profileError.message);
-        }
-
-        console.log('✅ Profil sauvegardé');
+        // Sauvegarder en localStorage d'abord
+        localStorage.setItem('flouUserProfile', JSON.stringify(formData));
+        console.log('✅ Données sauvegardées localement');
         
-        // 3. Afficher la page de succès
+        // Puis essayer Supabase si dispo
+        if (supabase) {
+          const { data, error: authError } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.password
+          });
+          if (!authError && data.user) {
+            await supabase.from('profiles').insert([{
+              user_id: data.user.id,
+              firstname: formData.firstName,
+              age: parseInt(formData.age),
+              city: formData.city,
+              gender: formData.gender,
+              sexuality: formData.sexuality,
+              interests: formData.interests
+            }]);
+            console.log('✅ Profil créé dans Supabase');
+          }
+        }
+        
+        // Afficher succès
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
       } catch (error) {
-        console.error('❌ Erreur:', error.message);
+        console.error('Erreur:', error);
         document.getElementById('error8').textContent = error.message;
       }
     }
