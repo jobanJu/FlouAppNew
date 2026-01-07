@@ -21,6 +21,72 @@
       padding: 20px;
     }
 
+    /* LOADING SCREEN */
+    #loadingScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #loadingScreen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loadingScreen video {
+      max-width: 80vw;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    /* Navigation */
+    nav {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    nav button {
+      flex: 1;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: auto;
+      height: auto;
+      box-shadow: none;
+      font-size: 1rem;
+    }
+
+    nav button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: none;
+      box-shadow: none;
+    }
+
+    nav button.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+
     /* Header */
     header {
       width: 100%;
@@ -215,6 +281,71 @@
       margin-bottom: 10px;
     }
 
+    /* Page Sections */
+    .page {
+      display: none;
+      width: 100%;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* Matches Page */
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .match-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .match-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .match-card-emoji {
+      width: 100%;
+      height: 120px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .match-card-info {
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .match-card-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .match-card-date {
+      font-size: 0.75rem;
+      color: #999;
+    }
+
     /* Responsive */
     @media (max-width: 480px) {
       header h1 {
@@ -239,6 +370,12 @@
   </style>
 </head>
 <body>
+  <!-- LOADING SCREEN -->
+  <div id="loadingScreen">
+    <video autoplay loop muted playsinline>
+      <source src="./assets/videos/logochargement.mp4" type="video/mp4">
+    </video>
+  </div>
   <!-- Header -->
   <header>
     <img src="./assets/logos/logo3.png" alt="Flou Logo" onerror="this.style.display='none'">
@@ -246,8 +383,14 @@
     <p>Découvrez de nouvelles connexions</p>
   </header>
 
-  <!-- Main Container -->
-  <div class="container">
+  <!-- Navigation -->
+  <nav>
+    <button id="browseBtn" class="active">Découvrir</button>
+    <button id="matchesBtn">Matches</button>
+  </nav>
+
+  <!-- Browse Page -->
+  <div id="browsePage" class="page active">
     <!-- Card Stack -->
     <div class="card-stack" id="cardStack">
       <!-- Cards will be loaded here -->
@@ -272,6 +415,13 @@
           <div class="stat-label">Matches</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Matches Page -->
+  <div id="matchesPage" class="page">
+    <div id="matchesContainer" class="matches-grid">
+      <!-- Matches will be loaded here -->
     </div>
   </div>
 
@@ -375,7 +525,87 @@
     btnSuper.addEventListener('click', superCard);
 
     // Initial load
-    loadUsers();
+    async function initApp() {
+      try {
+        await loadUsers();
+        await updateStats();
+        // Hide loading screen after data is loaded
+        hideLoadingScreen();
+      } catch (error) {
+        console.error('Erreur au chargement:', error);
+        hideLoadingScreen();
+      }
+    }
+
+    function hideLoadingScreen() {
+      const loadingScreen = document.getElementById('loadingScreen');
+      loadingScreen.classList.add('hidden');
+      // Remove from DOM after transition
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 500);
+    }
+
+    // Navigation
+    const browseBtn = document.getElementById('browseBtn');
+    const matchesBtn = document.getElementById('matchesBtn');
+    const browsePage = document.getElementById('browsePage');
+    const matchesPage = document.getElementById('matchesPage');
+
+    function switchPage(page) {
+      if (page === 'browse') {
+        browsePage.classList.add('active');
+        matchesPage.classList.remove('active');
+        browseBtn.classList.add('active');
+        matchesBtn.classList.remove('active');
+      } else if (page === 'matches') {
+        browsePage.classList.remove('active');
+        matchesPage.classList.add('active');
+        browseBtn.classList.remove('active');
+        matchesBtn.classList.add('active');
+        loadMatches();
+      }
+    }
+
+    browseBtn.addEventListener('click', () => switchPage('browse'));
+    matchesBtn.addEventListener('click', () => switchPage('matches'));
+
+    // Load and display matches
+    async function loadMatches() {
+      try {
+        const response = await fetch('/matches');
+        const matches = await response.json();
+        const matchesContainer = document.getElementById('matchesContainer');
+        
+        if (matches.length === 0) {
+          matchesContainer.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+              <h2>Pas de matches</h2>
+              <p>Commencez à découvrir des profils</p>
+            </div>
+          `;
+          return;
+        }
+
+        matchesContainer.innerHTML = matches.map(match => {
+          const date = new Date(match.timestamp).toLocaleDateString('fr-FR');
+          return `
+            <div class="match-card">
+              <div class="match-card-emoji">💕</div>
+              <div class="match-card-info">
+                <div class="match-card-name">${match.name}</div>
+                <div class="match-card-date">${date}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    }
+
+    // Start the app
+    initApp();
     setInterval(updateStats, 5000);
   </script>
 </body>

@@ -4,7 +4,7 @@ function createMatch(data = {}) {
   const match = {
     id: Date.now().toString(),
     name: data.name || "Match",
-    createdAt: new Date().toISOString()
+    timestamp: new Date().toISOString()
   };
   matches.push(match);
   return match;
