@@ -270,24 +270,24 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDocs, query, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { Client, Account, Databases, Storage, ID, Query } from 'https://cdn.jsdelivr.net/npm/appwrite@14.0.1/+esm';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBUsyng1I9UxTXvxcjcrhoRk29vTKZJEag",
-      authDomain: "flou-app-a03dc.firebaseapp.com",
-      projectId: "flou-app-a03dc",
-      storageBucket: "flou-app-a03dc.firebasestorage.app",
-      messagingSenderId: "94838358120",
-      appId: "1:94838358120:web:5be247dcfd496f620ebbdd"
-    };
+    // ⚠️ CONFIGURATION APPWRITE - À REMPLIR APRÈS CRÉATION DU PROJET
+    const APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'; // Ton endpoint Appwrite
+    const APPWRITE_PROJECT_ID = 'TON_PROJECT_ID_ICI'; // Récupère depuis Appwrite dashboard
+    const DATABASE_ID = 'flou-database'; // À créer dans Appwrite
+    const USERS_COLLECTION_ID = 'users'; // À créer dans Appwrite
+    const BUCKET_ID = 'user-photos'; // À créer dans Appwrite Storage
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+    const client = new Client()
+      .setEndpoint(APPWRITE_ENDPOINT)
+      .setProject(APPWRITE_PROJECT_ID);
+
+    const account = new Account(client);
+    const databases = new Databases(client);
+    const storage = new Storage(client);
+
+    let currentUser = null;
 
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
 
@@ -297,15 +297,17 @@
     let potentialMatches = [];
     let currentMatchIndex = 0;
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
+    // Check auth state on load
+    account.get()
+      .then(user => {
+        currentUser = user;
         const landing = document.getElementById('landingPage');
         const login = document.getElementById('loginPage');
         if (landing.classList.contains('active') || login.classList.contains('active')) {
           window.goToMatches();
         }
-      }
-    });
+      })
+      .catch(() => currentUser = null);
 
     window.geolocateUser = function() {
       const btn = document.querySelector('button[onclick="geolocateUser()"]');
@@ -382,17 +384,33 @@
       const btn = document.querySelector('button[onclick="submitForm()"]');
       try {
         btn.textContent = "Création..."; btn.disabled = true;
-        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-        const user = userCredential.user;
-        let photoUrl = "";
+        // Create account
+        const user = await account.create(ID.unique(), formData.email, formData.password, formData.firstName);
+        // Login immediately
+        await account.createEmailPasswordSession(formData.email, formData.password);
+        currentUser = user;
+        
+        let photoFileId = null;
         if (formData.photoFile) {
           btn.textContent = "Envoi photo...";
-          const storageRef = ref(storage, 'user_photos/' + user.uid);
-          await uploadBytes(storageRef, formData.photoFile);
-          photoUrl = await getDownloadURL(storageRef);
+          const file = await storage.createFile(BUCKET_ID, ID.unique(), formData.photoFile);
+          photoFileId = file.$id;
         }
+        
         btn.textContent = "Finalisation...";
-        await setDoc(doc(db, "users", user.uid), { firstname: formData.firstName, age: formData.age, city: formData.city, location: formData.location, gender: formData.gender, sexuality: formData.sexuality, interests: formData.interests, email: formData.email, photoUrl, createdAt: serverTimestamp() });
+        await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, user.$id, {
+          firstname: formData.firstName,
+          age: formData.age,
+          city: formData.city,
+          latitude: formData.location?.lat || null,
+          longitude: formData.location?.lng || null,
+          gender: formData.gender,
+          sexuality: formData.sexuality,
+          interests: formData.interests,
+          email: formData.email,
+          photoFileId: photoFileId
+        });
+        
         document.getElementById('signupPage').classList.remove('active');
         document.getElementById('successPage').classList.add('active');
       } catch (error) { console.error(error); alert('Erreur: ' + error.message); btn.textContent = "Créer mon compte"; btn.disabled = false; }
@@ -402,7 +420,11 @@
       const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value, error = document.getElementById('loginError');
       if (error) error.textContent = '';
       if (!email || !password) { if (error) error.textContent = 'Email et mot de passe requis'; return; }
-      try { await signInWithEmailAndPassword(auth, email, password); } catch (err) { if (error) error.textContent = err.message; }
+      try {
+        await account.createEmailPasswordSession(email, password);
+        currentUser = await account.get();
+        window.goToMatches();
+      } catch (err) { if (error) error.textContent = err.message; }
     }
 
     window.goToSignup = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('signupPage').classList.add('active'); currentStep = 1; window.showStep(1); window.renderInterests(); }
@@ -414,14 +436,15 @@
       const stack = document.getElementById('cardsStack');
       stack.innerHTML = '<div class="no-more-profiles"><p>Recherche...</p></div>';
       try {
-        const user = auth.currentUser; if (!user) return;
-        const q = query(collection(db, "users"), limit(20));
-        const snapshot = await getDocs(q);
-        potentialMatches = [];
-        snapshot.forEach((d) => { if (d.id !== user.uid) potentialMatches.push({ id: d.id, ...d.data() }); });
+        if (!currentUser) currentUser = await account.get();
+        const response = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+          Query.limit(20),
+          Query.notEqual('$id', currentUser.$id)
+        ]);
+        potentialMatches = response.documents;
         currentMatchIndex = 0;
         window.renderCurrentMatch();
-      } catch (error) { stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
+      } catch (error) { console.error(error); stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
     }
 
     window.renderCurrentMatch = function() {
@@ -429,12 +452,12 @@
       if (currentMatchIndex >= potentialMatches.length) { stack.innerHTML = '<div class="no-more-profiles"><p>Plus de profils</p><button class="btn-small btn-back" onclick="loadMatches()">Recharger</button></div>'; return; }
       const p = potentialMatches[currentMatchIndex];
       const tags = (p.interests || []).map(t => `<span class="mini-tag">${t}</span>`).join('');
-      const bg = p.photoUrl || '/assets/images/homme1.jpeg';
+      const bg = p.photoFileId ? `${APPWRITE_ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${p.photoFileId}/preview?width=400&height=600` : '/assets/images/homme1.jpeg';
       stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}');"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
     window.handleSwipe = function(action) { if (currentMatchIndex >= potentialMatches.length) return; currentMatchIndex++; window.renderCurrentMatch(); }
-    window.logout = function() { signOut(auth).then(() => window.goToLanding()); }
+    window.logout = function() { account.deleteSession('current').then(() => { currentUser = null; window.goToLanding(); }); }
 
     window.updateProgress();
   </script>
