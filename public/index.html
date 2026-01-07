@@ -271,9 +271,10 @@
       </div>
 
       <div class="form-step" data-step="8">
-        <div class="form-title">Ton email ?</div>
-        <div class="form-subtitle">Pour te connecter ensuite</div>
-        <input type="email" class="form-input" id="email" placeholder="ton@email.com">
+        <div class="form-title">Ta phrase d'accroche ?</div>
+        <div class="form-subtitle">Une phrase courte qui te représente (visible sur ta carte)</div>
+        <textarea class="form-input" id="catchphrase" placeholder="Ex: J'aime les ananas et les couchers de soleil 🌅" rows="3" maxlength="100" style="resize:none; font-family:inherit;"></textarea>
+        <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="catchphraseCount">0</span>/100</div>
         <div id="error8" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
@@ -282,11 +283,34 @@
       </div>
 
       <div class="form-step" data-step="9">
+        <div class="form-title">Parle-nous de toi</div>
+        <div class="form-subtitle">Une description plus détaillée (visible dans ton profil)</div>
+        <textarea class="form-input" id="bio" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="6" maxlength="500" style="resize:none; font-family:inherit;"></textarea>
+        <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="bioCount">0</span>/500</div>
+        <div id="error9" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <div class="form-step" data-step="10">
+        <div class="form-title">Ton email ?</div>
+        <div class="form-subtitle">Pour te connecter ensuite</div>
+        <input type="email" class="form-input" id="email" placeholder="ton@email.com">
+        <div id="error10" class="error-message"></div>
+        <div class="form-actions">
+          <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
+          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <div class="form-step" data-step="11">
         <div class="form-title">Crée un mot de passe</div>
         <div class="form-subtitle">Minimum 6 caractères</div>
         <input type="password" class="form-input" id="password" placeholder="Mot de passe" minlength="6">
         <input type="password" class="form-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" style="margin-top: -10px;">
-        <div id="error9" class="error-message"></div>
+        <div id="error11" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
           <button class="btn-small btn-next" onclick="submitForm()">Créer mon compte</button>
@@ -463,6 +487,19 @@
           <div style="margin-bottom:15px;">
             <label style="display:block; opacity:0.7; margin-bottom:8px;">Ville</label>
             <input type="text" id="editCity" class="form-input" placeholder="Ville" style="margin:0;">
+          </div>
+        </div>
+
+        <div class="profile-info" style="margin-bottom:20px;">
+          <div style="margin-bottom:15px;">
+            <label style="display:block; opacity:0.7; margin-bottom:8px;">Phrase d'accroche</label>
+            <textarea id="editCatchphrase" class="form-input" placeholder="Ex: J'aime les ananas et les couchers de soleil 🌅" rows="3" maxlength="100" style="margin:0; resize:none; font-family:inherit;"></textarea>
+            <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="editCatchphraseCount">0</span>/100</div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <label style="display:block; opacity:0.7; margin-bottom:8px;">Description</label>
+            <textarea id="editBio" class="form-input" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="6" maxlength="500" style="margin:0; resize:none; font-family:inherit;"></textarea>
+            <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="editBioCount">0</span>/500</div>
           </div>
         </div>
 
@@ -685,6 +722,51 @@
     </div>
   </div>
 
+  <!-- Modal Profil Détaillé -->
+  <div id="profileModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; overflow-y:auto;">
+    <div style="max-width:500px; margin:20px auto; position:relative;">
+      <button onclick="closeProfileModal()" style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.2); border:none; color:white; width:40px; height:40px; border-radius:50%; font-size:1.5rem; cursor:pointer; z-index:10;">×</button>
+      
+      <div style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding:30px; border-radius:15px; color:white;">
+        <div style="text-align:center; margin-bottom:20px;">
+          <img id="modalProfilePhoto" src="" alt="Photo" style="width:150px; height:150px; border-radius:50%; object-fit:cover; border:4px solid rgba(255,255,255,0.3);">
+        </div>
+        
+        <div style="text-align:center; margin-bottom:30px;">
+          <h2 id="modalProfileName" style="font-size:2rem; font-weight:700; margin-bottom:5px;">-</h2>
+          <div id="modalProfileAge" style="font-size:1.2rem; opacity:0.9; margin-bottom:10px;">-</div>
+          <div id="modalProfileCity" style="font-size:1rem; opacity:0.8;">📍 -</div>
+        </div>
+
+        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
+          <div style="font-weight:600; margin-bottom:10px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">Phrase d'accroche</div>
+          <div id="modalProfileCatchphrase" style="font-style:italic; font-size:1.1rem; line-height:1.5;">-</div>
+        </div>
+
+        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
+          <div style="font-weight:600; margin-bottom:10px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">À propos</div>
+          <div id="modalProfileBio" style="font-size:1rem; line-height:1.6; white-space:pre-wrap;">-</div>
+        </div>
+
+        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
+          <div style="font-weight:600; margin-bottom:15px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">Intérêts</div>
+          <div id="modalProfileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; text-align:center;">
+            <div style="font-size:0.85rem; opacity:0.8; margin-bottom:5px;">Genre</div>
+            <div id="modalProfileGender" style="font-weight:600; font-size:1.1rem;">-</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; text-align:center;">
+            <div style="font-size:0.85rem; opacity:0.8; margin-bottom:5px;">Sexualité</div>
+            <div id="modalProfileSexuality" style="font-weight:600; font-size:1.1rem;">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
@@ -697,9 +779,9 @@
 
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
 
-    let formData = { firstName: '', age: '', city: '', location: null, gender: '', sexuality: '', interests: [], photoFile: null, email: '', password: '' };
+    let formData = { firstName: '', age: '', city: '', location: null, gender: '', sexuality: '', interests: [], photoFile: null, catchphrase: '', bio: '', email: '', password: '' };
     let currentStep = 1;
-    const totalSteps = 9;
+    const totalSteps = 11;
     let potentialMatches = [];
     let currentMatchIndex = 0;
 
@@ -791,8 +873,10 @@
       else if (step === 5) { if (!formData.sexuality) { if (error) error.textContent = 'Sélectionne une option'; return false; } }
       else if (step === 6) { if (formData.interests.length < 5) { if (error) error.textContent = 'Au moins 5 intérêts'; return false; } }
       else if (step === 7) { if (!formData.photoFile) { if (error) error.textContent = 'Photo obligatoire'; return false; } }
-      else if (step === 8) { const e = document.getElementById('email').value.trim(); if (!e || !e.includes('@')) { if (error) error.textContent = 'Email invalide'; return false; } formData.email = e; }
-      else if (step === 9) { const p = document.getElementById('password').value, pc = document.getElementById('passwordConfirm').value; if (p.length < 6) { if (error) error.textContent = 'Mot de passe trop court'; return false; } if (p !== pc) { if (error) error.textContent = 'Mots de passe différents'; return false; } formData.password = p; }
+      else if (step === 8) { const cp = document.getElementById('catchphrase').value.trim(); if (cp.length < 10) { if (error) error.textContent = 'Phrase d\'accroche trop courte (min 10 caractères)'; return false; } formData.catchphrase = cp; }
+      else if (step === 9) { const b = document.getElementById('bio').value.trim(); if (b.length < 20) { if (error) error.textContent = 'Description trop courte (min 20 caractères)'; return false; } formData.bio = b; }
+      else if (step === 10) { const e = document.getElementById('email').value.trim(); if (!e || !e.includes('@')) { if (error) error.textContent = 'Email invalide'; return false; } formData.email = e; }
+      else if (step === 11) { const p = document.getElementById('password').value, pc = document.getElementById('passwordConfirm').value; if (p.length < 6) { if (error) error.textContent = 'Mot de passe trop court'; return false; } if (p !== pc) { if (error) error.textContent = 'Mots de passe différents'; return false; } formData.password = p; }
       return true;
     }
 
@@ -833,6 +917,8 @@
           gender: formData.gender,
           sexuality: formData.sexuality,
           interests: formData.interests,
+          catchphrase: formData.catchphrase,
+          bio: formData.bio,
           email: formData.email,
           photo_url: photoUrl
         });
@@ -847,7 +933,7 @@
     }
 
     window.submitForm = async function() {
-      if (!window.validateStep(9)) return;
+      if (!window.validateStep(11)) return;
       const btn = document.querySelector('button[onclick="submitForm()"]');
       try {
         btn.textContent = "Création..."; btn.disabled = true;
@@ -1004,8 +1090,9 @@
       const p = potentialMatches[currentMatchIndex];
       const tags = (p.interests || []).map(t => `<span class="mini-tag">${t}</span>`).join('');
       const bg = p.photo_url || '/assets/images/homme1.jpeg';
+      const catchphrase = p.catchphrase || 'Pas de phrase d\'accroche';
       // Profils à découvrir = toujours blur max (pas encore de match)
-      stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}'); filter: blur(40px);"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
+      stack.innerHTML = `<div class="match-card" onclick="showProfileModal('${p.id}')"><div class="card-image-area" style="background-image: url('${bg}'); filter: blur(40px);"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-catchphrase" style="font-style:italic; opacity:0.9; margin:10px 0; font-size:0.95rem;">"${catchphrase}"</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
     window.handleSwipe = async function(action) {
@@ -1186,6 +1273,12 @@
         document.getElementById('editFirstname').value = data.firstname;
         document.getElementById('editAge').value = data.age;
         document.getElementById('editCity').value = data.city || '';
+        document.getElementById('editCatchphrase').value = data.catchphrase || '';
+        document.getElementById('editBio').value = data.bio || '';
+        
+        // Update character counts
+        document.getElementById('editCatchphraseCount').textContent = (data.catchphrase || '').length;
+        document.getElementById('editBioCount').textContent = (data.bio || '').length;
         
         if (data.photo_url) {
           document.getElementById('editProfilePhoto').src = data.photo_url;
@@ -1230,9 +1323,16 @@
       const firstname = document.getElementById('editFirstname').value.trim();
       const age = parseInt(document.getElementById('editAge').value);
       const city = document.getElementById('editCity').value.trim();
+      const catchphrase = document.getElementById('editCatchphrase').value.trim();
+      const bio = document.getElementById('editBio').value.trim();
       
       if (!firstname || !age || age < 20 || editProfileData.interests.length < 5) {
         alert('Vérifie que tous les champs sont remplis et que tu as au moins 5 intérêts sélectionnés.');
+        return;
+      }
+      
+      if (catchphrase.length < 10 || bio.length < 20) {
+        alert('La phrase d\'accroche doit faire au moins 10 caractères et la description au moins 20 caractères.');
         return;
       }
       
@@ -1264,6 +1364,8 @@
             firstname: firstname,
             age: age,
             city: city,
+            catchphrase: catchphrase,
+            bio: bio,
             interests: editProfileData.interests,
             photo_url: photoUrl
           })
@@ -1383,6 +1485,43 @@
 
     window.logout = function() { supabase.auth.signOut().then(() => { currentUser = null; window.goToLanding(); }); }
 
+    // PROFILE MODAL
+    window.showProfileModal = async function(userId) {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .single();
+        
+        if (error) throw error;
+        
+        const modal = document.getElementById('profileModal');
+        document.getElementById('modalProfilePhoto').src = data.photo_url || '/assets/images/homme1.jpeg';
+        document.getElementById('modalProfileName').textContent = data.firstname;
+        document.getElementById('modalProfileAge').textContent = `${data.age} ans`;
+        document.getElementById('modalProfileCity').textContent = `📍 ${data.city || 'Non renseigné'}`;
+        document.getElementById('modalProfileCatchphrase').textContent = data.catchphrase || 'Pas de phrase d\'accroche';
+        document.getElementById('modalProfileBio').textContent = data.bio || 'Pas de description';
+        document.getElementById('modalProfileGender').textContent = data.gender;
+        document.getElementById('modalProfileSexuality').textContent = data.sexuality;
+        
+        const interestsHtml = (data.interests || []).map(i => `<span class="mini-tag">${i}</span>`).join('');
+        document.getElementById('modalProfileInterests').innerHTML = interestsHtml;
+        
+        // La photo dans la modal reste floutée
+        document.getElementById('modalProfilePhoto').style.filter = 'blur(40px)';
+        
+        modal.style.display = 'block';
+      } catch (error) {
+        console.error('Show profile modal error:', error);
+      }
+    }
+
+    window.closeProfileModal = function() {
+      document.getElementById('profileModal').style.display = 'none';
+    }
+
     // PWA Installation
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -1418,6 +1557,42 @@
     }
 
     window.updateProgress();
+    
+    // Compteurs de caractères pour catchphrase et bio
+    const catchphraseInput = document.getElementById('catchphrase');
+    const bioInput = document.getElementById('bio');
+    const catchphraseCount = document.getElementById('catchphraseCount');
+    const bioCount = document.getElementById('bioCount');
+    
+    if (catchphraseInput && catchphraseCount) {
+      catchphraseInput.addEventListener('input', function() {
+        catchphraseCount.textContent = this.value.length;
+      });
+    }
+    
+    if (bioInput && bioCount) {
+      bioInput.addEventListener('input', function() {
+        bioCount.textContent = this.value.length;
+      });
+    }
+    
+    // Compteurs pour l'édition de profil
+    const editCatchphraseInput = document.getElementById('editCatchphrase');
+    const editBioInput = document.getElementById('editBio');
+    const editCatchphraseCount = document.getElementById('editCatchphraseCount');
+    const editBioCount = document.getElementById('editBioCount');
+    
+    if (editCatchphraseInput && editCatchphraseCount) {
+      editCatchphraseInput.addEventListener('input', function() {
+        editCatchphraseCount.textContent = this.value.length;
+      });
+    }
+    
+    if (editBioInput && editBioCount) {
+      editBioInput.addEventListener('input', function() {
+        editBioCount.textContent = this.value.length;
+      });
+    }
   </script>
 </body>
 </html>

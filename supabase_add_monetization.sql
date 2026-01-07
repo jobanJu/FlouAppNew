@@ -35,6 +35,22 @@ begin
                  and column_name = 'subscription_start') then
     alter table public.users add column subscription_start timestamptz;
   end if;
+  
+  -- Phrase d'accroche (courte, visible sur swipe)
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'catchphrase') then
+    alter table public.users add column catchphrase text;
+  end if;
+  
+  -- Description / Bio (longue, visible dans profil détaillé)
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'bio') then
+    alter table public.users add column bio text;
+  end if;
 end $$;
 
 -- ================================
@@ -143,6 +159,7 @@ do $$
 begin
   raise notice '✅ Migration monétisation complétée avec succès!';
   raise notice '📊 Colonnes ajoutées: brumes_balance, subscription_tier, subscription_start';
+  raise notice '📊 Colonnes ajoutées: catchphrase (phrase d''accroche), bio (description)';
   raise notice '📊 Table créée: transactions';
   raise notice '⚙️ Fonctions créées: record_transaction, spend_brumes';
 end $$;
