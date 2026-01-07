@@ -70,10 +70,13 @@
     .success-message h2 { font-size: 1.8rem; margin-bottom: 20px; }
     .success-message p { opacity: 0.9; line-height: 1.6; }
 
-    .matches-container { width: 100%; max-width: 400px; height: 100%; display: flex; flex-direction: column; position: relative; }
-    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-bottom: 20px; }
-    .cards-stack { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 450px; }
-    .match-card { position: absolute; width: 100%; max-width: 360px; height: 100%; background: rgba(30, 30, 30, 0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); }
+    .matches-container { width: 100%; max-width: 100%; height: 100vh; display: flex; flex-direction: column; position: relative; padding-bottom: 70px; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
+    .cards-stack { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .match-card { position: absolute; width: 100%; max-width: 360px; height: 550px; background: rgba(30, 30, 30, 0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s, opacity 0.3s, rotate 0.3s; cursor: grab; }
+    .match-card.swiping { transition: none; }
+    .match-card.swipe-left { transform: translateX(-400px) rotate(-20deg); opacity: 0; }
+    .match-card.swipe-right { transform: translateX(400px) rotate(20deg); opacity: 0; }
     .card-image-area { flex: 2; background: #111; display: flex; justify-content: center; align-items: center; position: relative; background-size: cover; background-position: center; }
     .card-blur-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(20px); background: rgba(0,0,0,0.2); z-index: 10; }
     .card-info { flex: 1; padding: 20px; display: flex; flex-direction: column; }
@@ -88,7 +91,53 @@
     .action-btn:hover { transform: scale(1.1); }
     .no-more-profiles { text-align: center; padding: 40px; }
 
-    @media (max-width: 640px) { .form-step, .hero { width: 100%; padding: 0; } }
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; cursor: pointer; color: rgba(255,255,255,0.5); transition: color 0.3s; text-decoration: none; }
+    .nav-item.active { color: #667eea; }
+    .nav-item:hover { color: rgba(255,255,255,0.8); }
+    .nav-icon { font-size: 1.5rem; }
+    .nav-label { font-size: 0.7rem; }
+    .nav-badge { position: absolute; top: 5px; right: 25%; background: #ff6b6b; color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+
+    /* APP CONTAINER */
+    .app-view { display: none; width: 100%; height: 100vh; overflow-y: auto; padding-bottom: 70px; }
+    .app-view.active { display: block; }
+    
+    /* MATCHES LIST */
+    .matches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; }
+    .match-item { background: rgba(30, 30, 30, 0.9); border-radius: 15px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+    .match-item:hover { transform: scale(1.05); }
+    .match-item-img { width: 100%; height: 200px; object-fit: cover; filter: blur(15px); }
+    .match-item-info { padding: 12px; }
+    .match-item-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+    .match-item-preview { font-size: 0.85rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* MESSAGES */
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 70px); }
+    .chat-header { padding: 15px 20px; background: rgba(20, 20, 20, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .chat-back { font-size: 1.5rem; cursor: pointer; }
+    .chat-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; filter: blur(8px); }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .message { max-width: 75%; padding: 12px 16px; border-radius: 18px; }
+    .message.sent { align-self: flex-end; background: #667eea; }
+    .message.received { align-self: flex-start; background: rgba(255,255,255,0.1); }
+    .chat-input-container { padding: 15px 20px; background: rgba(20, 20, 20, 0.95); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; }
+    .chat-input { flex: 1; padding: 12px 16px; border-radius: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; }
+    .chat-send { padding: 12px 20px; border-radius: 20px; background: #667eea; color: white; border: none; font-weight: 600; cursor: pointer; }
+
+    /* PROFILE */
+    .profile-container { padding: 20px; max-width: 500px; margin: 0 auto; }
+    .profile-header { text-align: center; margin-bottom: 30px; }
+    .profile-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px; filter: blur(10px); }
+    .profile-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+    .profile-info { background: rgba(30, 30, 30, 0.9); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+    .profile-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .profile-row:last-child { border-bottom: none; }
+    .profile-label { opacity: 0.7; }
+    .profile-value { font-weight: 600; }
+
+    @media (max-width: 640px) { .form-step, .hero { width: 100%; padding: 0; } .matches-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -262,19 +311,101 @@
     </div>
   </div>
 
-  <!-- MATCHES PAGE -->
-  <div id="matchesPage" class="page">
-    <div class="matches-container">
+  <!-- APP PAGE (avec navigation) -->
+  <div id="appPage" class="page">
+    <!-- Vue Découvrir -->
+    <div id="discoverView" class="app-view active">
+      <div class="matches-container">
+        <div class="top-nav">
+          <div style="font-size:1.5rem; font-weight:bold;">Flou.</div>
+        </div>
+        <div class="cards-stack" id="cardsStack">
+          <div class="no-more-profiles"><p>Chargement des profils...</p></div>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn btn-pass" onclick="handleSwipe('pass')">✕</button>
+          <button class="action-btn btn-like" onclick="handleSwipe('like')">❤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vue Matches -->
+    <div id="matchesListView" class="app-view">
       <div class="top-nav">
-        <div style="font-size:1.5rem; font-weight:bold;">Flou.</div>
-        <button style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;" onclick="logout()">🚪</button>
+        <div style="font-size:1.5rem; font-weight:bold;">Mes Matches</div>
       </div>
-      <div class="cards-stack" id="cardsStack">
-        <div class="no-more-profiles"><p>Chargement des profils...</p></div>
+      <div class="matches-grid" id="matchesGrid">
+        <div style="grid-column: 1/-1; text-align:center; padding:40px; opacity:0.7;">Chargement...</div>
       </div>
-      <div class="card-actions">
-        <button class="action-btn btn-pass" onclick="handleSwipe('pass')">✕</button>
-        <button class="action-btn btn-like" onclick="handleSwipe('like')">❤</button>
+    </div>
+
+    <!-- Vue Messages -->
+    <div id="messagesView" class="app-view">
+      <div id="conversationsList">
+        <div class="top-nav">
+          <div style="font-size:1.5rem; font-weight:bold;">Messages</div>
+        </div>
+        <div id="conversationsContainer" style="padding:20px;">
+          <div style="text-align:center; padding:40px; opacity:0.7;">Aucune conversation pour le moment</div>
+        </div>
+      </div>
+      <div id="chatView" style="display:none;">
+        <!-- Chat individuel -->
+      </div>
+    </div>
+
+    <!-- Vue Profil -->
+    <div id="profileView" class="app-view">
+      <div class="profile-container">
+        <div class="profile-header">
+          <img id="profilePhoto" src="" alt="Photo" class="profile-photo">
+          <div class="profile-name" id="profileName">Chargement...</div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-row">
+            <span class="profile-label">Âge</span>
+            <span class="profile-value" id="profileAge">-</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-label">Ville</span>
+            <span class="profile-value" id="profileCity">-</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-label">Genre</span>
+            <span class="profile-value" id="profileGender">-</span>
+          </div>
+          <div class="profile-row">
+            <span class="profile-label">Sexualité</span>
+            <span class="profile-value" id="profileSexuality">-</span>
+          </div>
+        </div>
+        <div class="profile-info">
+          <div style="font-weight:600; margin-bottom:10px; opacity:0.9;">Intérêts</div>
+          <div id="profileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()" style="width:100%; margin-top:20px;">Déconnexion</button>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchView('discover')">
+        <div class="nav-icon">🔥</div>
+        <div class="nav-label">Découvrir</div>
+      </div>
+      <div class="nav-item" onclick="switchView('matches')">
+        <div class="nav-icon">💜</div>
+        <div class="nav-label">Matches</div>
+        <span id="matchesBadge" class="nav-badge" style="display:none;">0</span>
+      </div>
+      <div class="nav-item" onclick="switchView('messages')">
+        <div class="nav-icon">💬</div>
+        <div class="nav-label">Messages</div>
+        <span id="messagesBadge" class="nav-badge" style="display:none;">0</span>
+      </div>
+      <div class="nav-item" onclick="switchView('profile')">
+        <div class="nav-icon">👤</div>
+        <div class="nav-label">Profil</div>
       </div>
     </div>
   </div>
@@ -491,7 +622,36 @@
     window.goToSignup = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('signupPage').classList.add('active'); currentStep = 1; window.showStep(1); window.renderInterests(); }
     window.goToLanding = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('landingPage').classList.add('active'); }
     window.login = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('loginPage').classList.add('active'); }
-    window.goToMatches = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('matchesPage').classList.add('active'); window.loadMatches(); }
+    window.goToMatches = function() { 
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+      document.getElementById('appPage').classList.add('active');
+      window.switchView('discover');
+      window.loadMatches();
+      window.loadMyMatches();
+      window.loadProfile();
+    }
+
+    // NAVIGATION ENTRE VUES
+    window.switchView = function(view) {
+      document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      if (view === 'discover') {
+        document.getElementById('discoverView').classList.add('active');
+        document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+      } else if (view === 'matches') {
+        document.getElementById('matchesListView').classList.add('active');
+        document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+        window.loadMyMatches();
+      } else if (view === 'messages') {
+        document.getElementById('messagesView').classList.add('active');
+        document.querySelector('.nav-item:nth-child(3)').classList.add('active');
+      } else if (view === 'profile') {
+        document.getElementById('profileView').classList.add('active');
+        document.querySelector('.nav-item:nth-child(4)').classList.add('active');
+        window.loadProfile();
+      }
+    }
 
     window.isCompatible = function(myProfile, otherProfile) {
       const myGender = myProfile.gender;
@@ -566,7 +726,107 @@
       stack.innerHTML = `<div class="match-card"><div class="card-image-area" style="background-image: url('${bg}');"><div class="card-blur-overlay"></div></div><div class="card-info"><div class="card-name">${p.firstname}, ${p.age}</div><div class="card-details">📍 ${p.city || 'Non renseigné'}</div><div class="card-interests">${tags}</div></div></div>`;
     }
 
-    window.handleSwipe = function(action) { if (currentMatchIndex >= potentialMatches.length) return; currentMatchIndex++; window.renderCurrentMatch(); }
+    window.handleSwipe = async function(action) {
+      if (currentMatchIndex >= potentialMatches.length) return;
+      const profile = potentialMatches[currentMatchIndex];
+      const card = document.querySelector('.match-card');
+      
+      // Animation
+      if (card) {
+        card.classList.add(action === 'like' ? 'swipe-right' : 'swipe-left');
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      // Si like, enregistrer dans la DB
+      if (action === 'like' && currentUser) {
+        try {
+          const { data, error } = await supabase.from('matches').insert({
+            user_id: currentUser.id,
+            liked_user_id: profile.id
+          }).select().single();
+          
+          if (!error && data.status === 'matched') {
+            alert('💜 C\'est un match ! Vous vous plaisez mutuellement !');
+            window.loadMyMatches();
+          }
+        } catch (err) { console.error('Match error:', err); }
+      }
+      
+      currentMatchIndex++;
+      window.renderCurrentMatch();
+    }
+
+    // LOAD MY MATCHES
+    window.loadMyMatches = async function() {
+      if (!currentUser) return;
+      try {
+        const { data, error } = await supabase
+          .from('matches')
+          .select('*, users!matches_liked_user_id_fkey(*)')
+          .eq('user_id', currentUser.id)
+          .eq('status', 'matched');
+        
+        if (error) throw error;
+        
+        const grid = document.getElementById('matchesGrid');
+        if (!data || data.length === 0) {
+          grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; opacity:0.7;">Aucun match pour le moment 💔</div>';
+          return;
+        }
+        
+        grid.innerHTML = data.map(m => {
+          const user = m.users;
+          return `
+            <div class="match-item" onclick="openChat('${user.id}', '${user.firstname}')">
+              <img src="${user.photo_url || '/assets/images/homme1.jpeg'}" class="match-item-img" alt="${user.firstname}">
+              <div class="match-item-info">
+                <div class="match-item-name">${user.firstname}, ${user.age}</div>
+                <div class="match-item-preview">💬 Dites-vous bonjour !</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        // Update badge
+        const badge = document.getElementById('matchesBadge');
+        if (data.length > 0) {
+          badge.textContent = data.length;
+          badge.style.display = 'block';
+        }
+      } catch (error) { console.error('Load matches error:', error); }
+    }
+
+    // LOAD PROFILE
+    window.loadProfile = async function() {
+      if (!currentUser) return;
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+        
+        if (error) throw error;
+        
+        document.getElementById('profileName').textContent = data.firstname;
+        document.getElementById('profileAge').textContent = data.age;
+        document.getElementById('profileCity').textContent = data.city || 'Non renseigné';
+        document.getElementById('profileGender').textContent = data.gender;
+        document.getElementById('profileSexuality').textContent = data.sexuality;
+        
+        if (data.photo_url) {
+          document.getElementById('profilePhoto').src = data.photo_url;
+        }
+        
+        const interestsContainer = document.getElementById('profileInterests');
+        interestsContainer.innerHTML = data.interests.map(i => `<span class="mini-tag">${i}</span>`).join('');
+      } catch (error) { console.error('Load profile error:', error); }
+    }
+
+    // OPEN CHAT (placeholder)
+    window.openChat = function(userId, name) {
+      alert(`Chat avec ${name} - À implémenter prochainement !`);
+    }
     window.logout = function() { supabase.auth.signOut().then(() => { currentUser = null; window.goToLanding(); }); }
 
     window.updateProgress();
