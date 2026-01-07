@@ -47,6 +47,17 @@ create table if not exists public.users (
   created_at timestamptz default now()
 );
 
+-- Ajouter la colonne interests si elle n'existe pas (pour mise à jour)
+do $$ 
+begin
+  if not exists (select 1 from information_schema.columns 
+                 where table_schema = 'public' 
+                 and table_name = 'users' 
+                 and column_name = 'interests') then
+    alter table public.users add column interests text[] not null default '{}';
+  end if;
+end $$;
+
 -- Index pour performance
 create index if not exists idx_users_gender on public.users(gender);
 create index if not exists idx_users_sexuality on public.users(sexuality);
