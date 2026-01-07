@@ -38,6 +38,39 @@
       text-align: center;
       width: 100%;
       max-width: 500px;
+      position: relative;
+      z-index: 10;
+    }
+
+    #landingPage {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #landingPage::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 5;
+    }
+
+    #landingPage video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    #landingPage .page {
+      position: relative;
+      z-index: 10;
     }
 
     .logo-container {
@@ -294,6 +327,9 @@
 <body>
   <!-- LANDING PAGE -->
   <div id="landingPage" class="page active">
+    <video autoplay muted loop playsinline>
+      <source src="./assets/videos/Inscri1.mp4" type="video/mp4">
+    </video>
     <div class="hero">
       <div class="logo-container">
         <img src="./assets/logos/logo3.png" alt="Flou Logo">
@@ -301,7 +337,7 @@
       <h1>Et si l'essentiel se révélait avant le visage ?</h1>
       <div class="button-group">
         <button class="btn btn-primary" onclick="goToSignup()">
-          Commencer
+          S'inscrire
         </button>
         <button class="btn btn-secondary" onclick="login()">
           Connexion
