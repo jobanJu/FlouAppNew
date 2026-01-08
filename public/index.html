@@ -711,11 +711,12 @@
 
       <div class="form-step" data-step="3">
         <div class="form-title">Où es-tu ?</div>
-        <div class="form-subtitle">Active la localisation pour voir les profils autour de toi</div>
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-          <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;">
-          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;">◎</button>
+        <div class="form-subtitle">Active la localisation ou saisis ta ville</div>
+        <div style="display:flex; gap:10px; margin-bottom:15px; position: relative;">
+          <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;" oninput="searchCity(this.value)" autocomplete="off">
+          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;" title="Géolocalisation">📍</button>
         </div>
+        <div id="citySuggestions" style="position:absolute; background:#1a1a2e; border-radius:12px; max-height:200px; overflow-y:auto; z-index:100; width:calc(100% - 70px); display:none;"></div>
         <div id="error3" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
@@ -2018,14 +2019,64 @@
         async (pos) => {
           formData.location = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           try {
-            const res = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${pos.coords.longitude}&lat=${pos.coords.latitude}`);
+            // Utiliser Nominatim (OpenStreetMap) - gratuit et mondial
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&zoom=10&addressdetails=1`, {
+              headers: { 'Accept-Language': 'fr' }
+            });
             const data = await res.json();
-            if (data.features?.length > 0) document.getElementById('city').value = data.features[0].properties.city || '';
-          } catch(e) {}
+            if (data.address) {
+              const city = data.address.city || data.address.town || data.address.village || data.address.municipality || '';
+              document.getElementById('city').value = city;
+              formData.city = city;
+            }
+          } catch(e) { console.error('Erreur géoloc:', e); }
           btn.textContent = "✅";
         },
-        (err) => { alert("Erreur: " + err.message); btn.textContent = "📍"; }
+        (err) => { alert("Erreur: " + err.message); btn.textContent = "📍"; },
+        { enableHighAccuracy: true, timeout: 10000 }
       );
+    }
+
+    // Recherche de ville avec autocomplétion (Nominatim)
+    let searchTimeout = null;
+    window.searchCity = async function(query) {
+      const suggestions = document.getElementById('citySuggestions');
+      
+      if (query.length < 3) {
+        suggestions.style.display = 'none';
+        return;
+      }
+      
+      // Debounce pour éviter trop de requêtes
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(async () => {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`, {
+            headers: { 'Accept-Language': 'fr' }
+          });
+          const data = await res.json();
+          
+          if (data.length > 0) {
+            suggestions.innerHTML = data.map(item => {
+              const city = item.address?.city || item.address?.town || item.address?.village || item.name;
+              const country = item.address?.country || '';
+              return `<div onclick="selectCity('${city}', ${item.lat}, ${item.lon})" style="padding:12px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.1);" onmouseover="this.style.background='rgba(139,92,246,0.3)'" onmouseout="this.style.background='transparent'">${city}, ${country}</div>`;
+            }).join('');
+            suggestions.style.display = 'block';
+          } else {
+            suggestions.style.display = 'none';
+          }
+        } catch(e) {
+          console.error('Erreur recherche ville:', e);
+        }
+      }, 300);
+    }
+
+    window.selectCity = function(city, lat, lon) {
+      document.getElementById('city').value = city;
+      document.getElementById('citySuggestions').style.display = 'none';
+      formData.city = city;
+      formData.location = { lat: parseFloat(lat), lng: parseFloat(lon) };
     }
 
     window.handleFileSelect = function(input) {
@@ -2178,34 +2229,47 @@
 
     // Gérer le callback après connexion Google
     window.handleGoogleCallback = async function() {
+      console.log('🔄 handleGoogleCallback appelé');
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (session && session.user) {
         currentUser = session.user;
+        console.log('👤 User Google:', currentUser.email);
         
-        // Vérifier si le profil existe déjà
+        // Vérifier si le profil existe déjà et est complet
         const { data: existingProfile, error: profileError } = await supabase
           .from('users')
           .select('*')
           .eq('id', currentUser.id)
           .single();
         
-        if (existingProfile && existingProfile.firstname) {
-          // Profil complet existe, aller aux matches
+        console.log('📋 Profil existant:', existingProfile, 'Erreur:', profileError);
+        
+        // Profil complet = firstname + gender + seeking renseignés
+        const isProfileComplete = existingProfile && 
+          existingProfile.firstname && 
+          existingProfile.gender && 
+          existingProfile.seeking;
+        
+        if (isProfileComplete) {
+          console.log('✅ Profil complet, vers matches');
           window.goToMatches();
         } else {
-          // Nouveau user Google, créer profil minimal et aller à l'inscription
+          console.log('⚠️ Profil incomplet, vers complétion');
+          // Nouveau user Google ou profil incomplet
           const userMetadata = currentUser.user_metadata || {};
           
           if (!existingProfile) {
             // Créer une entrée minimale
-            await supabase.from('users').upsert({
+            console.log('📝 Création profil minimal...');
+            const { error: insertError } = await supabase.from('users').upsert({
               id: currentUser.id,
               email: currentUser.email,
               firstname: userMetadata.full_name?.split(' ')[0] || userMetadata.name?.split(' ')[0] || '',
               photo_url: userMetadata.avatar_url || userMetadata.picture || null,
               created_at: new Date().toISOString()
             });
+            if (insertError) console.error('Erreur création profil:', insertError);
           }
           
           // Rediriger vers la complétion du profil
