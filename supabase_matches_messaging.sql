@@ -1,36 +1,42 @@
--- TABLES POUR MATCHES ET MESSAGERIE
--- Exécute ce script dans SQL Editor Supabase
+-- ============================================
+-- MATCHES & MESSAGERIE - VERSION SAFE
+-- Gère les objets déjà existants
+-- ============================================
 
 -- 1. Table des likes/matches
-create table if not exists matches (
+CREATE TABLE IF NOT EXISTS matches (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users not null,
   liked_user_id uuid references auth.users not null,
   status text default 'pending' check (status in ('pending', 'matched')),
-  matched_at timestamptz, -- Date du match mutuel pour calcul de déflouttage
+  matched_at timestamptz,
   created_at timestamptz default now(),
   unique(user_id, liked_user_id)
 );
 
--- Index pour performance
-create index if not exists idx_matches_user on matches(user_id);
-create index if not exists idx_matches_liked on matches(liked_user_id);
+-- Index pour matches (IF NOT EXISTS = safe)
+CREATE INDEX IF NOT EXISTS idx_matches_user ON matches(user_id);
+CREATE INDEX IF NOT EXISTS idx_matches_liked ON matches(liked_user_id);
 
 -- RLS pour matches
-alter table matches enable row level security;
+ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
 
-create policy "Users can view their matches"
-on matches for select
-to authenticated
-using (auth.uid() = user_id or auth.uid() = liked_user_id);
+-- Policies matches (DROP puis CREATE pour éviter les erreurs)
+DROP POLICY IF EXISTS "Users can view their matches" ON matches;
+CREATE POLICY "Users can view their matches"
+ON matches FOR SELECT
+TO authenticated
+USING (auth.uid() = user_id OR auth.uid() = liked_user_id);
 
-create policy "Users can create matches"
-on matches for insert
-to authenticated
-with check (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can create matches" ON matches;
+CREATE POLICY "Users can create matches"
+ON matches FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = user_id);
+
 
 -- 2. Table des messages
-create table if not exists messages (
+CREATE TABLE IF NOT EXISTS messages (
   id uuid default gen_random_uuid() primary key,
   match_id uuid not null,
   sender_id uuid references auth.users not null,
@@ -40,65 +46,68 @@ create table if not exists messages (
   created_at timestamptz default now()
 );
 
--- Index pour performance
-create index if not exists idx_messages_match on messages(match_id);
-create index if not exists idx_messages_receiver on messages(receiver_id, read);
+-- Index pour messages
+CREATE INDEX IF NOT EXISTS idx_messages_match ON messages(match_id);
+CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id, read);
 
 -- RLS pour messages
-alter table messages enable row level security;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 
-create policy "Users can view their messages"
-on messages for select
-to authenticated
-using (auth.uid() = sender_id or auth.uid() = receiver_id);
+-- Policies messages (DROP puis CREATE)
+DROP POLICY IF EXISTS "Users can view their messages" ON messages;
+CREATE POLICY "Users can view their messages"
+ON messages FOR SELECT
+TO authenticated
+USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
 
-create policy "Users can send messages"
-on messages for insert
-to authenticated
-with check (auth.uid() = sender_id);
+DROP POLICY IF EXISTS "Users can send messages" ON messages;
+CREATE POLICY "Users can send messages"
+ON messages FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = sender_id);
 
-create policy "Users can mark messages as read"
-on messages for update
-to authenticated
-using (auth.uid() = receiver_id);
+DROP POLICY IF EXISTS "Users can mark messages as read" ON messages;
+CREATE POLICY "Users can mark messages as read"
+ON messages FOR UPDATE
+TO authenticated
+USING (auth.uid() = receiver_id);
+
 
 -- 3. Fonction pour détecter les matches mutuels
-create or replace function check_mutual_match()
-returns trigger as $$
-begin
+CREATE OR REPLACE FUNCTION check_mutual_match()
+RETURNS TRIGGER AS $$
+BEGIN
   -- Check if the liked user already liked back
-  update matches
-  set status = 'matched', matched_at = now()
-  where user_id = new.liked_user_id 
-    and liked_user_id = new.user_id 
-    and status = 'pending';
+  UPDATE matches
+  SET status = 'matched', matched_at = now()
+  WHERE user_id = NEW.liked_user_id 
+    AND liked_user_id = NEW.user_id 
+    AND status = 'pending';
   
   -- Mark current like as matched if mutual
-  if found then
-    new.status = 'matched';
-    new.matched_at = now();
-  end if;
+  IF FOUND THEN
+    NEW.status = 'matched';
+    NEW.matched_at = now();
+  END IF;
   
-  return new;
-end;
-$$ language plpgsql;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-create trigger on_new_like
-  before insert on matches
-  for each row
-  execute function check_mutual_match();
+-- Trigger (DROP puis CREATE)
+DROP TRIGGER IF EXISTS on_new_like ON matches;
+CREATE TRIGGER on_new_like
+  BEFORE INSERT ON matches
+  FOR EACH ROW
+  EXECUTE FUNCTION check_mutual_match();
 
--- 4. PROFILS DE TEST
--- Insère 3 profils de test (tu dois d'abord créer les comptes auth manuellement ou utiliser ces UUIDs fictifs)
 
--- Note: Ces UUID sont fictifs. Pour des vrais profils de test, tu dois:
--- 1. Créer les comptes via l'interface Supabase Auth ou signup
--- 2. Récupérer leurs vrais UUID depuis auth.users
--- 3. Les utiliser dans ces INSERT
-
--- Exemple avec des UUID fictifs (remplace par de vrais UUID auth.users):
-insert into users (id, firstname, age, city, latitude, longitude, gender, sexuality, interests, email, photo_url) values
-  ('11111111-1111-1111-1111-111111111111', 'Sophie', 25, 'Paris', 48.8566, 2.3522, 'Femme', 'Hétérosexuel', ARRAY['Voyage', 'Cuisine', 'Musique'], 'sophie.test@flou.app', 'https://i.pravatar.cc/300?img=47'),
-  ('22222222-2222-2222-2222-222222222222', 'Marc', 28, 'Lyon', 45.7640, 4.8357, 'Homme', 'Hétérosexuel', ARRAY['Sport', 'Cinéma', 'Gaming'], 'marc.test@flou.app', 'https://i.pravatar.cc/300?img=12'),
-  ('33333333-3333-3333-3333-333333333333', 'Julie', 23, 'Marseille', 43.2965, 5.3698, 'Femme', 'Bisexuel', ARRAY['Art', 'Lecture', 'Yoga'], 'julie.test@flou.app', 'https://i.pravatar.cc/300?img=38')
-on conflict (id) do nothing;
+-- ==================== CONFIRMATION ====================
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Matches & Messagerie configurés !';
+  RAISE NOTICE '   - Table matches créée/vérifiée';
+  RAISE NOTICE '   - Table messages créée/vérifiée';
+  RAISE NOTICE '   - Policies RLS configurées';
+  RAISE NOTICE '   - Trigger match mutuel actif';
+END $$;
