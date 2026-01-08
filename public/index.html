@@ -4537,10 +4537,10 @@
           camBtn.style.background = !enabled ? 'rgba(255,255,255,0.1)' : '#EF4444';
         }
         
-        // Afficher/masquer la vidéo de chargement sur ma vidéo
-        const myVideoContainer = document.querySelector(`[data-uid="${agoraClient?.uid}"]`);
-        if (myVideoContainer) {
-          let loader = myVideoContainer.querySelector('.video-loader');
+        // Afficher/masquer la vidéo de chargement sur mon slot
+        const mySlot = document.getElementById(`videoSlot${myCurrentSlot}`);
+        if (mySlot) {
+          let loader = mySlot.querySelector('.video-loader');
           if (!enabled) {
             // Caméra activée - retirer le loader
             if (loader) loader.remove();
@@ -4549,12 +4549,13 @@
             if (!loader) {
               loader = document.createElement('div');
               loader.className = 'video-loader';
+              loader.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 15;';
               loader.innerHTML = `
-                <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 10; border-radius: 16px;">
+                <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 14px;">
                   <source src="/assets/videos/logochargement.mp4" type="video/mp4">
                 </video>
               `;
-              myVideoContainer.appendChild(loader);
+              mySlot.appendChild(loader);
             }
           }
         }
@@ -4563,6 +4564,7 @@
     
     // Variable pour stocker l'ID de l'hôte du live actuel
     let currentLiveHostId = null;
+    let myCurrentSlot = null; // Slot où je suis affiché
 
     let currentLiveId = null;
     let currentLiveType = null;
@@ -4835,6 +4837,8 @@
     // Rejoindre le live en tant qu'hôte (slot 1)
     window.joinLiveRoomAsHost = async function(liveId) {
       try {
+        currentLiveId = liveId;
+        
         const { data: live } = await supabase
           .from('lives')
           .select('*')
@@ -4844,7 +4848,7 @@
         currentLiveHostId = live.host_id;
         
         // Afficher le bouton paramètres pour le créateur
-        document.getElementById('liveSettingsBtn').style.display = 'block';
+        document.getElementById('liveSettingsBtn').style.display = 'flex';
         document.getElementById('liveCloseBtn').textContent = '✕ Fermer le live';
         document.getElementById('liveCloseBtn').style.background = '#DC2626';
         
@@ -5024,6 +5028,8 @@
     // Rejoindre un live en tant que spectateur
     window.joinLiveRoomAsSpectator = async function(liveId, userName) {
       try {
+        currentLiveId = liveId;
+        
         const { data: live, error } = await supabase
           .from('lives')
           .select('*')
@@ -5823,10 +5829,18 @@
           
           agoraClient.on('user-published', async (user, mediaType) => {
             await agoraClient.subscribe(user, mediaType);
+            console.log('📹 Remote user published:', user.uid, mediaType);
+            
             if (mediaType === 'video') {
               remoteUsers[user.uid] = user;
-              // Trouver le slot de cet utilisateur
-              const slot = findUserSlot(user.uid);
+              // Trouver un slot libre pour cet utilisateur
+              let slot = findUserSlot(user.uid);
+              if (!slot) {
+                slot = findFreeSlot();
+                if (slot) {
+                  videoSlots[slot] = user.uid;
+                }
+              }
               if (slot) {
                 displayVideoInSlot(user, slot, false);
               }
@@ -5837,12 +5851,14 @@
           });
           
           agoraClient.on('user-unpublished', (user, mediaType) => {
+            console.log('📹 Remote user unpublished:', user.uid, mediaType);
             if (mediaType === 'video') {
               showLoaderInSlot(user.uid);
             }
           });
           
           agoraClient.on('user-left', (user) => {
+            console.log('👋 Remote user left:', user.uid);
             removeUserFromSlot(user.uid);
             delete remoteUsers[user.uid];
           });
@@ -5854,10 +5870,15 @@
         const uid = await agoraClient.join(AGORA_APP_ID, channelName, tokenData.token, null);
         [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
         
+        // Marquer le slot comme occupé
+        videoSlots[slotNumber] = uid;
+        
         // Afficher ma vidéo dans le slot
+        myCurrentSlot = slotNumber;
         displayVideoInSlot({ uid: uid, videoTrack: localVideoTrack }, slotNumber, true);
         
         await agoraClient.publish([localAudioTrack, localVideoTrack]);
+        console.log('✅ Published local video/audio to Agora');
         
         return uid;
       } catch (error) {
