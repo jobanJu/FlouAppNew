@@ -1931,15 +1931,39 @@
     window.checkPasswordResetFlow();
 
     // Check auth state on load
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user?.email_confirmed_at) {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
         currentUser = session.user;
         const landing = document.getElementById('landingPage');
         const login = document.getElementById('loginPage');
         const resetPage = document.getElementById('resetPasswordPage');
+        
         // Ne pas rediriger si on est sur la page de reset password
-        if ((landing.classList.contains('active') || login.classList.contains('active')) && !resetPage.classList.contains('active')) {
-          window.goToMatches();
+        if (resetPage.classList.contains('active')) return;
+        
+        // Vérifier si c'est un utilisateur Google
+        const isGoogleUser = session.user.app_metadata?.provider === 'google' || 
+                            session.user.identities?.some(i => i.provider === 'google');
+        
+        if (isGoogleUser) {
+          // Vérifier si le profil est complet
+          const { data: profile } = await supabase
+            .from('users')
+            .select('firstname, gender, seeking')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (profile && profile.firstname && profile.gender && profile.seeking) {
+            window.goToMatches();
+          } else {
+            // Profil incomplet, rediriger vers complétion
+            await window.handleGoogleCallback();
+          }
+        } else if (session.user.email_confirmed_at) {
+          // Utilisateur email classique
+          if (landing.classList.contains('active') || login.classList.contains('active')) {
+            window.goToMatches();
+          }
         }
       }
     });
