@@ -20,50 +20,57 @@
   <meta name="apple-mobile-web-app-title" content="Flou">
   
   <!-- Modern Design System -->
-  <link rel="stylesheet" href="/assets/css/modern-design.css">
+  <link rel="stylesheet" href="/assets/css/modern-design.css?v=20260108">
+  
+  <!-- Agora SDK pour les Lives vidéo -->
+  <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* ==================== DESIGN SYSTEM ==================== */
+    /* ==================== DESIGN SYSTEM - PREMIUM LIGHT ==================== */
     :root {
-      /* Couleurs primaires */
-      --primary: #7c3aed;
-      --primary-dark: #6d28d9;
-      --primary-light: #8b5cf6;
+      /* Couleurs primaires - Premium */
+      --primary: #8B5CF6;
+      --primary-dark: #7C3AED;
+      --primary-light: #A78BFA;
+      --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
       
       /* Couleurs d'accent */
       --accent-success: #10b981;
       --accent-danger: #ef4444;
       --accent-warning: #f59e0b;
       --accent-info: #3b82f6;
+      --accent-pink: #EC4899;
       
-      /* Surfaces & Backgrounds */
-      --bg-primary: #0f0f0f;
-      --bg-secondary: #1a1a1a;
-      --bg-tertiary: #262626;
-      --surface: rgba(255, 255, 255, 0.05);
-      --surface-hover: rgba(255, 255, 255, 0.08);
+      /* Surfaces & Backgrounds - LIGHT THEME */
+      --bg-primary: #FAFAF9;
+      --bg-secondary: #F5F5F4;
+      --bg-tertiary: #E7E5E4;
+      --bg-card: #FFFFFF;
+      --bg-nav: #FEFDFB;
+      --surface: rgba(0, 0, 0, 0.02);
+      --surface-hover: rgba(0, 0, 0, 0.04);
       
-      /* Texte */
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.7);
-      --text-tertiary: rgba(255, 255, 255, 0.5);
+      /* Texte - DARK ON LIGHT */
+      --text-primary: #1C1917;
+      --text-secondary: #57534E;
+      --text-tertiary: #A8A29E;
       
       /* Bordures */
-      --border-light: rgba(255, 255, 255, 0.08);
-      --border-medium: rgba(255, 255, 255, 0.12);
+      --border-light: rgba(0, 0, 0, 0.04);
+      --border-medium: rgba(0, 0, 0, 0.08);
       
-      /* Ombres */
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
-      --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
+      /* Ombres premium */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.15);
       
       /* Rayons */
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
-      --radius-xl: 20px;
+      --radius-xl: 24px;
       --radius-full: 9999px;
       
       /* Transitions */
@@ -80,23 +87,14 @@
     
     html, body { 
       height: 100%; 
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+      background: #FAFAF9;
+      color: #1C1917;
     }
 
-    html, body { 
-      height: 100%; 
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-
-    /* ==================== BACKGROUND ==================== */
+    /* ==================== BACKGROUND - Subtle Premium Gradient ==================== */
     body::before {
       content: '';
       position: fixed;
@@ -104,8 +102,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      opacity: 0.03;
+      background: linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(236,72,153,0.03) 100%);
       z-index: 0;
     }
 
@@ -164,12 +161,12 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
     }
 
     .btn-primary:active {
@@ -177,15 +174,15 @@
     }
 
     .btn-secondary {
-      background: var(--surface);
-      color: white;
-      border: 1px solid var(--border-medium);
-      backdrop-filter: blur(10px);
+      background: #FFFFFF;
+      color: #57534E;
+      border: 1px solid #E7E5E4;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
     .btn-secondary:hover {
-      background: var(--surface-hover);
-      border-color: var(--primary);
+      background: #F5F5F4;
+      border-color: #8B5CF6;
       transform: translateY(-2px);
     }
 
@@ -234,7 +231,7 @@
       font-weight: 500;
       margin-bottom: 20px;
       line-height: 1.5;
-      color: var(--text-secondary);
+      color: #57534E;
       letter-spacing: -0.02em;
     }
 
@@ -300,36 +297,37 @@
       font-weight: 700;
       margin-bottom: 8px;
       letter-spacing: -0.02em;
+      color: #1C1917;
     }
 
     .form-subtitle {
       font-size: 0.95rem;
-      color: var(--text-secondary);
+      color: #78716C;
       margin-bottom: 30px;
     }
 
     .form-input {
       width: 100%;
       padding: 14px 18px;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      color: white;
+      border: 1px solid #E7E5E4;
+      border-radius: 12px;
+      background: #FFFFFF;
+      color: #1C1917;
       font-size: 1rem;
       margin-bottom: 16px;
-      transition: all var(--transition-base);
-      backdrop-filter: blur(10px);
+      transition: all 250ms ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
     .form-input:focus {
       outline: none;
-      border-color: var(--primary);
-      background: var(--surface-hover);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      border-color: #8B5CF6;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
     }
 
     .form-input::placeholder {
-      color: var(--text-tertiary);
+      color: #A8A29E;
     }
 
     .choices {
@@ -341,27 +339,27 @@
 
     .choice-btn {
       padding: 16px 20px;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      color: white;
+      border: 1px solid #E7E5E4;
+      border-radius: 12px;
+      background: #FFFFFF;
+      color: #1C1917;
       font-size: 1rem;
       cursor: pointer;
-      transition: all var(--transition-base);
+      transition: all 250ms ease;
       text-align: left;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
     .choice-btn:hover {
-      border-color: var(--primary);
-      background: var(--surface-hover);
+      border-color: #8B5CF6;
+      background: #FEFDFB;
       transform: translateX(4px);
     }
 
     .choice-btn.selected {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(124, 58, 237, 0.1) 100%);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+      border-color: #8B5CF6;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
     }
 
     .interests-grid {
@@ -373,26 +371,27 @@
 
     .interest-tag {
       padding: 12px;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-full);
-      background: var(--surface);
-      color: white;
+      border: 1px solid #E7E5E4;
+      border-radius: 20px;
+      background: #FFFFFF;
+      color: #1C1917;
       font-size: 0.9rem;
       cursor: pointer;
-      transition: all var(--transition-base);
+      transition: all 250ms ease;
       text-align: center;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
     .interest-tag:hover {
-      border-color: var(--primary);
+      border-color: #8B5CF6;
       transform: scale(1.05);
     }
 
     .interest-tag.selected {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      box-shadow: var(--shadow-glow);
+      border-color: transparent;
+      background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     }
 
     .form-actions {
@@ -413,24 +412,25 @@
     }
 
     .btn-next {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
       color: white;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     }
 
     .btn-next:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
     }
 
     .btn-back {
-      background: var(--surface);
-      color: white;
-      border: 1px solid var(--border-medium);
+      background: #FFFFFF;
+      color: #57534E;
+      border: 1px solid #E7E5E4;
     }
 
     .btn-back:hover {
-      background: var(--surface-hover);
+      background: #F5F5F4;
+      border-color: #8B5CF6;
     }
 
     .error-message {
@@ -446,136 +446,144 @@
     .success-message {
       text-align: center;
       padding: 40px 20px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     .success-message h2 {
       font-size: 2rem;
       margin-bottom: 16px;
+      color: #1C1917;
     }
 
     .success-message p {
-      color: var(--text-secondary);
+      color: #57534E;
       line-height: 1.6;
     }
 
-    .matches-container { width: 100%; max-width: 100%; height: 100vh; display: flex; flex-direction: column; position: relative; padding-bottom: 70px; }
-    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
-    .cards-stack { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; padding: 20px; }
-    .match-card { position: absolute; width: 100%; max-width: 360px; height: 550px; background: rgba(30, 30, 30, 0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s, opacity 0.3s, rotate 0.3s; cursor: grab; }
+    .matches-container { width: 100%; max-width: 100%; height: 100vh; display: flex; flex-direction: column; position: relative; padding-bottom: 70px; background: #FAFAF9; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #FFFFFF; border-bottom: 1px solid rgba(0,0,0,0.04); color: #1C1917; }
+    .cards-stack { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; padding: 20px; background: linear-gradient(180deg, #F5F5F4 0%, #FAFAF9 100%); }
+    .match-card { position: absolute; width: 100%; max-width: 360px; height: 550px; background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.04); transition: transform 0.3s, opacity 0.3s, rotate 0.3s; cursor: grab; }
     .match-card.swiping { transition: none; }
     .match-card.swipe-left { transform: translateX(-400px) rotate(-20deg); opacity: 0; }
     .match-card.swipe-right { transform: translateX(400px) rotate(20deg); opacity: 0; }
-    .card-image-area { flex: 2; background: #111; display: flex; justify-content: center; align-items: center; position: relative; background-size: cover; background-position: center; }
-    .card-blur-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(20px); background: rgba(0,0,0,0.2); z-index: 10; }
-    .card-info { flex: 1; padding: 20px; display: flex; flex-direction: column; }
-    .card-name { font-size: 1.6rem; font-weight: 700; margin-bottom: 5px; }
-    .card-details { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+    .card-image-area { flex: 2; background: linear-gradient(180deg, #E7E5E4 0%, #D6D3D1 100%); display: flex; justify-content: center; align-items: center; position: relative; background-size: cover; background-position: center; }
+    .card-blur-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(20px); background: rgba(0,0,0,0.1); z-index: 10; }
+    .card-info { flex: 1; padding: 20px; display: flex; flex-direction: column; background: #FFFFFF; }
+    .card-name { font-size: 1.6rem; font-weight: 700; margin-bottom: 5px; color: #1C1917; }
+    .card-details { font-size: 0.9rem; color: #78716C; margin-bottom: 10px; }
     .card-interests { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; overflow-y: auto; max-height: 80px; }
-    .mini-tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; background: rgba(255,255,255,0.1); white-space: nowrap; }
-    .card-actions { display: flex; justify-content: center; gap: 30px; padding: 20px; }
-    .action-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
-    .btn-pass { background: rgba(0,0,0,0.5); color: #ff6b6b; border: 2px solid #ff6b6b; }
-    .btn-like { background: rgba(0,0,0,0.5); color: #51cf66; border: 2px solid #51cf66; }
+    .mini-tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.1)); color: #8B5CF6; white-space: nowrap; font-weight: 500; }
+    .card-actions { display: flex; justify-content: center; gap: 30px; padding: 20px; background: #FFFFFF; border-top: 1px solid rgba(0,0,0,0.04); }
+    .action-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .btn-pass { background: #FFFFFF; color: #EF4444; border: 2px solid #FECACA; }
+    .btn-pass:hover { background: #FEF2F2; border-color: #EF4444; }
+    .btn-like { background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; }
+    .btn-like:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
     .action-btn:hover { transform: scale(1.1); }
-    .no-more-profiles { text-align: center; padding: 40px; }
+    .no-more-profiles { text-align: center; padding: 40px; color: #78716C; }
 
-    /* BOTTOM NAV */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; cursor: pointer; color: rgba(255,255,255,0.5); transition: color 0.3s; text-decoration: none; }
-    .nav-item.active { color: #667eea; }
-    .nav-item:hover { color: rgba(255,255,255,0.8); }
-    .nav-icon { font-size: 1.5rem; }
-    .nav-label { font-size: 0.7rem; }
-    .nav-badge { position: absolute; top: 5px; right: 25%; background: #ff6b6b; color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; }
+    /* BOTTOM NAV - Premium White Milk Design */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #FEFDFB; backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 0 max(12px, env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -2px 20px rgba(0,0,0,0.03); }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; cursor: pointer; color: #A8A29E; transition: all 0.3s ease; text-decoration: none; }
+    .nav-item.active { color: #8B5CF6; }
+    .nav-item:hover { color: #7C3AED; }
+    .nav-icon { font-size: 1.5rem; font-weight: 300; }
+    .nav-label { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.02em; }
+    .nav-badge { position: absolute; top: 2px; right: 20%; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 600; min-width: 18px; text-align: center; }
 
     /* APP CONTAINER */
     .app-view { display: none; width: 100%; height: 100vh; overflow-y: auto; padding-bottom: 70px; }
     .app-view.active { display: block; }
     
-    /* MATCHES LIST */
+    /* MATCHES LIST - Premium Light Design */
     .matches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; }
-    .match-item { background: rgba(30, 30, 30, 0.9); border-radius: 15px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
-    .match-item:hover { transform: scale(1.05); }
+    .match-item { background: #FFFFFF; border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
+    .match-item:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(139,92,246,0.12); }
     .match-item-img { width: 100%; height: 200px; object-fit: cover; filter: blur(15px); }
-    .match-item-info { padding: 12px; }
-    .match-item-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
-    .match-item-preview { font-size: 0.85rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .match-item-info { padding: 14px; background: #FFFFFF; }
+    .match-item-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; color: #1C1917; }
+    .match-item-preview { font-size: 0.85rem; color: #78716C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* MESSAGES */
-    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 70px); }
-    .chat-header { padding: 15px 20px; background: rgba(20, 20, 20, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-    .chat-back { font-size: 1.5rem; cursor: pointer; }
+    /* MESSAGES - Premium Light Design */
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 70px); background: #FAFAF9; }
+    .chat-header { padding: 15px 20px; background: #FFFFFF; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .chat-back { font-size: 1.5rem; cursor: pointer; color: #8B5CF6; }
     .chat-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; filter: blur(8px); }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-    .message { max-width: 75%; padding: 12px 16px; border-radius: 18px; }
-    .message.sent { align-self: flex-end; background: #667eea; }
-    .message.received { align-self: flex-start; background: rgba(255,255,255,0.1); }
-    .chat-input-container { padding: 15px 20px; background: rgba(20, 20, 20, 0.95); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; }
-    .chat-input { flex: 1; padding: 12px 16px; border-radius: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; }
-    .chat-send { padding: 12px 20px; border-radius: 20px; background: #667eea; color: white; border: none; font-weight: 600; cursor: pointer; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: #FAFAF9; }
+    .message { max-width: 75%; padding: 12px 16px; border-radius: 18px; color: #1C1917; }
+    .message.sent { align-self: flex-end; background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%); color: white; }
+    .message.received { align-self: flex-start; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05); }
+    .chat-input-container { padding: 15px 20px; background: #FFFFFF; border-top: 1px solid rgba(0,0,0,0.05); display: flex; gap: 10px; }
+    .chat-input { flex: 1; padding: 12px 16px; border-radius: 20px; background: #F5F5F4; border: 1px solid #E7E5E4; color: #1C1917; }
+    .chat-input::placeholder { color: #A8A29E; }
+    .chat-send { padding: 12px 20px; border-radius: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    .chat-send:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
 
-    /* PROFILE */
-    .profile-container { padding: 20px; max-width: 500px; margin: 0 auto; }
+    /* PROFILE - Premium Light Design */
+    .profile-container { padding: 20px; max-width: 500px; margin: 0 auto; background: #FAFAF9; }
     .profile-header { text-align: center; margin-bottom: 30px; }
-    .profile-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px; filter: blur(10px); }
-    .profile-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
-    .profile-info { background: rgba(30, 30, 30, 0.9); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
-    .profile-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .profile-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px; filter: blur(10px); box-shadow: 0 8px 30px rgba(139,92,246,0.2); border: 4px solid white; }
+    .profile-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; color: #1C1917; }
+    .profile-info { background: #FFFFFF; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04); }
+    .profile-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #F5F5F4; }
     .profile-row:last-child { border-bottom: none; }
-    .profile-label { opacity: 0.7; }
-    .profile-value { font-weight: 600; }
+    .profile-label { color: #78716C; font-size: 0.9rem; }
+    .profile-value { font-weight: 600; color: #1C1917; }
 
-    /* LIVE */
-    .live-container { padding: 20px; max-width: 900px; margin: 0 auto; }
+    /* LIVE - Premium Light Design */
+    .live-container { padding: 20px; max-width: 900px; margin: 0 auto; background: #FAFAF9; }
     .live-header { text-align: center; margin-bottom: 30px; }
-    .live-header h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
-    .live-header p { opacity: 0.8; }
-    .live-create-btn { width: 100%; padding: 16px; background: #667eea; border: none; border-radius: 12px; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 30px; transition: all 0.3s; }
-    .live-create-btn:hover { background: #5568d3; transform: translateY(-2px); }
+    .live-header h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; color: #1C1917; }
+    .live-header p { color: #78716C; }
+    .live-create-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 16px; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 30px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
+    .live-create-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
     .live-types { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-    .live-type-card { background: rgba(30, 30, 30, 0.9); border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
-    .live-type-card:hover { border-color: #667eea; transform: scale(1.05); }
-    .live-type-card.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.15); }
+    .live-type-card { background: #FFFFFF; border-radius: 20px; padding: 24px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .live-type-card:hover { border-color: #8B5CF6; transform: translateY(-4px); box-shadow: 0 8px 25px rgba(139,92,246,0.15); }
+    .live-type-card.selected { border-color: #8B5CF6; background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(236,72,153,0.08)); }
     .live-type-icon { font-size: 2.5rem; margin-bottom: 10px; }
-    .live-type-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; }
-    .live-type-desc { font-size: 0.85rem; opacity: 0.7; }
+    .live-type-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; color: #1C1917; }
+    .live-type-desc { font-size: 0.85rem; color: #78716C; }
     .live-list { display: grid; gap: 15px; }
-    .live-item { background: rgba(30, 30, 30, 0.9); border-radius: 15px; padding: 20px; cursor: pointer; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-    .live-item:hover { transform: translateX(5px); border-color: #667eea; }
+    .live-item { background: #FFFFFF; border-radius: 20px; padding: 20px; cursor: pointer; transition: all 0.3s; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .live-item:hover { transform: translateX(5px); border-color: #8B5CF6; box-shadow: 0 8px 25px rgba(139,92,246,0.12); }
     .live-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .live-item-title { font-size: 1.2rem; font-weight: 600; }
+    .live-item-title { font-size: 1.2rem; font-weight: 600; color: #1C1917; }
     .live-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
-    .live-badge.active { background: #51cf66; color: white; }
-    .live-badge.waiting { background: #ffa94d; color: white; }
-    .live-item-host { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; }
-    .live-item-stats { display: flex; gap: 15px; font-size: 0.85rem; opacity: 0.7; }
-    .live-room { display: flex; flex-direction: column; height: calc(100vh - 70px); background: rgba(0,0,0,0.95); }
-    .live-room-header { padding: 15px 20px; background: rgba(20, 20, 20, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
-    .live-room-title { font-size: 1.2rem; font-weight: 600; }
-    .live-room-close { padding: 8px 16px; background: #ff6b6b; border: none; border-radius: 8px; color: white; cursor: pointer; }
-    .live-video-area { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 15px; background: #000; }
-    .live-video-box { position: relative; background: #111; border-radius: 12px; overflow: hidden; aspect-ratio: 3/4; }
+    .live-badge.active { background: linear-gradient(135deg, #10B981, #34D399); color: white; }
+    .live-badge.waiting { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: white; }
+    .live-item-host { font-size: 0.9rem; color: #78716C; margin-bottom: 5px; }
+    .live-item-stats { display: flex; gap: 15px; font-size: 0.85rem; color: #A8A29E; }
+    .live-room { display: flex; flex-direction: column; height: calc(100vh - 70px); background: linear-gradient(180deg, #1C1917 0%, #0F0F0F 100%); }
+    .live-room-header { padding: 15px 20px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
+    .live-room-title { font-size: 1.2rem; font-weight: 600; color: white; }
+    .live-room-close { padding: 8px 16px; background: linear-gradient(135deg, #EF4444, #F87171); border: none; border-radius: 12px; color: white; cursor: pointer; font-weight: 600; }
+    .live-video-area { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 15px; background: linear-gradient(180deg, #1C1917 0%, #0F0F0F 100%); }
+    .live-video-box { position: relative; background: linear-gradient(180deg, #262626 0%, #171717 100%); border-radius: 16px; overflow: hidden; aspect-ratio: 3/4; border: 1px solid rgba(255,255,255,0.08); }
     .live-video-blur { width: 100%; height: 100%; object-fit: cover; filter: blur(25px); }
-    .live-video-name { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 8px; font-size: 0.9rem; }
-    .live-chat-area { height: 250px; background: rgba(20, 20, 20, 0.95); border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
+    .live-video-name { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 10px; font-size: 0.9rem; color: white; }
+    .live-chat-area { height: 250px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; }
     .live-chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
-    .live-chat-message { padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 12px; font-size: 0.9rem; }
-    .live-chat-message strong { color: #667eea; margin-right: 5px; }
-    .live-chat-input-area { display: flex; gap: 10px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
-    .live-chat-input { flex: 1; padding: 10px 15px; border-radius: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; }
-    .live-chat-send { padding: 10px 20px; border-radius: 20px; background: #667eea; color: white; border: none; font-weight: 600; cursor: pointer; }
-    .live-controls { display: flex; justify-content: center; gap: 15px; padding: 15px; background: rgba(20, 20, 20, 0.95); border-top: 1px solid rgba(255,255,255,0.1); }
-    .live-control-btn { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .live-chat-message { padding: 8px 12px; background: rgba(255,255,255,0.08); border-radius: 12px; font-size: 0.9rem; color: white; }
+    .live-chat-message strong { color: #A78BFA; margin-right: 5px; }
+    .live-chat-input-area { display: flex; gap: 10px; padding: 15px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .live-chat-input { flex: 1; padding: 10px 15px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: white; }
+    .live-chat-send { padding: 10px 20px; border-radius: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; font-weight: 600; cursor: pointer; }
+    .live-controls { display: flex; justify-content: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.08); }
+    .live-control-btn { padding: 12px 24px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s; }
     .live-control-btn.mic { background: rgba(255,255,255,0.1); color: white; }
-    .live-control-btn.mic.muted { background: #ff6b6b; }
-    .live-control-btn.gift { background: #ffa94d; color: white; }
-    .live-control-btn.favorite { background: #667eea; color: white; }
+    .live-control-btn.mic.muted { background: linear-gradient(135deg, #EF4444, #F87171); }
+    .live-control-btn.gift { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: white; }
+    .live-control-btn.favorite { background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; }
     .live-versus-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; }
-    .live-versus-timer { font-size: 3rem; font-weight: 700; color: #667eea; margin-bottom: 30px; }
-    .live-versus-question { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 30px; }
+    .live-versus-timer { font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 30px; }
+    .live-versus-question { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 30px; color: white; }
     .live-versus-options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 500px; }
-    .live-versus-option { padding: 20px; background: rgba(30, 30, 30, 0.9); border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; text-align: center; font-size: 1.2rem; cursor: pointer; transition: all 0.3s; }
-    .live-versus-option:hover { border-color: #667eea; transform: scale(1.05); }
+    .live-versus-option { padding: 20px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15); border-radius: 16px; text-align: center; font-size: 1.2rem; cursor: pointer; transition: all 0.3s; color: white; }
+    .live-versus-option:hover { border-color: #8B5CF6; transform: scale(1.05); background: rgba(139,92,246,0.15); }
     .live-versus-option.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.2); }
     .live-versus-results { display: flex; gap: 20px; margin-top: 30px; }
     .live-versus-result { padding: 15px 25px; background: rgba(30, 30, 30, 0.9); border-radius: 12px; }
@@ -585,10 +593,48 @@
     @media (max-width: 640px) { .form-step, .hero { width: 100%; padding: 0; } .matches-grid { grid-template-columns: 1fr; } }
   </style>
   
-  <!-- Jitsi Meet SDK pour audio/vidéo (GRATUIT & ILLIMITÉ) -->
-  <script src="https://meet.jit.si/external_api.js"></script>
+  <!-- Agora SDK pour audio/vidéo (10,000 min GRATUIT/mois) -->
+  <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
 </head>
 <body>
+  <!-- INSTALL APP MODAL -->
+  <div id="installAppModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #FFFFFF; border-radius: 24px; max-width: 340px; width: 100%; padding: 32px 24px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalSlideIn 0.4s ease-out;">
+      <div style="width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(139,92,246,0.4);">
+        <img src="/assets/logos/FLOU.png" alt="Flou" style="width: 50px; height: 50px; object-fit: contain;">
+      </div>
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1C1917; margin-bottom: 12px;">Installe Flou</h2>
+      <p style="color: #57534E; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px;">Ajoute Flou à ton écran d'accueil pour une expérience optimale, plus rapide et hors-ligne !</p>
+      
+      <!-- Instructions iOS -->
+      <div id="iosInstructions" style="display: none; background: #F5F5F4; border-radius: 16px; padding: 16px; margin-bottom: 20px; text-align: left;">
+        <p style="font-size: 0.85rem; color: #57534E; margin-bottom: 12px;">Sur Safari :</p>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+          <span style="background: #8B5CF6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">1</span>
+          <span style="font-size: 0.9rem; color: #1C1917;">Appuie sur <strong>⎙</strong> (Partager)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="background: #8B5CF6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">2</span>
+          <span style="font-size: 0.9rem; color: #1C1917;">Puis <strong>"Sur l'écran d'accueil"</strong></span>
+        </div>
+      </div>
+      
+      <button id="installAppBtn" onclick="installApp()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(139,92,246,0.3);">
+        Installer l'application
+      </button>
+      <button onclick="closeInstallModal()" style="width: 100%; padding: 14px; background: transparent; border: 1.5px solid #E7E5E4; border-radius: 14px; color: #57534E; font-weight: 500; font-size: 0.95rem; cursor: pointer;">
+        Plus tard
+      </button>
+    </div>
+  </div>
+  
+  <style>
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+
   <!-- LANDING PAGE -->
   <div id="landingPage" class="page active">
     <img src="./assets/images/homme1.jpeg" alt="Flou" class="bg-image">
@@ -636,7 +682,7 @@
         <div class="form-subtitle">Active la localisation pour voir les profils autour de toi</div>
         <div style="display:flex; gap:10px; margin-bottom:15px;">
           <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;">
-          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;">📍</button>
+          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;">◎</button>
         </div>
         <div id="error3" class="error-message"></div>
         <div class="form-actions">
@@ -649,8 +695,8 @@
         <div class="form-title">Quel est ton genre ?</div>
         <div class="form-subtitle">Simplement pour te connaître</div>
         <div class="choices">
-          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Homme')">👨 Homme</button>
-          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Femme')">👩 Femme</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Homme')">♂ Homme</button>
+          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Femme')">♀ Femme</button>
         </div>
         <div id="error4" class="error-message"></div>
         <div class="form-actions">
@@ -690,7 +736,7 @@
         <div class="form-subtitle">Sélectionne une photo de toi (elle sera floutée au début)</div>
         <div style="text-align:center; margin-bottom:20px;">
           <div id="photoPreviewContainer" style="width:150px; height:150px; border-radius:10px; background:rgba(255,255,255,0.1); margin:0 auto 20px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 2px dashed rgba(255,255,255,0.3);">
-            <span id="photoPlaceholder" style="font-size:3rem; opacity:0.5;">📷</span>
+            <span id="photoPlaceholder" style="font-size:2rem; opacity:0.5;">○</span>
             <img id="photoPreview" src="" alt="Aperçu" style="width:100%; height:100%; object-fit:cover; display:none;">
           </div>
           <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
@@ -756,7 +802,7 @@
   <div id="loginPage" class="page">
     <div class="signup-form" style="max-width: 400px;">
       <div style="text-align: center; margin-bottom: 40px;">
-        <div style="font-size: 2rem; margin-bottom: 20px;">🔓</div>
+        <div style="font-size: 2rem; margin-bottom: 20px;">○</div>
         <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Connexion</h2>
       </div>
       <input type="email" class="form-input" id="loginEmail" placeholder="ton@email.com">
@@ -772,7 +818,7 @@
   <!-- SUCCESS PAGE -->
   <div id="successPage" class="page">
     <div class="success-message">
-      <h2>Bienvenue sur Flou ! 💜</h2>
+      <h2>Bienvenue sur Flou ! ♡</h2>
       <p>Ton profil a été créé avec succès.<br>Prépare-toi à découvrir des connexions authentiques.</p>
       <button class="btn btn-primary" onclick="goToMatches()" style="margin-top:20px;">Découvrir les profils</button>
     </div>
@@ -781,7 +827,7 @@
   <!-- EMAIL CONFIRMATION PAGE -->
   <div id="emailConfirmPage" class="page">
     <div class="success-message">
-      <h2>📧 Vérifie ton email</h2>
+      <h2>✉ Vérifie ton email</h2>
       <p>Un email de confirmation a été envoyé à <strong id="confirmEmail"></strong></p>
       <p style="margin-top:20px; opacity:0.8;">Clique sur le lien dans l'email pour activer ton compte.</p>
       <button class="btn btn-secondary" onclick="goToLanding()" style="margin-top:30px;">Retour</button>
@@ -799,9 +845,9 @@
         <div class="cards-stack" id="cardsStack">
           <div class="no-more-profiles"><p>Chargement des profils...</p></div>
         </div>
-        <div class="card-actions">
-          <button class="action-btn btn-pass" onclick="handleSwipe('pass')">✕</button>
-          <button class="action-btn btn-like" onclick="handleSwipe('like')">❤</button>
+        <div class="card-actions" style="background: var(--bg-nav); border-top: 1px solid var(--border); padding: 20px;">
+          <button class="action-btn btn-pass" onclick="handleSwipe('pass')" style="background: white; border: 2px solid #FECACA; color: #EF4444; font-size: 1.3rem;">×</button>
+          <button class="action-btn btn-like" onclick="handleSwipe('like')" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; color: white; font-size: 1.3rem;">♡</button>
         </div>
       </div>
     </div>
@@ -831,123 +877,145 @@
       </div>
     </div>
 
-    <!-- Vue Profil -->
+    <!-- Vue Profil - Premium Design -->
     <div id="profileView" class="app-view">
-      <div class="profile-container">
-        <div class="profile-header">
-          <img id="profilePhoto" src="" alt="Photo" class="profile-photo">
-          <div class="profile-name" id="profileName">Chargement...</div>
+      <div class="profile-container" style="background: var(--bg); min-height: 100vh;">
+        <div class="profile-header" style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 40px 20px 60px; margin: -20px -20px 0; border-radius: 0 0 40px 40px; position: relative;">
+          <div style="position: relative; width: 130px; height: 130px; margin: 0 auto 15px;">
+            <img id="profilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+            <div id="profilePhotoLoader" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 30px; height: 30px; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            </div>
+          </div>
+          <div class="profile-name" id="profileName" style="font-size: 1.8rem; font-weight: 700; color: white; text-align: center;">Chargement...</div>
+          <div id="profileAgeCity" style="text-align: center; color: rgba(255,255,255,0.9); font-size: 1rem; margin-top: 6px;"><span id="profileAgeHeader">-</span> ans • <span id="profileCityHeader">-</span></div>
         </div>
-        <div class="profile-info">
-          <div class="profile-row">
-            <span class="profile-label">Âge</span>
-            <span class="profile-value" id="profileAge">-</span>
+
+        <div style="margin-top: -30px; padding: 0 20px;">
+          <!-- Subscription Badge -->
+          <div style="background: var(--bg-card); padding: 20px; border-radius: 20px; text-align: center; box-shadow: var(--shadow-lg); margin-bottom: 20px;">
+            <div id="userSubscription" style="font-size: 1.1rem; font-weight: 700; color: #8B5CF6; margin-bottom: 8px;">⚪ CLASSIQUE</div>
+            <div style="font-size: 1.6rem; font-weight: 700; color: #F59E0B; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <span>◆</span> <span id="userBrumes">0</span> <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-light);">Brumes</span>
+            </div>
           </div>
-          <div class="profile-row">
-            <span class="profile-label">Ville</span>
-            <span class="profile-value" id="profileCity">-</span>
+
+          <!-- Info Cards -->
+          <div style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Âge</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: var(--text);" id="profileAge">-</div>
+              </div>
+              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Ville</div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: var(--text);" id="profileCity">-</div>
+              </div>
+              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Genre</div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: var(--text);" id="profileGender">-</div>
+              </div>
+              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Recherche</div>
+                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
+              </div>
+            </div>
           </div>
-          <div class="profile-row">
-            <span class="profile-label">Genre</span>
-            <span class="profile-value" id="profileGender">-</span>
+
+          <!-- Interests -->
+          <div style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="font-weight: 600; margin-bottom: 14px; color: var(--text); font-size: 0.95rem;">Mes intérêts</div>
+            <div id="profileInterests" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
           </div>
-          <div class="profile-row">
-            <span class="profile-label">Sexualité</span>
-            <span class="profile-value" id="profileSexuality">-</span>
+
+          <!-- Action Buttons -->
+          <button class="btn btn-primary" onclick="switchView('shop')" style="width: 100%; margin-bottom: 12px; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);">
+            ◇ Boutique & Abonnements
+          </button>
+          <button class="btn btn-secondary" onclick="showFavoritesModal()" style="width: 100%; margin-bottom: 12px;">
+            ★ Mes Favoris Live
+          </button>
+          <button class="btn btn-secondary" onclick="switchView('editProfile')" style="width: 100%; margin-bottom: 12px;">
+            ✎ Modifier mon profil
+          </button>
+          <button id="installBtn" class="btn btn-secondary" onclick="installPWA()" style="width: 100%; margin-bottom: 12px; display: none;">
+            ↓ Installer l'application
+          </button>
+          
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.8rem; text-align: center;">
+            <a href="/cgu.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">CGU</a>
+            <a href="/confidentialite.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">Confidentialité</a>
+            <a href="/reglement.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">Règlement</a>
           </div>
+          
+          <button class="btn-ghost" onclick="logout()" style="width: 100%; margin-top: 16px; color: #EF4444;">Déconnexion</button>
         </div>
-        <div class="profile-info">
-          <div style="font-weight:600; margin-bottom:10px; opacity:0.9;">Intérêts</div>
-          <div id="profileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-        </div>
-        
-        <!-- Solde Brumes et Abonnement -->
-        <div class="profile-info" style="margin-top:20px; text-align:center;">
-          <div style="font-size:1.2rem; font-weight:600; margin-bottom:15px;">
-            <span id="userSubscription" style="color:#a78bfa;">⚪ CLASSIQUE</span>
-          </div>
-          <div style="font-size:1.5rem; font-weight:700; color:#fbbf24;">
-            💎 <span id="userBrumes">0</span> Brumes
-          </div>
-        </div>
-        
-        <button class="btn btn-primary" onclick="switchView('shop')" style="width:100%; margin-top:20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-          🛒 Boutique & Abonnements
-        </button>
-        <button class="btn btn-primary" onclick="showFavoritesModal()" style="width:100%; margin-top:15px; background:#667eea;">
-          ⭐ Mes Favoris Live
-        </button>
-        <button class="btn btn-primary" onclick="switchView('editProfile')" style="width:100%; margin-top:15px;">
-          ✏️ Modifier mon profil
-        </button>
-        <button id="installBtn" class="btn btn-primary" onclick="installPWA()" style="width:100%; margin-top:15px; display:none;">
-          📱 Installer Flou sur mon téléphone
-        </button>
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; opacity: 0.7; text-align: center;">
-          <a href="/cgu.html" style="color: white; margin: 0 8px; text-decoration: underline;">CGU</a>
-          <a href="/confidentialite.html" style="color: white; margin: 0 8px; text-decoration: underline;">Confidentialité</a>
-          <a href="/reglement.html" style="color: white; margin: 0 8px; text-decoration: underline;">Règlement</a>
-        </div>
-        <button class="btn btn-secondary" onclick="logout()" style="width:100%; margin-top:20px;">Déconnexion</button>
       </div>
     </div>
 
-    <!-- Vue Édition Profil -->
+    <!-- Vue Édition Profil - Premium Design -->
     <div id="editProfileView" class="app-view">
-      <div class="profile-container">
-        <div style="display:flex; align-items:center; margin-bottom:30px;">
-          <button onclick="switchView('profile')" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding:0; margin-right:15px;">←</button>
-          <h2 style="font-size:1.5rem; font-weight:700; margin:0;">Modifier mon profil</h2>
+      <div class="profile-container" style="background: var(--bg); min-height: 100vh;">
+        <div style="display: flex; align-items: center; margin-bottom: 30px; padding-top: 10px;">
+          <button onclick="switchView('profile')" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 1.3rem; cursor: pointer; padding: 10px 14px; border-radius: 12px; margin-right: 15px; box-shadow: var(--shadow);">←</button>
+          <h2 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: var(--text);">Modifier mon profil</h2>
         </div>
         
-        <div class="profile-info" style="margin-bottom:20px;">
-          <div style="font-weight:600; margin-bottom:15px;">Photo de profil</div>
-          <div style="text-align:center; margin-bottom:15px;">
-            <img id="editProfilePhoto" src="" alt="Photo" style="width:120px; height:120px; border-radius:50%; object-fit:cover; filter:blur(0px);">
+        <!-- Photo Section -->
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); text-align: center;">
+          <div style="font-weight: 600; margin-bottom: 16px; color: var(--text); font-size: 0.9rem;">Photo de profil</div>
+          <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 16px;">
+            <img id="editProfilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
           </div>
-          <input type="file" id="editPhotoInput" accept="image/*" style="display:none;" onchange="previewEditPhoto()">
-          <button class="btn btn-secondary" onclick="document.getElementById('editPhotoInput').click()" style="width:100%;">
-            📷 Changer la photo
+          <input type="file" id="editPhotoInput" accept="image/*" style="display: none;" onchange="previewEditPhoto()">
+          <button onclick="document.getElementById('editPhotoInput').click()" style="background: var(--bg-secondary); border: 1.5px solid var(--border); color: var(--text); padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+            ↑ Changer la photo
           </button>
         </div>
 
-        <div class="profile-info" style="margin-bottom:20px;">
-          <div style="margin-bottom:15px;">
-            <label style="display:block; opacity:0.7; margin-bottom:8px;">Prénom</label>
-            <input type="text" id="editFirstname" class="form-input" placeholder="Prénom" style="margin:0;">
+        <!-- Info Section -->
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Prénom</label>
+            <input type="text" id="editFirstname" placeholder="Prénom" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
           </div>
-          <div style="margin-bottom:15px;">
-            <label style="display:block; opacity:0.7; margin-bottom:8px;">Âge</label>
-            <input type="number" id="editAge" class="form-input" placeholder="Âge" min="20" max="100" style="margin:0;">
-          </div>
-          <div style="margin-bottom:15px;">
-            <label style="display:block; opacity:0.7; margin-bottom:8px;">Ville</label>
-            <input type="text" id="editCity" class="form-input" placeholder="Ville" style="margin:0;">
-          </div>
-        </div>
-
-        <div class="profile-info" style="margin-bottom:20px;">
-          <div style="margin-bottom:15px;">
-            <label style="display:block; opacity:0.7; margin-bottom:8px;">Phrase d'accroche</label>
-            <textarea id="editCatchphrase" class="form-input" placeholder="Ex: J'aime les ananas et les couchers de soleil 🌅" rows="3" maxlength="100" style="margin:0; resize:none; font-family:inherit;"></textarea>
-            <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="editCatchphraseCount">0</span>/100</div>
-          </div>
-          <div style="margin-bottom:15px;">
-            <label style="display:block; opacity:0.7; margin-bottom:8px;">Description</label>
-            <textarea id="editBio" class="form-input" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="6" maxlength="500" style="margin:0; resize:none; font-family:inherit;"></textarea>
-            <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="editBioCount">0</span>/500</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Âge</label>
+              <input type="number" id="editAge" placeholder="Âge" min="20" max="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Ville</label>
+              <input type="text" id="editCity" placeholder="Ville" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
+            </div>
           </div>
         </div>
 
-        <div class="profile-info" style="margin-bottom:20px;">
-          <div style="font-weight:600; margin-bottom:15px;">Intérêts (5 minimum)</div>
-          <div id="editInterestsGrid" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        <!-- Bio Section -->
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Phrase d'accroche</label>
+            <textarea id="editCatchphrase" placeholder="Ex: J'aime les ananas et les couchers de soleil" rows="2" maxlength="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit;"></textarea>
+            <div style="text-align: right; font-size: 0.75rem; color: var(--text-lighter); margin-top: 6px;"><span id="editCatchphraseCount">0</span>/100</div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Description</label>
+            <textarea id="editBio" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="5" maxlength="500" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit;"></textarea>
+            <div style="text-align: right; font-size: 0.75rem; color: var(--text-lighter); margin-top: 6px;"><span id="editBioCount">0</span>/500</div>
+          </div>
         </div>
 
-        <button class="btn btn-primary" onclick="saveProfile()" style="width:100%; margin-bottom:10px;">
-          💾 Enregistrer les modifications
+        <!-- Interests Section -->
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
+          <div style="font-weight: 600; margin-bottom: 16px; color: var(--text); font-size: 0.9rem;">Intérêts <span style="font-weight: 400; color: var(--text-lighter);">(5 minimum)</span></div>
+          <div id="editInterestsGrid" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+
+        <!-- Save Buttons -->
+        <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%; margin-bottom: 12px;">
+          ✓ Enregistrer les modifications
         </button>
-        <button class="btn btn-secondary" onclick="switchView('profile')" style="width:100%;">
+        <button onclick="switchView('profile')" style="width: 100%; background: transparent; border: 1.5px solid var(--border); color: var(--text); padding: 14px; border-radius: 16px; font-weight: 600; cursor: pointer;">
           Annuler
         </button>
       </div>
@@ -1122,14 +1190,6 @@
             </div>
             <div style="font-size:0.85rem; opacity:0.7;">Ajoute une vidéo à ton profil (si non-Cupidon)</div>
           </div>
-
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">🎁 Cadeaux Live</span>
-              <span style="color:#fbbf24; font-weight:600;">5-100 💎</span>
-            </div>
-            <div style="font-size:0.85rem; opacity:0.7;">Envoie des cadeaux virtuels en direct</div>
-          </div>
         </div>
 
       </div>
@@ -1139,136 +1199,155 @@
     <div id="liveView" class="app-view">
       <div class="live-container">
         <div class="live-header">
-          <h2>🎥 Mode Live</h2>
-          <p>Rencontre en audio-vidéo floutée</p>
+          <h2 style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Mode Live</h2>
+          <p style="color: #57534E;">Rencontre en vidéo floutée</p>
         </div>
 
-        <button class="live-create-btn" onclick="showCreateLive()">
-          ✨ Créer un Live
-        </button>
+        <!-- Live Rooms Selection -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px;">
+          <div onclick="showLiveLobby('live')" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); padding: 24px 16px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">▸</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 6px;">Live</div>
+            <div style="font-size: 0.8rem; opacity: 0.9; color: white;">Jusqu'à 4 participants</div>
+          </div>
+          <div onclick="showLiveLobby('speedDating')" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); padding: 24px 16px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">♡</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 6px;">Speed Dating</div>
+            <div style="font-size: 0.8rem; opacity: 0.9; color: white;">Face-à-face 3 min</div>
+          </div>
+        </div>
 
-        <h3 style="font-size:1.3rem; font-weight:600; margin-bottom:15px;">Lives en cours</h3>
+        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #1C1917;">Lives en cours</h3>
         <div id="livesList" class="live-list">
           <!-- Lives générés dynamiquement -->
         </div>
       </div>
     </div>
 
-    <!-- CREATE LIVE VIEW -->
-    <div id="createLiveView" class="app-view">
-      <div class="live-container">
-        <button onclick="switchView('live')" style="background:rgba(255,255,255,0.1); border:none; padding:10px 20px; border-radius:8px; color:white; margin-bottom:20px; cursor:pointer;">← Retour</button>
-        
-        <div class="live-header">
-          <h2>Créer un Live</h2>
-          <p>Choisis le type de rencontre</p>
-        </div>
-
-        <div class="live-types">
-          <div class="live-type-card" onclick="selectLiveType('groupe')">
-            <div class="live-type-icon">👥</div>
-            <div class="live-type-title">Live Groupe</div>
-            <div class="live-type-desc">Jusqu'à 4 participants + spectateurs</div>
-          </div>
-          <div class="live-type-card" onclick="selectLiveType('date')">
-            <div class="live-type-icon">💕</div>
-            <div class="live-type-title">Live Date</div>
-            <div class="live-type-desc">Face-à-face 1v1 avec Versus</div>
-          </div>
-        </div>
-
-        <div id="liveFormDetails" style="display:none;">
-          <input type="text" id="liveTitle" class="form-input" placeholder="Titre du Live" maxlength="50">
-          <textarea id="liveDescription" class="form-input" placeholder="Description (optionnelle)" rows="3" style="resize:vertical;"></textarea>
-          <input type="text" id="livePseudo" class="form-input" placeholder="Ton pseudo pour ce Live" maxlength="20">
-          <button class="btn btn-primary" onclick="createLive()" style="width:100%; padding:14px; font-size:1.1rem;">🎬 Lancer le Live</button>
-        </div>
-      </div>
-    </div>
-
     <!-- LIVE ROOM (GROUPE) -->
     <div id="liveRoomView" class="app-view">
-      <div class="live-room">
-        <div class="live-room-header">
+      <div class="live-room" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%);">
+        <div class="live-room-header" style="background: rgba(28, 25, 23, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08);">
           <div>
-            <div class="live-room-title" id="liveRoomTitle">Chargement...</div>
-            <div style="font-size:0.85rem; opacity:0.7;" id="liveRoomStats">0 participants • 0 spectateurs</div>
+            <div class="live-room-title" id="liveRoomTitle" style="color: white;">Chargement...</div>
+            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);" id="liveRoomStats">0 participants • 0 spectateurs</div>
+            <div style="font-size: 0.8rem; color: rgba(139, 92, 246, 0.9); margin-top: 4px;" id="liveRoomDescription"></div>
           </div>
-          <button class="live-room-close" onclick="leaveLive()">Quitter</button>
+          <button class="live-room-close" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
         </div>
 
-        <div class="live-video-area" id="liveVideoArea">
-          <!-- Vidéos des participants (floutées) -->
+        <div class="live-video-area" id="liveVideoArea" style="background: linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.03) 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px;">
+          <!-- Vidéos des participants (floutées) - max 4 -->
+        </div>
+        
+        <!-- Bouton rejoindre en cam (pour spectateurs) -->
+        <div id="joinCamContainer" style="display: none; padding: 12px; background: rgba(28, 25, 23, 0.95); border-top: 1px solid rgba(255,255,255,0.08);">
+          <button id="joinCamBtn" onclick="requestJoinCam()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span style="font-size: 1.4rem; font-weight: 300;">+</span> Rejoindre en caméra
+          </button>
+          <p style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 8px;" id="camSlotsInfo">3 places disponibles</p>
         </div>
 
-        <div class="live-chat-area">
+        <div class="live-chat-area" style="background: rgba(28, 25, 23, 0.98); border-top: 1px solid rgba(255,255,255,0.08);">
           <div class="live-chat-messages" id="liveChatMessages">
             <!-- Messages du chat -->
           </div>
-          <div class="live-chat-input-area">
-            <input type="text" id="liveChatInput" class="live-chat-input" placeholder="Envoyer un message..." maxlength="200">
-            <button class="live-chat-send" onclick="sendLiveMessage()">Envoyer</button>
+          <div class="live-chat-input-area" style="border-top: 1px solid rgba(255,255,255,0.08);">
+            <input type="text" id="liveChatInput" class="live-chat-input" placeholder="Envoyer un message..." maxlength="200" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: white;">
+            <button class="live-chat-send" onclick="sendLiveMessage()" style="background: linear-gradient(135deg, #8B5CF6, #EC4899);">Envoyer</button>
           </div>
         </div>
 
-        <div class="live-controls">
-          <button class="live-control-btn mic" id="micBtn" onclick="toggleMic()">🎤 Micro</button>
-          <button class="live-control-btn gift" onclick="showGiftModal()">🎁 Cadeau</button>
-          <button class="live-control-btn favorite" onclick="addToFavorites()">⭐ Favoris</button>
+        <div class="live-controls" style="background: rgba(28, 25, 23, 0.98); border-top: 1px solid rgba(255,255,255,0.08);">
+          <button class="live-control-btn mic" id="micBtn" onclick="toggleMic()" style="background: rgba(255,255,255,0.1); color: white; border-radius: 14px;">● Micro</button>
+          <button class="live-control-btn" id="camBtn" onclick="toggleCam()" style="background: rgba(255,255,255,0.1); color: white; border-radius: 14px;">◉ Caméra</button>
+          <button class="live-control-btn favorite" onclick="addToFavorites()" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED); border-radius: 14px;">★ Favoris</button>
         </div>
       </div>
     </div>
 
-    <!-- LIVE DATE (VERSUS) -->
+    <!-- SPEED DATING VIEW -->
     <div id="liveDateView" class="app-view">
-      <div class="live-room">
-        <div class="live-room-header">
+      <div class="live-room" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%);">
+        <div class="live-room-header" style="background: rgba(28, 25, 23, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08);">
           <div>
-            <div class="live-room-title">Live Date • Phase Versus</div>
-            <div style="font-size:0.85rem; opacity:0.7;">Réponds rapidement !</div>
+            <div class="live-room-title" style="background: linear-gradient(135deg, #EC4899, #DB2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">Speed Dating</div>
+            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Réponds et parle à ton match !</div>
           </div>
-          <button class="live-room-close" onclick="leaveLive()">Quitter</button>
+          <button class="live-room-close" onclick="leaveSpeedDating()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
         </div>
 
-        <div class="live-versus-container" id="versusContainer">
-          <div class="live-versus-timer" id="versusTimer">2:00</div>
-          <div class="live-versus-question" id="versusQuestion">Chargement...</div>
-          <div class="live-versus-options" id="versusOptions">
-            <!-- Options générées dynamiquement -->
+        <!-- Zone vidéo floutée pour les 2 participants -->
+        <div id="speedDatingVideoArea" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; height: 35%;">
+          <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <div style="font-size: 3rem; opacity: 0.5;">?</div>
+            <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: white;">Toi</div>
           </div>
-          <div class="live-versus-results" id="versusResults" style="display:none;">
-            <!-- Résultats de comparaison -->
+          <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <div style="font-size: 3rem; opacity: 0.5;">?</div>
+            <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: white;" id="partnerName">En attente...</div>
           </div>
         </div>
 
-        <div style="padding:20px; text-align:center;">
-          <div id="versusProgressText" style="font-size:0.9rem; opacity:0.8;">Question 1 / 10</div>
+        <!-- Zone questions style Lovoo VS -->
+        <div class="live-versus-container" id="versusContainer" style="padding: 20px; flex: 1; background: linear-gradient(180deg, rgba(236, 72, 153, 0.03) 0%, rgba(139, 92, 246, 0.05) 100%);">
+          <div id="waitingForMatch" style="text-align: center; padding: 40px;">
+            <div style="font-size: 3rem; margin-bottom: 20px; animation: pulse 2s infinite;">♡</div>
+            <h3 style="color: white; margin-bottom: 10px;">En attente d'un match...</h3>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Le Speed Dating commencera dès qu'une personne te rejoindra</p>
+          </div>
+          <div id="versusGameArea" style="display: none;">
+            <div class="live-versus-timer" id="versusTimer" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #EC4899, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; margin-bottom: 20px;">3:00</div>
+            <div class="live-versus-question" id="versusQuestion" style="font-size: 1.3rem; font-weight: 600; text-align: center; color: white; margin-bottom: 24px;">Chargement...</div>
+            <div class="live-versus-options" id="versusOptions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <!-- Options générées dynamiquement -->
+            </div>
+            <div class="live-versus-results" id="versusResults" style="display: none; margin-top: 24px;">
+              <!-- Résultats de comparaison -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Controles audio -->
+        <div style="padding: 16px; text-align: center; background: rgba(28, 25, 23, 0.98); border-top: 1px solid rgba(255,255,255,0.08);">
+          <div id="versusProgressText" style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 12px;">Parle avec ton match pendant les questions !</div>
+          <button id="speedDatingMicBtn" onclick="toggleSpeedDatingMic()" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; color: white; padding: 14px 32px; border-radius: 14px; font-weight: 600; cursor: pointer;">● Micro activé</button>
+        </div>
+
+        <!-- Choix final -->
+        <div id="finalChoice" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; padding: 30px;">
+          <h2 style="color: white; font-size: 1.8rem; margin-bottom: 10px; text-align: center;">Temps écoulé !</h2>
+          <p style="color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 30px;">Souhaites-tu continuer en discussion privée ?</p>
+          <div style="display: flex; gap: 20px;">
+            <button onclick="speedDatingChoice('no')" style="background: rgba(255,255,255,0.1); border: 2px solid #EF4444; color: #EF4444; padding: 18px 40px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer;">× Non</button>
+            <button onclick="speedDatingChoice('yes')" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; color: white; padding: 18px 40px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer;">♡ Oui</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation - Premium White Milk Design -->
     <div class="bottom-nav">
       <div class="nav-item active" onclick="switchView('discover')">
-        <div class="nav-icon">🔥</div>
+        <div class="nav-icon">◇</div>
         <div class="nav-label">Découvrir</div>
       </div>
       <div class="nav-item" onclick="switchView('matches')">
-        <div class="nav-icon">💜</div>
+        <div class="nav-icon">♡</div>
         <div class="nav-label">Matches</div>
         <span id="matchesBadge" class="nav-badge" style="display:none;">0</span>
       </div>
       <div class="nav-item" onclick="switchView('messages')">
-        <div class="nav-icon">💬</div>
+        <div class="nav-icon">◯</div>
         <div class="nav-label">Messages</div>
         <span id="messagesBadge" class="nav-badge" style="display:none;">0</span>
       </div>
       <div class="nav-item" onclick="switchView('live')">
-        <div class="nav-icon">🎥</div>
+        <div class="nav-icon">▸</div>
         <div class="nav-label">Live</div>
       </div>
       <div class="nav-item" onclick="switchView('profile')">
-        <div class="nav-icon">👤</div>
+        <div class="nav-icon">○</div>
         <div class="nav-label">Profil</div>
       </div>
     </div>
@@ -1335,24 +1414,6 @@
     </div>
   </div>
 
-  <!-- Modal Cadeau Brumes -->
-  <div id="giftModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; display:flex; align-items:center; justify-content:center;">
-    <div style="background:rgba(30,30,30,0.95); padding:30px; border-radius:15px; color:white; max-width:400px; width:90%;">
-      <h3 style="font-size:1.5rem; font-weight:700; margin-bottom:20px; text-align:center;">🎁 Envoyer des Brumes</h3>
-      
-      <div id="giftParticipantsList" style="margin-bottom:20px;">
-        <!-- Liste des participants -->
-      </div>
-      
-      <input type="number" id="giftAmount" placeholder="Montant (min. 10 Brumes)" min="10" style="width:100%; padding:12px; border-radius:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; margin-bottom:15px;">
-      
-      <div style="display:flex; gap:10px;">
-        <button onclick="closeGiftModal()" style="flex:1; padding:12px; border-radius:8px; background:rgba(255,255,255,0.1); border:none; color:white; font-weight:600; cursor:pointer;">Annuler</button>
-        <button onclick="confirmSendGift()" style="flex:1; padding:12px; border-radius:8px; background:#ffa94d; border:none; color:white; font-weight:600; cursor:pointer;">Envoyer</button>
-      </div>
-    </div>
-  </div>
-
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
@@ -1363,9 +1424,97 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let currentUser = null;
 
-    // Jitsi Meet configuration (100% GRATUIT - pas d'API Key nécessaire !)
-    let jitsiAPI = null;
+    // Agora RTC Configuration
+    const AGORA_APP_ID = '2d6f68f6a59b4622ac64393266c8f828';
+    let agoraClient = null;
+    let localAudioTrack = null;
+    let localVideoTrack = null;
+    let remoteUsers = {};
     let currentRoomName = null;
+
+    // PWA Install prompt
+    let deferredPrompt = null;
+    
+    // Capture the install prompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('Install prompt captured');
+    });
+
+    // Show install modal on first visit
+    function showInstallModal() {
+      // Don't show if already installed as PWA
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('App already installed');
+        return;
+      }
+      
+      // Don't show if user dismissed it recently (24h)
+      const lastDismissed = localStorage.getItem('installModalDismissed');
+      if (lastDismissed) {
+        const dismissedTime = parseInt(lastDismissed);
+        if (Date.now() - dismissedTime < 24 * 60 * 60 * 1000) {
+          return;
+        }
+      }
+      
+      const modal = document.getElementById('installAppModal');
+      const iosInstructions = document.getElementById('iosInstructions');
+      const installBtn = document.getElementById('installAppBtn');
+      
+      // Detect iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+      
+      if (isIOS) {
+        iosInstructions.style.display = 'block';
+        installBtn.textContent = 'J\'ai compris !';
+      } else {
+        iosInstructions.style.display = 'none';
+        installBtn.textContent = 'Installer l\'application';
+      }
+      
+      modal.style.display = 'flex';
+    }
+
+    // Install the app
+    window.installApp = async function() {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      
+      if (isIOS) {
+        // On iOS, just close the modal (instructions shown)
+        closeInstallModal();
+        return;
+      }
+      
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('User choice:', outcome);
+        deferredPrompt = null;
+        closeInstallModal();
+        
+        if (outcome === 'accepted') {
+          localStorage.setItem('appInstalled', 'true');
+        }
+      } else {
+        // No prompt available, show instructions
+        alert('Pour installer Flou, utilise le menu de ton navigateur et cherche "Ajouter à l\'écran d\'accueil" ou "Installer l\'application"');
+        closeInstallModal();
+      }
+    }
+
+    // Close install modal
+    window.closeInstallModal = function() {
+      document.getElementById('installAppModal').style.display = 'none';
+      localStorage.setItem('installModalDismissed', Date.now().toString());
+    }
+
+    // Show modal after 2 seconds on page load
+    setTimeout(() => {
+      showInstallModal();
+    }, 2000);
 
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
 
@@ -1610,8 +1759,6 @@
       } else if (view === 'shop') {
         document.getElementById('shopView').classList.add('active');
         window.loadShop();
-      } else if (view === 'createLive') {
-        document.getElementById('createLiveView').classList.add('active');
       } else if (view === 'liveRoom') {
         document.getElementById('liveRoomView').classList.add('active');
       } else if (view === 'liveDate') {
@@ -1800,9 +1947,14 @@
       } catch (error) { console.error('Load matches error:', error); }
     }
 
-    // LOAD PROFILE
+    // LOAD PROFILE - Fixed to display all data properly
     window.loadProfile = async function() {
-      if (!currentUser) return;
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) currentUser = session.user;
+        else return;
+      }
+      
       try {
         const { data, error } = await supabase
           .from('users')
@@ -1812,21 +1964,44 @@
         
         if (error) throw error;
         
-        document.getElementById('profileName').textContent = data.firstname;
-        document.getElementById('profileAge').textContent = data.age;
+        // Update all profile fields
+        document.getElementById('profileName').textContent = data.firstname || 'Sans nom';
+        document.getElementById('profileAge').textContent = data.age || '-';
+        document.getElementById('profileAgeHeader').textContent = data.age || '-';
         document.getElementById('profileCity').textContent = data.city || 'Non renseigné';
-        document.getElementById('profileGender').textContent = data.gender;
-        document.getElementById('profileSexuality').textContent = data.sexuality;
+        document.getElementById('profileCityHeader').textContent = data.city || 'Non renseigné';
+        document.getElementById('profileGender').textContent = data.gender || '-';
+        document.getElementById('profileSexuality').textContent = data.sexuality || '-';
+        
+        // Profile photo with proper loading state
+        const profilePhoto = document.getElementById('profilePhoto');
+        const photoLoader = document.getElementById('profilePhotoLoader');
         
         if (data.photo_url) {
-          const profilePhoto = document.getElementById('profilePhoto');
+          if (photoLoader) photoLoader.style.display = 'flex';
+          profilePhoto.onload = function() {
+            if (photoLoader) photoLoader.style.display = 'none';
+          };
+          profilePhoto.onerror = function() {
+            if (photoLoader) photoLoader.style.display = 'none';
+            profilePhoto.src = '/assets/images/default-avatar.png';
+          };
           profilePhoto.src = data.photo_url;
-          // Mon propre profil = pas de blur
           profilePhoto.style.filter = 'blur(0px)';
+        } else {
+          profilePhoto.src = '/assets/images/default-avatar.png';
+          if (photoLoader) photoLoader.style.display = 'none';
         }
         
+        // Interests with better styling
         const interestsContainer = document.getElementById('profileInterests');
-        interestsContainer.innerHTML = data.interests.map(i => `<span class="mini-tag">${i}</span>`).join('');
+        if (data.interests && data.interests.length > 0) {
+          interestsContainer.innerHTML = data.interests.map(i => 
+            `<span style="font-size: 0.85rem; padding: 8px 14px; border-radius: 20px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); color: var(--primary); border: 1px solid rgba(139, 92, 246, 0.2); font-weight: 500;">${i}</span>`
+          ).join('');
+        } else {
+          interestsContainer.innerHTML = '<span style="color: var(--text-lighter);">Aucun intérêt renseigné</span>';
+        }
         
         // Load subscription and Brumes balance
         const brumesBalance = data.brumes_balance || 0;
@@ -1840,24 +2015,31 @@
           'cupidon': '💜 CUPIDON'
         };
         const subColors = {
-          'classique': '#a78bfa',
-          'kama': '#3b82f6',
-          'cupidon': '#8b5cf6'
+          'classique': '#8B5CF6',
+          'kama': '#3B82F6',
+          'cupidon': '#A855F7'
         };
         
         const subElement = document.getElementById('userSubscription');
         subElement.textContent = subLabels[subscription] || subLabels.classique;
         subElement.style.color = subColors[subscription] || subColors.classique;
         
-      } catch (error) { console.error('Load profile error:', error); }
+      } catch (error) { 
+        console.error('Load profile error:', error); 
+      }
     }
 
-    // LOAD EDIT PROFILE
+    // LOAD EDIT PROFILE - Fixed to load all data properly
     let editProfileData = {};
     let newPhotoFile = null;
 
     window.loadEditProfile = async function() {
-      if (!currentUser) return;
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) currentUser = session.user;
+        else return;
+      }
+      
       try {
         const { data, error } = await supabase
           .from('users')
@@ -1869,8 +2051,9 @@
         
         editProfileData = { ...data };
         
-        document.getElementById('editFirstname').value = data.firstname;
-        document.getElementById('editAge').value = data.age;
+        // Fill all form fields
+        document.getElementById('editFirstname').value = data.firstname || '';
+        document.getElementById('editAge').value = data.age || '';
         document.getElementById('editCity').value = data.city || '';
         document.getElementById('editCatchphrase').value = data.catchphrase || '';
         document.getElementById('editBio').value = data.bio || '';
@@ -1879,27 +2062,50 @@
         document.getElementById('editCatchphraseCount').textContent = (data.catchphrase || '').length;
         document.getElementById('editBioCount').textContent = (data.bio || '').length;
         
+        // Profile photo
+        const editPhoto = document.getElementById('editProfilePhoto');
         if (data.photo_url) {
-          document.getElementById('editProfilePhoto').src = data.photo_url;
+          editPhoto.src = data.photo_url;
+        } else {
+          editPhoto.src = '/assets/images/default-avatar.png';
         }
         
-        // Render interests as toggleable tags
+        // Render interests as toggleable tags with premium styling
         const grid = document.getElementById('editInterestsGrid');
+        const userInterests = data.interests || [];
         grid.innerHTML = interests.map(interest => {
-          const isSelected = data.interests.includes(interest);
-          return `<span class="interest-tag ${isSelected ? 'selected' : ''}" onclick="toggleEditInterest(this, '${interest}')">${interest}</span>`;
+          const isSelected = userInterests.includes(interest);
+          return `<span class="interest-tag ${isSelected ? 'selected' : ''}" onclick="toggleEditInterest(this, '${interest}')" style="cursor: pointer; padding: 10px 16px; border-radius: 20px; font-size: 0.85rem; transition: all 0.2s; ${isSelected ? 'background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none;' : 'background: var(--bg-secondary); color: var(--text); border: 1.5px solid var(--border);'}">${interest}</span>`;
         }).join('');
-      } catch (error) { console.error('Load edit profile error:', error); }
+        
+      } catch (error) { 
+        console.error('Load edit profile error:', error); 
+        alert('Erreur lors du chargement du profil');
+      }
     }
 
     window.toggleEditInterest = function(element, interest) {
-      element.classList.toggle('selected');
-      if (element.classList.contains('selected')) {
-        if (!editProfileData.interests.includes(interest)) {
-          editProfileData.interests.push(interest);
-        }
+      const isCurrentlySelected = element.classList.contains('selected');
+      
+      if (isCurrentlySelected) {
+        // Remove interest
+        element.classList.remove('selected');
+        element.style.background = 'var(--bg-secondary)';
+        element.style.color = 'var(--text)';
+        element.style.border = '1.5px solid var(--border)';
+        editProfileData.interests = (editProfileData.interests || []).filter(i => i !== interest);
       } else {
-        editProfileData.interests = editProfileData.interests.filter(i => i !== interest);
+        // Add interest (max 10)
+        if ((editProfileData.interests || []).length >= 10) {
+          alert('Maximum 10 intérêts');
+          return;
+        }
+        element.classList.add('selected');
+        element.style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
+        element.style.color = 'white';
+        element.style.border = 'none';
+        if (!editProfileData.interests) editProfileData.interests = [];
+        editProfileData.interests.push(interest);
       }
     }
 
@@ -1907,6 +2113,11 @@
       const input = document.getElementById('editPhotoInput');
       const file = input.files[0];
       if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Photo trop lourde (max 5Mo)');
+          input.value = '';
+          return;
+        }
         newPhotoFile = file;
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -1917,7 +2128,10 @@
     }
 
     window.saveProfile = async function() {
-      if (!currentUser) return;
+      if (!currentUser) {
+        alert('Vous devez être connecté');
+        return;
+      }
       
       const firstname = document.getElementById('editFirstname').value.trim();
       const age = parseInt(document.getElementById('editAge').value);
@@ -1925,15 +2139,27 @@
       const catchphrase = document.getElementById('editCatchphrase').value.trim();
       const bio = document.getElementById('editBio').value.trim();
       
-      if (!firstname || !age || age < 20 || editProfileData.interests.length < 5) {
-        alert('Vérifie que tous les champs sont remplis et que tu as au moins 5 intérêts sélectionnés.');
+      // Validation
+      if (!firstname || firstname.length < 2) {
+        alert('Le prénom doit contenir au moins 2 caractères');
         return;
       }
       
-      if (catchphrase.length < 10 || bio.length < 20) {
-        alert('La phrase d\'accroche doit faire au moins 10 caractères et la description au moins 20 caractères.');
+      if (!age || age < 20 || age > 100) {
+        alert('L\'âge doit être entre 20 et 100 ans');
         return;
       }
+      
+      if ((editProfileData.interests || []).length < 5) {
+        alert('Sélectionne au moins 5 intérêts');
+        return;
+      }
+      
+      // Show loading state
+      const saveBtn = document.querySelector('button[onclick="saveProfile()"]');
+      const originalText = saveBtn.innerHTML;
+      saveBtn.innerHTML = 'Enregistrement...';
+      saveBtn.disabled = true;
       
       try {
         let photoUrl = editProfileData.photo_url;
@@ -1947,7 +2173,10 @@
             .from('user-photos')
             .upload(fileName, newPhotoFile, { upsert: true });
           
-          if (uploadError) throw uploadError;
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            throw new Error('Erreur lors de l\'upload de la photo');
+          }
           
           const { data: { publicUrl } } = supabase.storage
             .from('user-photos')
@@ -1957,27 +2186,38 @@
         }
         
         // Update profile in database
+        const updateData = {
+          firstname: firstname,
+          age: age,
+          city: city || null,
+          catchphrase: catchphrase || null,
+          bio: bio || null,
+          interests: editProfileData.interests,
+          photo_url: photoUrl
+        };
+        
+        console.log('Saving profile:', updateData);
+        
         const { error: updateError } = await supabase
           .from('users')
-          .update({
-            firstname: firstname,
-            age: age,
-            city: city,
-            catchphrase: catchphrase,
-            bio: bio,
-            interests: editProfileData.interests,
-            photo_url: photoUrl
-          })
+          .update(updateData)
           .eq('id', currentUser.id);
         
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Update error:', updateError);
+          throw new Error('Erreur lors de la mise à jour: ' + updateError.message);
+        }
         
         alert('✅ Profil mis à jour avec succès !');
         newPhotoFile = null;
         window.switchView('profile');
+        
       } catch (error) {
         console.error('Save profile error:', error);
-        alert('Erreur lors de la mise à jour : ' + error.message);
+        alert('Erreur: ' + error.message);
+      } finally {
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
       }
     }
 
@@ -2194,278 +2434,632 @@
     }
 
     // ================================
-    // LIVE FUNCTIONS
+    // LIVE FUNCTIONS - AGORA RTC
     // ================================
 
-    // Jitsi Meet - Créer une room vidéo (GRATUIT - pas besoin d'API !)
-    function createJitsiRoom(roomName) {
-      // Génère un nom de room unique
-      const uniqueRoomName = `flou-live-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      return {
-        roomName: uniqueRoomName,
-        url: `https://meet.jit.si/${uniqueRoomName}`
-      };
+    // Générer un nom de room unique
+    function generateRoomName() {
+      return `flou-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     }
 
-    // Jitsi Meet - Rejoindre une room et afficher les vidéos
-    function joinJitsiRoom(roomName, userName) {
-      // Container pour Jitsi
-      const videoArea = document.getElementById('liveVideoArea');
-      videoArea.innerHTML = '<div id="jitsi-container" style="width:100%; height:100%; display:none;"></div>';
-
-      const domain = 'meet.jit.si';
-      const options = {
-        roomName: roomName,
-        width: '100%',
-        height: '100%',
-        parentNode: document.getElementById('jitsi-container'),
-        userInfo: {
-          displayName: userName
-        },
-        configOverwrite: {
-          startWithAudioMuted: false,
-          startWithVideoMuted: false,
-          disableDeepLinking: true,
-          enableNoisyMicDetection: false,
-          prejoinPageEnabled: true, // Activer la page de prévisualisation pour demander permissions
-          toolbarButtons: ['microphone', 'camera', 'hangup', 'chat', 'settings'], // Garder les boutons essentiels
-          enableWelcomePage: false,
-          enableClosePage: false
-        },
-        interfaceConfigOverwrite: {
-          SHOW_JITSI_WATERMARK: false,
-          SHOW_WATERMARK_FOR_GUESTS: false,
-          SHOW_BRAND_WATERMARK: false,
-          DISABLE_VIDEO_BACKGROUND: true,
-          TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'chat', 'settings'],
-          filmStripOnly: false,
-          VERTICAL_FILMSTRIP: false
-        },
-        // Demander les permissions dès le chargement
-        devices: {
-          audioInput: undefined, // Permet à Jitsi de sélectionner le micro
-          videoInput: undefined  // Permet à Jitsi de sélectionner la caméra
-        }
-      };
-
-      jitsiAPI = new JitsiMeetExternalAPI(domain, options);
-
-      // Appliquer le flou sur les vidéos
-      jitsiAPI.addListener('videoConferenceJoined', () => {
-        console.log('✅ Connecté à Jitsi');
-        applyBlurToVideos();
-        
-        // Afficher le container
-        document.getElementById('jitsi-container').style.display = 'block';
-      });
-
-      jitsiAPI.addListener('participantJoined', () => {
-        console.log('Participant rejoint');
-        setTimeout(applyBlurToVideos, 500);
-      });
-
-      jitsiAPI.addListener('videoMuteStatusChanged', () => {
-        setTimeout(applyBlurToVideos, 300);
-      });
-    }
-
-    // Appliquer le flou sur toutes les vidéos Jitsi
-    function applyBlurToVideos() {
-      const iframe = document.querySelector('#jitsi-container iframe');
-      if (!iframe) return;
-
+    // Initialiser Agora et rejoindre une room
+    async function joinAgoraRoom(channelName, userName, containerId = 'liveVideoArea') {
       try {
-        // Injecter du CSS dans l'iframe Jitsi pour flouter les vidéos
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        let style = iframeDoc.getElementById('flou-blur-style');
+        console.log('🎥 Connexion à Agora...', channelName);
         
-        if (!style) {
-          style = iframeDoc.createElement('style');
-          style.id = 'flou-blur-style';
-          style.innerHTML = `
-            video {
-              filter: blur(25px) !important;
-              -webkit-filter: blur(25px) !important;
-            }
-            .videocontainer video {
-              filter: blur(25px) !important;
-            }
-          `;
-          iframeDoc.head.appendChild(style);
+        // Créer le client Agora
+        agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+        
+        // Gérer les utilisateurs distants
+        agoraClient.on('user-published', async (user, mediaType) => {
+          await agoraClient.subscribe(user, mediaType);
+          console.log('✅ Utilisateur distant connecté:', user.uid);
+          
+          if (mediaType === 'video') {
+            const remoteVideoTrack = user.videoTrack;
+            remoteUsers[user.uid] = user;
+            displayRemoteVideo(user, containerId);
+          }
+          if (mediaType === 'audio') {
+            const remoteAudioTrack = user.audioTrack;
+            remoteAudioTrack.play();
+          }
+        });
+        
+        agoraClient.on('user-unpublished', (user, mediaType) => {
+          if (mediaType === 'video') {
+            removeRemoteVideo(user.uid);
+          }
+        });
+        
+        agoraClient.on('user-left', (user) => {
+          console.log('Utilisateur parti:', user.uid);
+          removeRemoteVideo(user.uid);
+          delete remoteUsers[user.uid];
+        });
+        
+        // Récupérer le token depuis le serveur
+        console.log('Récupération du token Agora...');
+        const tokenResponse = await fetch(`/api/agora-token?channel=${encodeURIComponent(channelName)}&uid=0&role=publisher`);
+        const tokenData = await tokenResponse.json();
+        
+        if (!tokenData.token) {
+          throw new Error('Token non reçu du serveur');
         }
-      } catch (e) {
-        console.log('Impossible d\'appliquer le flou via iframe (CORS), utilisation du CSS externe');
-      }
-
-      // Appliquer le flou sur le container
-      const container = document.getElementById('jitsi-container');
-      if (container) {
-        container.style.filter = 'blur(25px)';
+        console.log('Token reçu');
+        
+        // Rejoindre le channel avec le token
+        const uid = await agoraClient.join(AGORA_APP_ID, channelName, tokenData.token, null);
+        console.log('Connecté à Agora avec UID:', uid);
+        
+        // Créer les tracks audio/vidéo locaux
+        [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+        
+        // Afficher la vidéo locale (floutée)
+        displayLocalVideo(containerId, userName);
+        
+        // Publier les tracks
+        await agoraClient.publish([localAudioTrack, localVideoTrack]);
+        console.log('Vidéo et audio publiés');
+        
+        return uid;
+      } catch (error) {
+        console.error('Erreur Agora:', error);
+        alert('Erreur de connexion vidéo: ' + error.message);
+        throw error;
       }
     }
 
-    // Quitter la room Jitsi
-    function leaveJitsiRoom() {
-      if (jitsiAPI) {
-        jitsiAPI.dispose();
-        jitsiAPI = null;
+    // Rejoindre Agora comme spectateur (sans publier de vidéo)
+    async function joinAgoraAsSpectator(channelName, containerId = 'liveVideoArea') {
+      try {
+        console.log('👁️ Connexion à Agora comme spectateur...', channelName);
+        
+        // Créer le client Agora
+        agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+        
+        // Gérer les utilisateurs distants
+        agoraClient.on('user-published', async (user, mediaType) => {
+          await agoraClient.subscribe(user, mediaType);
+          console.log('✅ Utilisateur distant connecté:', user.uid);
+          
+          if (mediaType === 'video') {
+            remoteUsers[user.uid] = user;
+            displayRemoteVideo(user, containerId);
+            currentCamCount = Object.keys(remoteUsers).length;
+            updateJoinCamButton();
+          }
+          if (mediaType === 'audio') {
+            const remoteAudioTrack = user.audioTrack;
+            remoteAudioTrack.play();
+          }
+        });
+        
+        agoraClient.on('user-unpublished', (user, mediaType) => {
+          if (mediaType === 'video') {
+            removeRemoteVideo(user.uid);
+          }
+        });
+        
+        agoraClient.on('user-left', (user) => {
+          console.log('Utilisateur parti:', user.uid);
+          removeRemoteVideo(user.uid);
+          delete remoteUsers[user.uid];
+          currentCamCount = Object.keys(remoteUsers).length;
+          updateJoinCamButton();
+        });
+        
+        // Récupérer le token depuis le serveur (subscriber role)
+        const tokenResponse = await fetch(`/api/agora-token?channel=${encodeURIComponent(channelName)}&uid=0&role=subscriber`);
+        const tokenData = await tokenResponse.json();
+        
+        if (!tokenData.token) {
+          throw new Error('Token non reçu du serveur');
+        }
+        
+        // Rejoindre le channel comme spectateur
+        const uid = await agoraClient.join(AGORA_APP_ID, channelName, tokenData.token, null);
+        console.log('Connecté à Agora comme spectateur, UID:', uid);
+        
+        return uid;
+      } catch (error) {
+        console.error('Erreur Agora spectateur:', error);
+        throw error;
       }
-      document.getElementById('liveVideoArea').innerHTML = '';
+    }
+
+    // Mettre à jour le bouton rejoindre en cam
+    function updateJoinCamButton() {
+      const container = document.getElementById('joinCamContainer');
+      const info = document.getElementById('camSlotsInfo');
+      const btn = document.getElementById('joinCamBtn');
+      
+      if (!container) return;
+      
+      if (isOnCam) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      const slotsAvailable = 4 - currentCamCount;
+      
+      if (slotsAvailable > 0) {
+        container.style.display = 'block';
+        info.textContent = `${slotsAvailable} place${slotsAvailable > 1 ? 's' : ''} disponible${slotsAvailable > 1 ? 's' : ''}`;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      } else {
+        container.style.display = 'block';
+        info.textContent = 'Toutes les places sont prises';
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+      }
+    }
+
+    // Demander à rejoindre en caméra
+    window.requestJoinCam = async function() {
+      if (isOnCam || currentCamCount >= 4) return;
+      
+      try {
+        // Récupérer le nom de l'utilisateur
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+        
+        const userName = userData?.firstname || 'Utilisateur';
+        
+        // Créer les tracks audio/vidéo
+        [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+        
+        // Afficher la vidéo locale
+        displayLocalVideo('liveVideoArea', userName);
+        
+        // Publier les tracks
+        await agoraClient.publish([localAudioTrack, localVideoTrack]);
+        console.log('Vidéo et audio publiés - monté en cam!');
+        
+        // Mettre à jour le statut dans la base de données
+        await supabase
+          .from('live_participants')
+          .update({ on_cam: true, role: 'participant' })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', currentUser.id);
+        
+        isOnCam = true;
+        currentCamCount++;
+        document.getElementById('joinCamContainer').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Erreur montée en cam:', error);
+        alert('Impossible de rejoindre en caméra: ' + error.message);
+      }
+    }
+
+    // Afficher la vidéo locale avec flou
+    function displayLocalVideo(containerId, userName) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      const videoBox = document.createElement('div');
+      videoBox.id = 'local-video-box';
+      videoBox.style.cssText = `
+        position: relative;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
+        border-radius: 16px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+        min-height: 200px;
+      `;
+      
+      const videoWrapper = document.createElement('div');
+      videoWrapper.id = 'local-video-wrapper';
+      videoWrapper.style.cssText = `
+        width: 100%;
+        height: 100%;
+        filter: blur(25px);
+        -webkit-filter: blur(25px);
+      `;
+      
+      const nameTag = document.createElement('div');
+      nameTag.style.cssText = `
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(10px);
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: white;
+        z-index: 10;
+      `;
+      nameTag.textContent = userName || 'Toi';
+      
+      videoBox.appendChild(videoWrapper);
+      videoBox.appendChild(nameTag);
+      container.appendChild(videoBox);
+      
+      // Jouer la vidéo locale dans le wrapper
+      localVideoTrack.play('local-video-wrapper');
+    }
+
+    // Afficher une vidéo distante avec flou
+    function displayRemoteVideo(user, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      const videoBox = document.createElement('div');
+      videoBox.id = `remote-video-${user.uid}`;
+      videoBox.style.cssText = `
+        position: relative;
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3));
+        border-radius: 16px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+        min-height: 200px;
+      `;
+      
+      const videoWrapper = document.createElement('div');
+      videoWrapper.id = `remote-wrapper-${user.uid}`;
+      videoWrapper.style.cssText = `
+        width: 100%;
+        height: 100%;
+        filter: blur(25px);
+        -webkit-filter: blur(25px);
+      `;
+      
+      const nameTag = document.createElement('div');
+      nameTag.style.cssText = `
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(10px);
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: white;
+        z-index: 10;
+      `;
+      nameTag.textContent = 'Participant';
+      
+      videoBox.appendChild(videoWrapper);
+      videoBox.appendChild(nameTag);
+      container.appendChild(videoBox);
+      
+      // Jouer la vidéo distante
+      user.videoTrack.play(`remote-wrapper-${user.uid}`);
+      
+      // Pour le Speed Dating, mettre à jour le nom du partenaire
+      const partnerNameEl = document.getElementById('partnerName');
+      if (partnerNameEl) {
+        partnerNameEl.textContent = 'Ton match';
+      }
+    }
+
+    // Supprimer une vidéo distante
+    function removeRemoteVideo(uid) {
+      const videoBox = document.getElementById(`remote-video-${uid}`);
+      if (videoBox) {
+        videoBox.remove();
+      }
+    }
+
+    // Quitter la room Agora
+    async function leaveAgoraRoom() {
+      try {
+        if (localAudioTrack) {
+          localAudioTrack.close();
+          localAudioTrack = null;
+        }
+        if (localVideoTrack) {
+          localVideoTrack.close();
+          localVideoTrack = null;
+        }
+        if (agoraClient) {
+          await agoraClient.leave();
+          agoraClient = null;
+        }
+        remoteUsers = {};
+        console.log('Déconnecté Agora');
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion:', error);
+      }
+    }
+
+    // Toggle micro
+    window.toggleMic = async function() {
+      if (localAudioTrack) {
+        const muted = localAudioTrack.muted;
+        await localAudioTrack.setMuted(!muted);
+        const micBtn = document.getElementById('micBtn');
+        if (micBtn) {
+          micBtn.textContent = !muted ? '● Micro OFF' : '● Micro';
+          micBtn.classList.toggle('muted', !muted);
+        }
+      }
+    }
+
+    // Toggle caméra
+    window.toggleCam = async function() {
+      if (localVideoTrack) {
+        const enabled = localVideoTrack.enabled;
+        await localVideoTrack.setEnabled(!enabled);
+        const camBtn = document.getElementById('camBtn');
+        if (camBtn) {
+          camBtn.textContent = !enabled ? '◉ Caméra' : '◉ Caméra OFF';
+        }
+      }
     }
 
     let currentLiveId = null;
     let currentLiveType = null;
     let selectedLiveType = null;
     let isMuted = false;
+    let speedDatingMuted = false;
     let versusQuestions = [
-      { question: "Matin ou Nuit ?", options: ["Matin", "Nuit"] },
-      { question: "Improviser ou Planifier ?", options: ["Improviser", "Planifier"] },
-      { question: "Voyager léger ou Tout prévoir ?", options: ["Voyager léger", "Tout prévoir"] },
-      { question: "Montagne ou Plage ?", options: ["Montagne", "Plage"] },
-      { question: "Rester chez soi ou Sortir ?", options: ["Rester chez soi", "Sortir"] },
-      { question: "Cuisine maison ou Restaurant ?", options: ["Cuisine maison", "Restaurant"] },
-      { question: "Série ou Film ?", options: ["Série", "Film"] },
-      { question: "Chat ou Chien ?", options: ["Chat", "Chien"] },
-      { question: "Sport ou Lecture ?", options: ["Sport", "Lecture"] },
-      { question: "Ville ou Campagne ?", options: ["Ville", "Campagne"] }
+      { question: "Matin ou Nuit ?", options: ["☀️ Matin", "🌙 Nuit"] },
+      { question: "Improviser ou Planifier ?", options: ["🎲 Improviser", "📋 Planifier"] },
+      { question: "Voyager léger ou Tout prévoir ?", options: ["🎒 Léger", "🧳 Tout prévoir"] },
+      { question: "Montagne ou Plage ?", options: ["⛰️ Montagne", "🏖️ Plage"] },
+      { question: "Rester chez soi ou Sortir ?", options: ["🏠 Chez moi", "🎉 Sortir"] },
+      { question: "Cuisine maison ou Restaurant ?", options: ["👨‍🍳 Maison", "🍽️ Restaurant"] },
+      { question: "Série ou Film ?", options: ["📺 Série", "🎬 Film"] },
+      { question: "Chat ou Chien ?", options: ["🐱 Chat", "🐕 Chien"] },
+      { question: "Sport ou Lecture ?", options: ["🏃 Sport", "📚 Lecture"] },
+      { question: "Ville ou Campagne ?", options: ["🏙️ Ville", "🌳 Campagne"] }
     ];
     let currentVersusIndex = 0;
-    let versusTimer = 120; // 2 minutes
+    let versusTimer = 180; // 3 minutes pour Speed Dating
+    let versusTimerInterval = null;
+    let isOnCam = false; // Track if current user is on camera
+    let currentCamCount = 0; // Track number of people on cam
+
+    // New: Show Live Lobby based on type - Simplified: direct launch
+    window.showLiveLobby = function(type) {
+      selectedLiveType = type === 'speedDating' ? 'date' : 'groupe';
+      
+      if (type === 'speedDating') {
+        // For speed dating, go directly to waiting room
+        startSpeedDatingMatchmaking();
+      } else {
+        // For live, launch directly without form
+        quickStartLive();
+      }
+    }
+
+    // Speed Dating matchmaking
+    window.startSpeedDatingMatchmaking = async function() {
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) currentUser = session.user;
+        else {
+          alert('Tu dois être connecté');
+          return;
+        }
+      }
+      
+      try {
+        // Get user's name for display
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+        
+        const userName = userData?.firstname || 'Anonyme';
+        
+        // Check if there's already a waiting speed dating
+        const { data: waitingLives } = await supabase
+          .from('lives')
+          .select('*, live_participants(user_id)')
+          .eq('type', 'date')
+          .eq('status', 'waiting')
+          .neq('host_id', currentUser.id)
+          .order('created_at', { ascending: true })
+          .limit(1);
+        
+        if (waitingLives && waitingLives.length > 0) {
+          // Join existing speed dating
+          const live = waitingLives[0];
+          currentLiveId = live.id;
+          currentLiveType = 'date';
+          currentRoomName = live.room_url;
+          
+          // Add as participant
+          await supabase
+            .from('live_participants')
+            .insert({
+              live_id: live.id,
+              user_id: currentUser.id,
+              role: 'participant',
+              pseudo: userName
+            });
+          
+          // Update live status to active
+          await supabase
+            .from('lives')
+            .update({ status: 'active', started_at: new Date().toISOString() })
+            .eq('id', live.id);
+          
+          // Join the room
+          switchView('liveDate');
+          document.getElementById('waitingForMatch').style.display = 'none';
+          document.getElementById('versusGameArea').style.display = 'block';
+          document.getElementById('partnerName').textContent = 'Match trouvé !';
+          
+          // Vider et préparer le container vidéo
+          document.getElementById('speedDatingVideoArea').innerHTML = '';
+          
+          // Rejoindre Agora
+          await joinAgoraRoom(live.room_url, userName, 'speedDatingVideoArea');
+          
+          // Start the game
+          startSpeedDatingGame();
+        } else {
+          // Create new speed dating and wait
+          const roomName = generateRoomName();
+          
+          const { data: live, error } = await supabase
+            .from('lives')
+            .insert({
+              host_id: currentUser.id,
+              type: 'date',
+              title: 'Speed Dating',
+              description: null,
+              max_participants: 1,
+              status: 'waiting',
+              room_url: roomName
+            })
+            .select()
+            .single();
+          
+          if (error) throw error;
+          
+          // Add host as participant
+          await supabase
+            .from('live_participants')
+            .insert({
+              live_id: live.id,
+              user_id: currentUser.id,
+              role: 'host',
+              pseudo: userName
+            });
+          
+          currentLiveId = live.id;
+          currentLiveType = 'date';
+          currentRoomName = roomName;
+          
+          switchView('liveDate');
+          
+          // Show waiting screen
+          document.getElementById('waitingForMatch').style.display = 'block';
+          document.getElementById('versusGameArea').style.display = 'none';
+          
+          // Subscribe to participant changes
+          subscribeSpeedDatingMatch(live.id, userName);
+        }
+      } catch (error) {
+        console.error('Speed dating error:', error);
+        alert('Erreur: ' + error.message);
+      }
+    }
+
+    // Subscribe to speed dating match
+    window.subscribeSpeedDatingMatch = function(liveId, userName) {
+      supabase
+        .channel(`speed-dating:${liveId}`)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'live_participants',
+          filter: `live_id=eq.${liveId}`
+        }, async (payload) => {
+          if (payload.new.user_id !== currentUser.id) {
+            // Match found!
+            document.getElementById('waitingForMatch').style.display = 'none';
+            document.getElementById('versusGameArea').style.display = 'block';
+            document.getElementById('partnerName').textContent = payload.new.pseudo || 'Match';
+            
+            // Vider et préparer le container vidéo
+            document.getElementById('speedDatingVideoArea').innerHTML = '';
+            
+            // Rejoindre Agora
+            await joinAgoraRoom(currentRoomName, userName, 'speedDatingVideoArea');
+            
+            // Start the game
+            startSpeedDatingGame();
+          }
+        })
+        .subscribe();
+    }
+
+    // Start Speed Dating game
+    window.startSpeedDatingGame = function() {
+      currentVersusIndex = 0;
+      versusTimer = 180; // 3 minutes
+      showVersusQuestion();
+      startVersusTimer();
+    }
 
     window.showCreateLive = function() {
-      switchView('createLive');
-      document.getElementById('liveFormDetails').style.display = 'none';
-      document.querySelectorAll('.live-type-card').forEach(card => card.classList.remove('selected'));
-      selectedLiveType = null;
+      selectedLiveType = 'groupe';
+      quickStartLive();
+    }
+
+    // Quick start live - no form needed
+    window.quickStartLive = async function() {
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          alert('Tu dois être connecté pour créer un Live');
+          return;
+        }
+        currentUser = session.user;
+      }
+
+      try {
+        // Get user's name
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+        
+        const userPseudo = userData?.firstname || 'Hôte';
+        const roomName = generateRoomName();
+        const liveTitle = `Live de ${userPseudo}`;
+
+        // Create Live
+        const { data: live, error: liveError } = await supabase
+          .from('lives')
+          .insert({
+            host_id: currentUser.id,
+            type: 'groupe',
+            title: liveTitle,
+            description: null,
+            max_participants: 4,
+            status: 'waiting',
+            room_url: roomName
+          })
+          .select()
+          .single();
+
+        if (liveError) throw liveError;
+
+        // Add host as participant
+        await supabase
+          .from('live_participants')
+          .insert({
+            live_id: live.id,
+            user_id: currentUser.id,
+            role: 'host',
+            pseudo: userPseudo
+          });
+
+        currentLiveId = live.id;
+        currentLiveType = 'groupe';
+        currentRoomName = roomName;
+
+        await joinLiveRoom(live.id);
+        
+      } catch (error) {
+        console.error('Erreur création Live:', error);
+        alert('Erreur: ' + (error.message || 'Erreur inconnue'));
+      }
     }
 
     window.selectLiveType = function(type) {
       selectedLiveType = type;
       document.querySelectorAll('.live-type-card').forEach(card => card.classList.remove('selected'));
       event.target.closest('.live-type-card').classList.add('selected');
-      document.getElementById('liveFormDetails').style.display = 'block';
     }
 
+    // Keep createLive for backward compatibility but simplified
     window.createLive = async function() {
-      const title = document.getElementById('liveTitle').value.trim();
-      const description = document.getElementById('liveDescription').value.trim();
-      const pseudo = document.getElementById('livePseudo').value.trim();
-
-      if (!selectedLiveType) {
-        alert('Sélectionne un type de Live');
-        return;
-      }
-      if (!title) {
-        alert('Entre un titre');
-        return;
-      }
-      if (!pseudo) {
-        alert('Entre un pseudo');
-        return;
-      }
-
-      try {
-        console.log('🔍 DIAGNOSTIC: Début création Live...');
-        console.log('📝 Données:', { 
-          title, 
-          type: selectedLiveType, 
-          pseudo,
-          currentUser: currentUser?.id,
-          authenticated: !!currentUser
-        });
-
-        // Vérifier que l'utilisateur est connecté
-        if (!currentUser) {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session) {
-            alert('Tu dois être connecté pour créer un Live');
-            return;
-          }
-          currentUser = session.user;
-          console.log('✅ Session récupérée:', currentUser.id);
-        }
-        
-        // Créer une room Jitsi (GRATUIT - pas d'API nécessaire !)
-        console.log('🎥 Création room Jitsi...');
-        const jitsiRoom = createJitsiRoom(title);
-        console.log('✅ Room Jitsi créée:', jitsiRoom);
-        
-        // Créer le Live avec le nom de la room
-        console.log('💾 Insertion dans Supabase...');
-        const liveData = {
-          host_id: currentUser.id,
-          type: selectedLiveType,
-          title: title,
-          description: description || null,
-          max_participants: selectedLiveType === 'groupe' ? 4 : 1,
-          status: 'waiting',
-          room_url: jitsiRoom.roomName
-        };
-        console.log('📤 Données à insérer:', liveData);
-
-        const { data: live, error: liveError } = await supabase
-          .from('lives')
-          .insert(liveData)
-          .select()
-          .single();
-
-        if (liveError) {
-          console.error('❌ ERREUR insertion Live:', liveError);
-          console.error('Code:', liveError.code);
-          console.error('Message:', liveError.message);
-          console.error('Details:', liveError.details);
-          console.error('Hint:', liveError.hint);
-          throw liveError;
-        }
-        
-        console.log('✅ Live créé avec succès:', live);
-
-        // Ajouter l'hôte comme participant
-        console.log('👤 Ajout du participant hôte...');
-        const participantData = {
-          live_id: live.id,
-          user_id: currentUser.id,
-          role: 'host',
-          pseudo: pseudo
-        };
-        console.log('📤 Données participant:', participantData);
-
-        const { error: participantError } = await supabase
-          .from('live_participants')
-          .insert(participantData);
-
-        if (participantError) {
-          console.error('❌ ERREUR ajout participant:', participantError);
-          console.error('Code:', participantError.code);
-          console.error('Message:', participantError.message);
-          console.error('Details:', participantError.details);
-          throw participantError;
-        }
-
-        console.log('✅ Participant ajouté avec succès');
-
-        currentLiveId = live.id;
-        currentLiveType = selectedLiveType;
-        currentRoomName = jitsiRoom.roomName;
-
-        console.log('🚀 Redirection vers le Live...');
-        // Rediriger vers la salle appropriée
-        if (selectedLiveType === 'groupe') {
-          await joinLiveRoom(live.id);
-        } else {
-          await joinLiveDate(live.id);
-        }
-
-      } catch (error) {
-        console.error('💥 ERREUR GLOBALE création Live:', error);
-        console.error('Type:', error.constructor.name);
-        console.error('Message:', error.message);
-        console.error('Code:', error.code);
-        console.error('Hint:', error.hint);
-        console.error('Details:', error.details);
-        console.error('Stack:', error.stack);
-        alert('Erreur lors de la création du Live:\n' + (error.message || error.hint || 'Erreur inconnue. Vérifie que le script SQL est exécuté dans Supabase.'));
-      }
+      quickStartLive();
     }
 
     window.loadLives = async function() {
@@ -2521,18 +3115,27 @@
       }
     }
 
-    window.joinLiveRoom = async function(liveId, pseudo = null) {
+    window.joinLiveRoom = async function(liveId, pseudo = null, asSpectator = false) {
       try {
+        // Compter les participants actuels en cam
+        const { data: camParticipants } = await supabase
+          .from('live_participants')
+          .select('*')
+          .eq('live_id', liveId)
+          .eq('role', 'host');
+        
+        const { data: onCamParticipants } = await supabase
+          .from('live_participants')
+          .select('*')
+          .eq('live_id', liveId)
+          .eq('on_cam', true);
+        
+        currentCamCount = (camParticipants?.length || 0) + (onCamParticipants?.length || 0);
+        const canJoinCam = currentCamCount < 4 && !asSpectator;
+        
         // Si pseudo fourni, ajouter comme participant/spectateur
         if (pseudo) {
-          const { data: live } = await supabase
-            .from('lives')
-            .select('*, live_participants(count)')
-            .eq('id', liveId)
-            .single();
-
-          const participantCount = live.live_participants?.length || 0;
-          const role = participantCount < 5 ? 'participant' : 'spectator';
+          const role = canJoinCam ? 'participant' : 'spectator';
 
           await supabase
             .from('live_participants')
@@ -2540,8 +3143,14 @@
               live_id: liveId,
               user_id: currentUser.id,
               role: role,
-              pseudo: pseudo
+              pseudo: pseudo,
+              on_cam: canJoinCam
             });
+            
+          isOnCam = canJoinCam;
+        } else {
+          // Host creating the live
+          isOnCam = true;
         }
 
         // Charger les infos du Live
@@ -2560,25 +3169,35 @@
         console.log('✅ Live chargé:', live);
 
         document.getElementById('liveRoomTitle').textContent = live.title;
-        currentRoomName = live.room_url;
+        document.getElementById('liveRoomDescription').textContent = live.description || '';
+        currentRoomName = live.room_url || generateRoomName();
+        currentLiveId = liveId;
 
-        console.log('👤 Récupération pseudo utilisateur...');
-        // Récupérer le pseudo de l'utilisateur
-        const { data: myParticipant } = await supabase
-          .from('live_participants')
-          .select('pseudo')
-          .eq('live_id', liveId)
-          .eq('user_id', currentUser.id)
+        console.log('👤 Récupération info utilisateur...');
+        // Récupérer le nom de l'utilisateur
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
           .single();
 
-        console.log('✅ Pseudo récupéré:', myParticipant?.pseudo);
+        const userName = userData?.firstname || 'Utilisateur';
+        console.log('✅ Nom récupéré:', userName);
 
-        // Rejoindre la room Jitsi
-        if (currentRoomName && myParticipant?.pseudo) {
-          console.log('🎥 Connexion à Jitsi:', { room: currentRoomName, pseudo: myParticipant.pseudo });
-          joinJitsiRoom(currentRoomName, myParticipant.pseudo);
+        // Vider le container vidéo
+        document.getElementById('liveVideoArea').innerHTML = '';
+
+        // Si on est en cam, rejoindre Agora avec vidéo
+        if (isOnCam) {
+          console.log('🎥 Connexion à Agora avec caméra:', { room: currentRoomName, user: userName });
+          await joinAgoraRoom(currentRoomName, userName, 'liveVideoArea');
+          document.getElementById('joinCamContainer').style.display = 'none';
         } else {
-          console.error('❌ Impossible de rejoindre Jitsi:', { currentRoomName, pseudo: myParticipant?.pseudo });
+          // Spectateur: rejoindre Agora sans publier de vidéo
+          console.log('👁️ Connexion à Agora comme spectateur:', { room: currentRoomName, user: userName });
+          await joinAgoraAsSpectator(currentRoomName, 'liveVideoArea');
+          // Afficher le bouton pour rejoindre en cam
+          updateJoinCamButton();
         }
 
         // Charger les participants
@@ -2593,7 +3212,7 @@
         if (live.host_id === currentUser.id && live.status === 'waiting') {
           await supabase
             .from('lives')
-            .update({ status: 'active', started_at: new Date().toISOString() })
+            .update({ status: 'active', started_at: new Date().toISOString(), room_url: currentRoomName })
             .eq('id', liveId);
         }
 
@@ -2602,7 +3221,7 @@
 
       } catch (error) {
         console.error('Erreur rejoindre Live:', error);
-        alert('Erreur lors de l\'accès au Live');
+        alert('Erreur lors de acces au Live: ' + error.message);
       }
     }
 
@@ -2619,12 +3238,35 @@
             });
         }
 
+        currentLiveId = liveId;
         switchView('liveDate');
+        
+        // Récupérer le nom de l'utilisateur
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+
+        const userName = userData?.firstname || 'Utilisateur';
+
+        // Charger les infos du Live Date
+        const { data: live } = await supabase
+          .from('lives')
+          .select('room_url')
+          .eq('id', liveId)
+          .single();
+
+        currentRoomName = live?.room_url || generateRoomName();
+
+        // Rejoindre Agora pour le Speed Dating
+        await joinAgoraRoom(currentRoomName, userName, 'speedDatingVideoArea');
+        
         startVersus(liveId);
 
       } catch (error) {
         console.error('Erreur rejoindre Live Date:', error);
-        alert('Erreur lors de l\'accès au Live Date');
+        alert('Erreur lors de acces au Speed Dating');
       }
     }
 
@@ -2713,11 +3355,11 @@
       }
     }
 
-    window.toggleMic = function() {
-      if (!jitsiAPI) return;
+    window.toggleMic = async function() {
+      if (!agoraClient || !localAudioTrack) return;
       
       isMuted = !isMuted;
-      jitsiAPI.executeCommand('toggleAudio');
+      await localAudioTrack.setEnabled(!isMuted);
       
       const micBtn = document.getElementById('micBtn');
       if (isMuted) {
@@ -2964,17 +3606,15 @@
       }
     }
 
-    window.showGiftModal = function() {
-      loadGiftParticipants();
-      document.getElementById('giftModal').style.display = 'flex';
-    }
-
     window.leaveLive = async function() {
       if (!currentLiveId) return;
 
       try {
-        // Quitter la room Jitsi
-        leaveJitsiRoom();
+        // Quitter la room Agora
+        await leaveAgoraRoom();
+        
+        // Vider le container vidéo
+        document.getElementById('liveVideoArea').innerHTML = '';
         
         // Mettre à jour left_at
         await supabase
@@ -3009,29 +3649,28 @@
 
     window.startVersus = function(liveId) {
       currentVersusIndex = 0;
-      versusTimer = 120;
+      versusTimer = 180; // 3 minutes
+      document.getElementById('waitingForMatch').style.display = 'none';
+      document.getElementById('versusGameArea').style.display = 'block';
       showVersusQuestion();
       startVersusTimer();
     }
 
     window.showVersusQuestion = function() {
       if (currentVersusIndex >= versusQuestions.length) {
-        // Fin du Versus
-        document.getElementById('versusContainer').innerHTML = 
-          '<div style="text-align:center;"><h2>✨ Phase Versus terminée !</h2><p>Passage à la phase Live...</p></div>';
-        setTimeout(() => {
-          switchView('liveRoom');
-        }, 3000);
+        // All questions answered - keep talking until timer ends
+        document.getElementById('versusQuestion').textContent = 'Continuez à discuter !';
+        document.getElementById('versusOptions').innerHTML = '<div style="text-align: center; padding: 30px; color: rgba(255,255,255,0.7);">Toutes les questions ont été posées.<br>Profitez du temps restant pour mieux vous connaître !</div>';
         return;
       }
 
       const q = versusQuestions[currentVersusIndex];
       document.getElementById('versusQuestion').textContent = q.question;
       document.getElementById('versusOptions').innerHTML = q.options.map(opt => `
-        <div class="live-versus-option" onclick="answerVersus('${opt}')">${opt}</div>
+        <div class="live-versus-option" onclick="answerVersus('${opt}')" style="padding: 20px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15); border-radius: 16px; text-align: center; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; color: white;" onmouseover="this.style.borderColor='#EC4899'; this.style.transform='scale(1.03)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.transform='scale(1)'">${opt}</div>
       `).join('');
       document.getElementById('versusProgressText').textContent = 
-        `Question ${currentVersusIndex + 1} / ${versusQuestions.length}`;
+        `Question ${currentVersusIndex + 1} / ${versusQuestions.length} • Parle avec ton match !`;
     }
 
     window.answerVersus = async function(answer) {
@@ -3048,19 +3687,20 @@
             answer: answer
           });
 
-        // Marquer comme sélectionnée
+        // Marquer comme sélectionnée avec animation
         document.querySelectorAll('.live-versus-option').forEach(opt => {
           if (opt.textContent === answer) {
-            opt.classList.add('selected');
+            opt.style.borderColor = '#EC4899';
+            opt.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3))';
           }
           opt.style.pointerEvents = 'none';
         });
 
-        // Passer à la question suivante après 1 seconde
+        // Passer à la question suivante après un court délai
         setTimeout(() => {
           currentVersusIndex++;
           showVersusQuestion();
-        }, 1000);
+        }, 800);
 
       } catch (error) {
         console.error('Erreur enregistrement réponse:', error);
@@ -3068,20 +3708,179 @@
     }
 
     window.startVersusTimer = function() {
-      const timerInterval = setInterval(() => {
+      if (versusTimerInterval) clearInterval(versusTimerInterval);
+      
+      versusTimerInterval = setInterval(() => {
         versusTimer--;
         const minutes = Math.floor(versusTimer / 60);
         const seconds = versusTimer % 60;
-        document.getElementById('versusTimer').textContent = 
-          `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        const timerEl = document.getElementById('versusTimer');
+        if (timerEl) {
+          timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          // Change color when time is running low
+          if (versusTimer <= 30) {
+            timerEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+            timerEl.style.webkitBackgroundClip = 'text';
+          }
+        }
 
         if (versusTimer <= 0) {
-          clearInterval(timerInterval);
-          // Fin du temps imparti
-          currentVersusIndex = versusQuestions.length;
-          showVersusQuestion();
+          clearInterval(versusTimerInterval);
+          versusTimerInterval = null;
+          // Show final choice modal
+          showFinalChoice();
         }
       }, 1000);
+    }
+
+    // Show final choice for Speed Dating
+    window.showFinalChoice = function() {
+      const finalChoiceEl = document.getElementById('finalChoice');
+      if (finalChoiceEl) {
+        finalChoiceEl.style.display = 'flex';
+      }
+    }
+
+    // Handle Speed Dating choice
+    window.speedDatingChoice = async function(choice) {
+      try {
+        // Record the choice
+        await supabase
+          .from('live_date_answers')
+          .insert({
+            live_id: currentLiveId,
+            user_id: currentUser.id,
+            question: 'FINAL_CHOICE',
+            answer: choice
+          });
+        
+        // Hide the choice modal
+        document.getElementById('finalChoice').style.display = 'none';
+        
+        if (choice === 'yes') {
+          // Check if the other person also said yes
+          const { data: otherAnswers } = await supabase
+            .from('live_date_answers')
+            .select('*')
+            .eq('live_id', currentLiveId)
+            .eq('question', 'FINAL_CHOICE')
+            .neq('user_id', currentUser.id);
+          
+          if (otherAnswers && otherAnswers.length > 0 && otherAnswers[0].answer === 'yes') {
+            // It's a match! Create a match in the database
+            const { data: participants } = await supabase
+              .from('live_participants')
+              .select('user_id')
+              .eq('live_id', currentLiveId)
+              .neq('user_id', currentUser.id);
+            
+            if (participants && participants.length > 0) {
+              const matchedUserId = participants[0].user_id;
+              
+              // Create match
+              await supabase.from('matches').insert({
+                user_id: currentUser.id,
+                liked_user_id: matchedUserId,
+                status: 'matched',
+                matched_at: new Date().toISOString()
+              });
+              
+              alert('🎉 C\'est un match mutuel ! Vous pouvez maintenant discuter en privé dans la section Messages.');
+            }
+          } else {
+            // Waiting for the other person or they said no
+            alert('Ta réponse a été enregistrée. Si l\'autre personne dit oui aussi, vous serez mis en contact !');
+          }
+        } else {
+          alert('Merci pour ta participation ! À bientôt sur Flou.');
+        }
+        
+        // Leave the speed dating
+        leaveSpeedDating();
+        
+      } catch (error) {
+        console.error('Error recording choice:', error);
+        leaveSpeedDating();
+      }
+    }
+
+    // Leave Speed Dating
+    window.leaveSpeedDating = async function() {
+      if (versusTimerInterval) {
+        clearInterval(versusTimerInterval);
+        versusTimerInterval = null;
+      }
+      
+      // Leave Agora
+      await leaveAgoraRoom();
+      
+      // Vider le container vidéo
+      document.getElementById('speedDatingVideoArea').innerHTML = `
+        <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+          <div style="font-size: 3rem; opacity: 0.5;">?</div>
+          <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: white;">Toi</div>
+        </div>
+        <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+          <div style="font-size: 3rem; opacity: 0.5;">?</div>
+          <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: white;" id="partnerName">En attente...</div>
+        </div>
+      `;
+      
+      if (currentLiveId) {
+        try {
+          // Update left_at
+          await supabase
+            .from('live_participants')
+            .update({ left_at: new Date().toISOString() })
+            .eq('live_id', currentLiveId)
+            .eq('user_id', currentUser.id);
+          
+          // End the live if host
+          const { data: live } = await supabase
+            .from('lives')
+            .select('host_id')
+            .eq('id', currentLiveId)
+            .single();
+          
+          if (live && live.host_id === currentUser.id) {
+            await supabase
+              .from('lives')
+              .update({ status: 'ended', ended_at: new Date().toISOString() })
+              .eq('id', currentLiveId);
+          }
+        } catch (error) {
+          console.error('Error leaving speed dating:', error);
+        }
+      }
+      
+      currentLiveId = null;
+      currentLiveType = null;
+      currentRoomName = null;
+      
+      // Reset UI
+      document.getElementById('finalChoice').style.display = 'none';
+      document.getElementById('waitingForMatch').style.display = 'block';
+      document.getElementById('versusGameArea').style.display = 'none';
+      
+      switchView('live');
+    }
+
+    // Toggle mic for speed dating
+    window.toggleSpeedDatingMic = async function() {
+      if (!agoraClient || !localAudioTrack) return;
+      
+      speedDatingMuted = !speedDatingMuted;
+      await localAudioTrack.setEnabled(!speedDatingMuted);
+      
+      const micBtn = document.getElementById('speedDatingMicBtn');
+      if (speedDatingMuted) {
+        micBtn.style.background = '#EF4444';
+        micBtn.innerHTML = '○ Micro coupé';
+      } else {
+        micBtn.style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
+        micBtn.innerHTML = '● Micro activé';
+      }
     }
 
     window.subscribeLiveUpdates = function(liveId) {

@@ -2,13 +2,36 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, "public");
 
+// Agora Configuration
+const AGORA_APP_ID = '2d6f68f6a59b4622ac64393266c8f828';
+const AGORA_APP_CERTIFICATE = '166070eec4344f8e8374f701324d5c6a';
+
 console.log("Starting server...");
 console.log("PORT:", PORT);
 console.log("Public dir:", publicDir);
+
+// ==================== AGORA TOKEN GENERATION ====================
+function generateRtcToken(channelName, uid, role, expireTime) {
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+  const privilegeExpiredTs = currentTimestamp + expireTime;
+  
+  const token = RtcTokenBuilder.buildTokenWithUid(
+    AGORA_APP_ID,
+    AGORA_APP_CERTIFICATE,
+    channelName,
+    uid,
+    role,
+    privilegeExpiredTs
+  );
+  
+  return token;
+}
+// ==================== END AGORA TOKEN ====================
 
 function send(res, status, content, type = "text/plain") {
   try {
@@ -21,14 +44,46 @@ function send(res, status, content, type = "text/plain") {
 
 const server = http.createServer((req, res) => {
   try {
-    const parsedUrl = url.parse(req.url);
+    const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
 
     console.log("Request:", pathname);
 
+    // CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204);
+      return res.end();
+    }
+
     // HEALTH CHECK (Railway)
     if (pathname === "/health" || pathname === "/status") {
       return send(res, 200, JSON.stringify({ status: "ok" }), "application/json");
+    }
+
+    // AGORA TOKEN API
+    if (pathname === "/api/agora-token") {
+      const query = parsedUrl.query;
+      const channelName = query.channel;
+      const uid = parseInt(query.uid) || 0;
+      const role = query.role === 'subscriber' ? RtcRole.SUBSCRIBER : RtcRole.PUBLISHER;
+      const expireTime = 3600; // 1 hour
+
+      if (!channelName) {
+        return send(res, 400, JSON.stringify({ error: 'Channel name required' }), "application/json");
+      }
+
+      try {
+        const token = generateRtcToken(channelName, uid, role, expireTime);
+        console.log('Token generated for channel:', channelName);
+        return send(res, 200, JSON.stringify({ token, appId: AGORA_APP_ID }), "application/json");
+      } catch (tokenError) {
+        console.error('Token generation error:', tokenError);
+        return send(res, 500, JSON.stringify({ error: 'Token generation failed' }), "application/json");
+      }
     }
 
     // ROOT → index.html
