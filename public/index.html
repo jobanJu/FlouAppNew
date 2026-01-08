@@ -687,31 +687,34 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
+      padding: 14px 16px;
       background: var(--bg-card);
-      border-radius: 16px;
-      margin-bottom: 12px;
+      border-radius: 14px;
+      margin-bottom: 16px;
       box-shadow: var(--shadow-sm);
     }
     
     .theme-toggle-label {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-weight: 600;
+      font-size: 0.9rem;
       color: var(--text);
     }
     
     .theme-toggle-icon {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
     }
     
     .toggle-switch {
       position: relative;
-      width: 60px;
-      height: 32px;
+      width: 52px;
+      height: 28px;
       background: var(--bg-tertiary);
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -721,26 +724,21 @@
     }
     
     .toggle-switch::before {
-      content: '☀️';
+      content: '';
       position: absolute;
-      left: 4px;
+      left: 3px;
       top: 50%;
       transform: translateY(-50%);
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       background: white;
       border-radius: 50%;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     
     .toggle-switch.active::before {
-      content: '🌙';
-      left: calc(100% - 28px);
+      left: calc(100% - 25px);
     }
   </style>
 
@@ -1147,100 +1145,104 @@
       </div>
     </div>
 
-    <!-- Vue Profil - Premium Design -->
+    <!-- Vue Profil - Design Épuré -->
     <div id="profileView" class="app-view">
-      <div class="profile-container" style="background: var(--bg); min-height: 100vh;">
-        <div class="profile-header" style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 40px 20px 60px; margin: -20px -20px 0; border-radius: 0 0 40px 40px; position: relative;">
-          <div style="position: relative; width: 130px; height: 130px; margin: 0 auto 15px;">
-            <img id="profilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
-            <div id="profilePhotoLoader" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-              <div style="width: 30px; height: 30px; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-            </div>
+      <div class="profile-container" style="background: var(--bg); min-height: 100vh; padding-bottom: 100px;">
+        
+        <!-- Header avec photo -->
+        <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 50px 20px 70px; margin: -20px -20px 0; border-radius: 0 0 30px 30px;">
+          <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 16px;">
+            <img id="profilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 8px 30px rgba(0,0,0,0.25);">
           </div>
-          <div class="profile-name" id="profileName" style="font-size: 1.8rem; font-weight: 700; color: white; text-align: center;">Chargement...</div>
-          <div id="profileAgeCity" style="text-align: center; color: rgba(255,255,255,0.9); font-size: 1rem; margin-top: 6px;"><span id="profileAgeHeader">-</span> ans • <span id="profileCityHeader">-</span></div>
+          <div id="profileName" style="font-size: 1.6rem; font-weight: 700; color: white; text-align: center;">-</div>
+          <div style="text-align: center; color: rgba(255,255,255,0.9); font-size: 0.95rem; margin-top: 4px;">
+            <span id="profileAgeHeader">-</span> ans · <span id="profileCityHeader">-</span>
+          </div>
         </div>
 
-        <div style="margin-top: -30px; padding: 0 20px;">
-          <!-- Subscription Badge -->
-          <div style="background: var(--bg-card); padding: 20px; border-radius: 20px; text-align: center; box-shadow: var(--shadow-lg); margin-bottom: 20px;">
-            <div id="userSubscription" style="font-size: 1.1rem; font-weight: 700; color: #8B5CF6; margin-bottom: 8px;">⚪ CLASSIQUE</div>
-            <div style="font-size: 1.6rem; font-weight: 700; color: #F59E0B; display: flex; align-items: center; justify-content: center; gap: 8px;">
-              <span>◆</span> <span id="userBrumes">0</span> <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-light);">Brumes</span>
+        <div style="margin-top: -40px; padding: 0 16px;">
+          
+          <!-- Abonnement & Brumes -->
+          <div style="background: var(--bg-card); padding: 18px; border-radius: 16px; text-align: center; box-shadow: var(--shadow-lg); margin-bottom: 16px;">
+            <div id="userSubscription" style="font-size: 0.95rem; font-weight: 600; color: #8B5CF6; margin-bottom: 6px;">CLASSIQUE</div>
+            <div style="font-size: 1.4rem; font-weight: 700; color: #F59E0B; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <span id="userBrumes">0</span>
+              <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-light);">Brumes</span>
             </div>
           </div>
 
           <!-- Toggle Mode Jour/Nuit -->
           <div class="theme-toggle">
             <div class="theme-toggle-label">
-              <span class="theme-toggle-icon" id="themeIcon">☀️</span>
+              <span class="theme-toggle-icon" id="themeIcon">O</span>
               <span id="themeLabel">Mode Jour</span>
             </div>
             <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()"></div>
           </div>
 
-          <!-- Info Cards -->
-          <div style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Âge</div>
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--text);" id="profileAge">-</div>
+          <!-- Infos en grille -->
+          <div style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Age</div>
+                <div style="font-size: 1.2rem; font-weight: 700; color: var(--text);" id="profileAge">-</div>
               </div>
-              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Ville</div>
-                <div style="font-size: 1.1rem; font-weight: 600; color: var(--text);" id="profileCity">-</div>
+              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Ville</div>
+                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileCity">-</div>
               </div>
-              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Genre</div>
-                <div style="font-size: 1.1rem; font-weight: 600; color: var(--text);" id="profileGender">-</div>
+              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Genre</div>
+                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileGender">-</div>
               </div>
-              <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 14px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Recherche</div>
-                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
+              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Recherche</div>
+                <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
               </div>
             </div>
           </div>
 
-          <!-- Catchphrase & Bio -->
-          <div id="profileBioSection" style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); display: none;">
-            <div id="profileCatchphraseContainer" style="margin-bottom: 16px; display: none;">
-              <div style="font-size: 1.1rem; font-style: italic; color: var(--text); text-align: center; padding: 12px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.08)); border-radius: 12px; border-left: 3px solid var(--primary);">
+          <!-- Bio & Phrase d'accroche -->
+          <div id="profileBioSection" style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); display: none;">
+            <div id="profileCatchphraseContainer" style="margin-bottom: 12px; display: none;">
+              <div style="font-size: 1rem; font-style: italic; color: var(--text); text-align: center; padding: 10px; background: var(--bg-secondary); border-radius: 10px; border-left: 3px solid var(--primary);">
                 "<span id="profileCatchphrase"></span>"
               </div>
             </div>
             <div id="profileBioContainer" style="display: none;">
-              <div style="font-weight: 600; margin-bottom: 10px; color: var(--text); font-size: 0.9rem;">À propos de moi</div>
-              <div id="profileBio" style="font-size: 0.95rem; color: var(--text-light); line-height: 1.6;"></div>
+              <div style="font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.85rem;">A propos</div>
+              <div id="profileBio" style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;"></div>
             </div>
           </div>
 
-          <!-- Interests -->
-          <div style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);">
-            <div style="font-weight: 600; margin-bottom: 14px; color: var(--text); font-size: 0.95rem;">Mes intérêts</div>
-            <div id="profileInterests" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+          <!-- Centres d'interet -->
+          <div style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="font-weight: 600; margin-bottom: 12px; color: var(--text); font-size: 0.85rem;">Centres d'interet</div>
+            <div id="profileInterests" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
           </div>
 
-          <!-- Action Buttons -->
-          <button class="btn btn-primary" onclick="switchView('shop')" style="width: 100%; margin-bottom: 12px; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);">
-            ◇ Boutique & Abonnements
+          <!-- Boutons d'action -->
+          <button class="btn btn-primary" onclick="switchView('shop')" style="width: 100%; margin-bottom: 10px; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);">
+            Boutique
           </button>
-          <button class="btn btn-secondary" onclick="showFavoritesModal()" style="width: 100%; margin-bottom: 12px;">
-            ★ Mes Favoris Live
+          <button class="btn btn-secondary" onclick="showFavoritesModal()" style="width: 100%; margin-bottom: 10px;">
+            Mes Favoris
           </button>
-          <button class="btn btn-secondary" onclick="switchView('editProfile')" style="width: 100%; margin-bottom: 12px;">
-            ✎ Modifier mon profil
+          <button class="btn btn-secondary" onclick="switchView('editProfile')" style="width: 100%; margin-bottom: 10px;">
+            Modifier mon profil
           </button>
-          <button id="installBtn" class="btn btn-secondary" onclick="installPWA()" style="width: 100%; margin-bottom: 12px; display: none;">
-            ↓ Installer l'application
+          <button id="installBtn" class="btn btn-secondary" onclick="installPWA()" style="width: 100%; margin-bottom: 10px; display: none;">
+            Installer l'app
           </button>
           
-          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.8rem; text-align: center;">
-            <a href="/cgu.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">CGU</a>
-            <a href="/confidentialite.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">Confidentialité</a>
-            <a href="/reglement.html" style="color: var(--text-lighter); margin: 0 8px; text-decoration: none;">Règlement</a>
+          <!-- Liens -->
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.75rem; text-align: center;">
+            <a href="/cgu.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">CGU</a> |
+            <a href="/confidentialite.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">Confidentialite</a> |
+            <a href="/reglement.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">Reglement</a>
           </div>
           
-          <button class="btn-ghost" onclick="logout()" style="width: 100%; margin-top: 16px; color: #EF4444;">Déconnexion</button>
+          <button class="btn-ghost" onclick="logout()" style="width: 100%; margin-top: 12px; color: #EF4444; font-size: 0.9rem;">Deconnexion</button>
         </div>
       </div>
     </div>
@@ -1967,7 +1969,7 @@
         const icon = document.getElementById('themeIcon');
         const label = document.getElementById('themeLabel');
         if (toggle) toggle.classList.add('active');
-        if (icon) icon.textContent = '🌙';
+        if (icon) icon.textContent = 'C';
         if (label) label.textContent = 'Mode Nuit';
       } else {
         document.documentElement.removeAttribute('data-theme');
@@ -1975,7 +1977,7 @@
         const icon = document.getElementById('themeIcon');
         const label = document.getElementById('themeLabel');
         if (toggle) toggle.classList.remove('active');
-        if (icon) icon.textContent = '☀️';
+        if (icon) icon.textContent = 'O';
         if (label) label.textContent = 'Mode Jour';
       }
     }
@@ -2949,29 +2951,62 @@
           .eq('id', currentUser.id)
           .single();
         
-        if (error) throw error;
+        if (error) {
+          console.error('Load profile error:', error);
+          return;
+        }
         
-        // Update all profile fields
-        document.getElementById('profileName').textContent = data.firstname || 'Sans nom';
-        document.getElementById('profileAge').textContent = data.age || '-';
-        document.getElementById('profileAgeHeader').textContent = data.age || '-';
-        document.getElementById('profileCity').textContent = data.city || 'Non renseigné';
-        document.getElementById('profileCityHeader').textContent = data.city || 'Non renseigné';
+        console.log('Profile data:', data);
         
-        // Gender with labels
-        const genderLabels = { 'homme': 'Homme', 'femme': 'Femme', 'non-binaire': 'Non-binaire' };
-        document.getElementById('profileGender').textContent = genderLabels[data.gender] || '-';
+        // Nom
+        const nameEl = document.getElementById('profileName');
+        if (nameEl) nameEl.textContent = data.firstname || 'Sans nom';
         
-        // Seeking with labels
-        const seekingLabels = { 'homme': 'Homme', 'femme': 'Femme', 'tous': 'Tout le monde' };
-        document.getElementById('profileSexuality').textContent = seekingLabels[data.seeking] || '-';
+        // Age
+        const ageEl = document.getElementById('profileAge');
+        const ageHeaderEl = document.getElementById('profileAgeHeader');
+        const age = data.age || '-';
+        if (ageEl) ageEl.textContent = age;
+        if (ageHeaderEl) ageHeaderEl.textContent = age;
         
-        // Bio and catchphrase
-        const catchphraseEl = document.getElementById('profileCatchphrase');
-        const bioEl = document.getElementById('profileBio');
+        // Ville
+        const cityEl = document.getElementById('profileCity');
+        const cityHeaderEl = document.getElementById('profileCityHeader');
+        const city = data.city || 'Non renseigne';
+        if (cityEl) cityEl.textContent = city;
+        if (cityHeaderEl) cityHeaderEl.textContent = city;
+        
+        // Genre
+        const genderEl = document.getElementById('profileGender');
+        if (genderEl) {
+          const genderLabels = { 'Homme': 'Homme', 'Femme': 'Femme', 'homme': 'Homme', 'femme': 'Femme' };
+          genderEl.textContent = genderLabels[data.gender] || data.gender || '-';
+        }
+        
+        // Recherche (seeking)
+        const seekingEl = document.getElementById('profileSexuality');
+        if (seekingEl) {
+          const seekingLabels = { 'Homme': 'Hommes', 'Femme': 'Femmes', 'Les deux': 'Tous', 'homme': 'Hommes', 'femme': 'Femmes' };
+          seekingEl.textContent = seekingLabels[data.seeking] || data.seeking || '-';
+        }
+        
+        // Brumes
+        const brumesEl = document.getElementById('userBrumes');
+        if (brumesEl) brumesEl.textContent = data.brumes || 0;
+        
+        // Abonnement
+        const subEl = document.getElementById('userSubscription');
+        if (subEl) {
+          const subLabels = { 'free': 'CLASSIQUE', 'premium': 'PREMIUM', 'vip': 'VIP' };
+          subEl.textContent = subLabels[data.subscription] || 'CLASSIQUE';
+        }
+        
+        // Bio et catchphrase
         const bioSection = document.getElementById('profileBioSection');
         const catchphraseContainer = document.getElementById('profileCatchphraseContainer');
         const bioContainer = document.getElementById('profileBioContainer');
+        const catchphraseEl = document.getElementById('profileCatchphrase');
+        const bioEl = document.getElementById('profileBio');
         
         let showBioSection = false;
         
@@ -2995,29 +3030,20 @@
           bioSection.style.display = showBioSection ? 'block' : 'none';
         }
         
-        // Profile photo with proper loading state
+        // Photo (non floutee pour son propre profil)
         const profilePhoto = document.getElementById('profilePhoto');
-        const photoLoader = document.getElementById('profilePhotoLoader');
-        
-        if (data.photo_url) {
-          if (photoLoader) photoLoader.style.display = 'flex';
-          profilePhoto.onload = function() {
-            if (photoLoader) photoLoader.style.display = 'none';
-          };
-          profilePhoto.onerror = function() {
-            if (photoLoader) photoLoader.style.display = 'none';
+        if (profilePhoto) {
+          if (data.photo_url) {
+            profilePhoto.src = data.photo_url;
+            profilePhoto.style.filter = 'none';
+          } else {
             profilePhoto.src = '/assets/images/default-avatar.png';
-          };
-          profilePhoto.src = data.photo_url;
-          profilePhoto.style.filter = 'blur(0px)';
-        } else {
-          profilePhoto.src = '/assets/images/default-avatar.png';
-          if (photoLoader) photoLoader.style.display = 'none';
+          }
         }
         
-        // Interests with better styling
+        // Interets
         const interestsContainer = document.getElementById('profileInterests');
-        if (data.interests && data.interests.length > 0) {
+        if (interestsContainer && data.interests && data.interests.length > 0) {
           interestsContainer.innerHTML = data.interests.map(i => 
             `<span style="font-size: 0.85rem; padding: 8px 14px; border-radius: 20px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); color: var(--primary); border: 1px solid rgba(139, 92, 246, 0.2); font-weight: 500;">${i}</span>`
           ).join('');
