@@ -25,6 +25,9 @@
   <!-- Agora SDK pour les Lives vidéo -->
   <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
   
+  <!-- Stripe SDK pour les paiements -->
+  <script src="https://js.stripe.com/v3/"></script>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ==================== DESIGN SYSTEM - PREMIUM ==================== */
@@ -1405,8 +1408,90 @@
           </div>
         </div>
       </div>
-      <div id="chatView" style="display:none;">
-        <!-- Chat individuel -->
+      <div id="chatView" style="display:none; height: 100vh; display: flex; flex-direction: column; background: var(--bg);">
+        <!-- Header du chat -->
+        <div id="chatHeader" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;">
+          <button onclick="closeChat()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <img id="chatUserPhoto" src="/assets/images/default-avatar.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+          <div style="flex: 1;">
+            <div id="chatUserName" style="font-weight: 600; color: var(--text);">-</div>
+            <div id="chatUserStatus" style="font-size: 0.8rem; color: var(--success);">En ligne</div>
+          </div>
+          <button onclick="showChatOptions()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text)"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </button>
+        </div>
+        
+        <!-- Zone des messages -->
+        <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+          <!-- Messages chargés dynamiquement -->
+        </div>
+        
+        <!-- Zone de saisie avec IA Cupidon -->
+        <div style="background: var(--bg-card); border-top: 1px solid var(--border); padding: 12px 16px;">
+          <!-- Bouton Assistant IA (Cupidon only) -->
+          <div id="aiAssistantBar" style="display: none; margin-bottom: 10px;">
+            <button onclick="toggleAIAssistant()" id="aiAssistantBtn" style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; border-radius: 20px; padding: 8px 16px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+              <span>🤖</span>
+              <span>Assistant IA</span>
+              <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">CUPIDON</span>
+            </button>
+          </div>
+          
+          <!-- Panneau suggestions IA -->
+          <div id="aiSuggestionsPanel" style="display: none; margin-bottom: 12px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 16px; padding: 14px; border: 1px solid rgba(139, 92, 246, 0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span style="font-weight: 600; color: var(--text); font-size: 0.9rem;">🤖 Assistant de rédaction</span>
+              <button onclick="closeAISuggestions()" style="background: none; border: none; color: var(--text-lighter); cursor: pointer; font-size: 1.2rem;">×</button>
+            </div>
+            <div id="aiSuggestionsContent">
+              <!-- Catégories de suggestions -->
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <button onclick="getAISuggestions('icebreaker')" class="ai-cat-btn" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text);">💡 Premier message</button>
+                <button onclick="getAISuggestions('flirty')" class="ai-cat-btn" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text);">💕 Flirter</button>
+                <button onclick="getAISuggestions('funny')" class="ai-cat-btn" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text);">😄 Humour</button>
+                <button onclick="getAISuggestions('deep')" class="ai-cat-btn" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text);">💭 Profond</button>
+                <button onclick="getAISuggestions('date')" class="ai-cat-btn" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; color: var(--text);">📅 Rendez-vous</button>
+              </div>
+              <!-- Suggestions générées -->
+              <div id="aiSuggestionsList" style="display: flex; flex-direction: column; gap: 8px;">
+                <p style="color: var(--text-lighter); font-size: 0.85rem; text-align: center; padding: 10px;">Choisis une catégorie pour obtenir des suggestions ✨</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Input de message -->
+          <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <textarea id="chatMessageInput" placeholder="Écris ton message..." style="flex: 1; padding: 12px 16px; border-radius: 20px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); font-size: 0.95rem; resize: none; height: 44px; max-height: 120px; line-height: 1.4; outline: none;" oninput="autoResizeTextarea(this)" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            <button onclick="sendChatMessage()" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Assistant IA Upgrade (pour non-Cupidon) -->
+    <div id="aiUpgradeModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; padding: 20px;">
+      <div style="background: var(--bg-card); border-radius: 24px; max-width: 360px; width: 100%; padding: 30px; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 16px;">🤖✨</div>
+        <h3 style="color: var(--text); font-size: 1.3rem; font-weight: 700; margin-bottom: 12px;">Assistant IA de rédaction</h3>
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">L'assistant IA t'aide à rédiger des messages parfaits pour séduire tes matchs !</p>
+        <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 16px; padding: 16px; margin-bottom: 20px;">
+          <p style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">💜 Exclusif abonnés CUPIDON</p>
+          <ul style="text-align: left; color: var(--text-light); font-size: 0.85rem; margin: 12px 0 0 20px; list-style: disc;">
+            <li>Suggestions intelligentes</li>
+            <li>Messages d'accroche créatifs</li>
+            <li>Aide pour proposer un date</li>
+            <li>Réponses personnalisées</li>
+          </ul>
+        </div>
+        <button onclick="switchView('shop'); closeModal('aiUpgradeModal')" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none; border-radius: 14px; padding: 14px 24px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 10px;">
+          Passer à CUPIDON - 14.99€/sem
+        </button>
+        <button onclick="closeModal('aiUpgradeModal')" style="background: none; border: none; color: var(--text-lighter); font-size: 0.9rem; cursor: pointer;">Non merci</button>
       </div>
     </div>
 
@@ -3536,6 +3621,7 @@
       } else if (view === 'messages') {
         document.getElementById('messagesView').classList.add('active');
         document.querySelector('.nav-item:nth-child(3)').classList.add('active');
+        window.loadConversations();
       } else if (view === 'live') {
         document.getElementById('liveView').classList.add('active');
         document.querySelector('.nav-item:nth-child(4)').classList.add('active');
@@ -4209,6 +4295,521 @@
       alert(`Chat avec ${name} - À implémenter prochainement !`);
     }
 
+    // ============================================
+    // CHAT & MESSAGERIE
+    // ============================================
+    let currentChatUserId = null;
+    let currentChatMatchId = null;
+    let chatMessagesSubscription = null;
+
+    window.openChat = async function(userId, name, photo = null) {
+      if (!currentUser) return;
+      
+      currentChatUserId = userId;
+      
+      // Afficher le chat
+      document.getElementById('conversationsList').style.display = 'none';
+      const chatView = document.getElementById('chatView');
+      chatView.style.display = 'flex';
+      
+      // Mettre à jour le header
+      document.getElementById('chatUserName').textContent = name || 'Utilisateur';
+      if (photo) {
+        document.getElementById('chatUserPhoto').src = photo;
+      }
+      
+      // Charger l'utilisateur cible pour plus d'infos
+      try {
+        const { data: targetUser } = await supabase
+          .from('users')
+          .select('firstname, photos, is_online')
+          .eq('id', userId)
+          .single();
+          
+        if (targetUser) {
+          document.getElementById('chatUserName').textContent = targetUser.firstname || name;
+          if (targetUser.photos && targetUser.photos[0]) {
+            document.getElementById('chatUserPhoto').src = targetUser.photos[0];
+          }
+          document.getElementById('chatUserStatus').textContent = targetUser.is_online ? 'En ligne' : 'Hors ligne';
+          document.getElementById('chatUserStatus').style.color = targetUser.is_online ? 'var(--success)' : 'var(--text-lighter)';
+        }
+      } catch (e) {
+        console.log('Error loading target user:', e);
+      }
+      
+      // Trouver ou créer le match
+      await findOrCreateMatch(userId);
+      
+      // Charger les messages
+      await loadChatMessages();
+      
+      // S'abonner aux nouveaux messages en temps réel
+      subscribeToChatMessages();
+      
+      // Afficher le bouton IA si Cupidon
+      const userTier = currentUser.subscription_tier;
+      const aiBar = document.getElementById('aiAssistantBar');
+      if (userTier === 'cupidon') {
+        aiBar.style.display = 'block';
+      } else {
+        aiBar.style.display = 'none';
+      }
+    }
+
+    async function findOrCreateMatch(targetUserId) {
+      // Chercher un match existant
+      const { data: existingMatch } = await supabase
+        .from('matches')
+        .select('id')
+        .or(`and(user_id.eq.${currentUser.id},liked_user_id.eq.${targetUserId}),and(user_id.eq.${targetUserId},liked_user_id.eq.${currentUser.id})`)
+        .eq('status', 'matched')
+        .single();
+      
+      if (existingMatch) {
+        currentChatMatchId = existingMatch.id;
+      } else {
+        // Pour le chat, on crée un match simulé temporaire
+        currentChatMatchId = `temp_${currentUser.id}_${targetUserId}`;
+      }
+    }
+
+    async function loadChatMessages() {
+      const messagesContainer = document.getElementById('chatMessages');
+      
+      if (!currentChatMatchId || currentChatMatchId.startsWith('temp_')) {
+        messagesContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">💬</div>
+            <p style="color: var(--text-lighter);">Commence la conversation !</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const { data: messages, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('match_id', currentChatMatchId)
+        .order('created_at', { ascending: true });
+      
+      if (error) {
+        console.error('Error loading messages:', error);
+        return;
+      }
+      
+      if (!messages || messages.length === 0) {
+        messagesContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">💬</div>
+            <p style="color: var(--text-lighter);">Commence la conversation !</p>
+          </div>
+        `;
+        return;
+      }
+      
+      messagesContainer.innerHTML = messages.map(msg => renderMessage(msg)).join('');
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Marquer comme lus
+      await markMessagesAsRead();
+    }
+
+    function renderMessage(msg) {
+      const isMine = msg.sender_id === currentUser.id;
+      const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      
+      return `
+        <div style="display: flex; ${isMine ? 'justify-content: flex-end' : 'justify-content: flex-start'};">
+          <div style="max-width: 75%; padding: 12px 16px; border-radius: ${isMine ? '18px 18px 4px 18px' : '18px 18px 18px 4px'}; background: ${isMine ? 'linear-gradient(135deg, #8B5CF6, #EC4899)' : 'var(--bg-secondary)'}; color: ${isMine ? 'white' : 'var(--text)'};">
+            <p style="margin: 0; word-wrap: break-word; line-height: 1.4;">${escapeHtml(msg.content)}</p>
+            <div style="font-size: 0.7rem; ${isMine ? 'color: rgba(255,255,255,0.7)' : 'color: var(--text-lighter)'}; margin-top: 4px; text-align: right;">
+              ${time} ${isMine && msg.read ? '✓✓' : isMine ? '✓' : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    async function markMessagesAsRead() {
+      if (!currentChatMatchId || currentChatMatchId.startsWith('temp_')) return;
+      
+      await supabase
+        .from('messages')
+        .update({ read: true })
+        .eq('match_id', currentChatMatchId)
+        .eq('receiver_id', currentUser.id)
+        .eq('read', false);
+    }
+
+    function subscribeToChatMessages() {
+      if (chatMessagesSubscription) {
+        chatMessagesSubscription.unsubscribe();
+      }
+      
+      if (!currentChatMatchId || currentChatMatchId.startsWith('temp_')) return;
+      
+      chatMessagesSubscription = supabase
+        .channel('chat_messages_' + currentChatMatchId)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `match_id=eq.${currentChatMatchId}`
+        }, (payload) => {
+          const messagesContainer = document.getElementById('chatMessages');
+          // Vérifier si c'est un placeholder
+          if (messagesContainer.querySelector('div[style*="text-align: center"]')) {
+            messagesContainer.innerHTML = '';
+          }
+          messagesContainer.innerHTML += renderMessage(payload.new);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          
+          // Marquer comme lu si c'est pas le mien
+          if (payload.new.sender_id !== currentUser.id) {
+            markMessagesAsRead();
+          }
+        })
+        .subscribe();
+    }
+
+    window.sendChatMessage = async function() {
+      const input = document.getElementById('chatMessageInput');
+      const content = input.value.trim();
+      
+      if (!content || !currentChatUserId) return;
+      
+      input.value = '';
+      input.style.height = '44px';
+      
+      // Si pas de vrai match, créer le message quand même (pour MVP)
+      if (!currentChatMatchId || currentChatMatchId.startsWith('temp_')) {
+        // Afficher le message localement
+        const messagesContainer = document.getElementById('chatMessages');
+        if (messagesContainer.querySelector('div[style*="text-align: center"]')) {
+          messagesContainer.innerHTML = '';
+        }
+        const fakeMsg = {
+          sender_id: currentUser.id,
+          content: content,
+          created_at: new Date().toISOString(),
+          read: false
+        };
+        messagesContainer.innerHTML += renderMessage(fakeMsg);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return;
+      }
+      
+      const { error } = await supabase
+        .from('messages')
+        .insert({
+          match_id: currentChatMatchId,
+          sender_id: currentUser.id,
+          receiver_id: currentChatUserId,
+          content: content
+        });
+      
+      if (error) {
+        console.error('Error sending message:', error);
+        alert('Erreur lors de l\'envoi du message');
+      }
+    }
+
+    window.closeChat = function() {
+      if (chatMessagesSubscription) {
+        chatMessagesSubscription.unsubscribe();
+        chatMessagesSubscription = null;
+      }
+      
+      currentChatUserId = null;
+      currentChatMatchId = null;
+      
+      document.getElementById('chatView').style.display = 'none';
+      document.getElementById('conversationsList').style.display = 'block';
+      
+      // Fermer le panneau IA si ouvert
+      document.getElementById('aiSuggestionsPanel').style.display = 'none';
+    }
+
+    window.showChatOptions = function() {
+      alert('Options : Bloquer, Signaler, Supprimer la conversation\n\n(À implémenter)');
+    }
+
+    function autoResizeTextarea(textarea) {
+      textarea.style.height = '44px';
+      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    // ============================================
+    // ASSISTANT IA - CUPIDON EXCLUSIVE
+    // ============================================
+    const AI_SUGGESTIONS = {
+      icebreaker: [
+        "Salut ! J'ai vu qu'on avait matché, et j'avoue que ton profil m'a vraiment intrigué(e) 😊",
+        "Hey ! Je ne suis pas du genre à envoyer des messages génériques... mais toi tu mérites une exception 💫",
+        "Coucou ! Si je devais résumer ton profil en un emoji, ce serait ✨ Curieux(se) d'en savoir plus ?",
+        "Hello ! Je cherchais quelqu'un d'intéressant, et je crois que je viens de trouver 👀",
+        "Salut toi ! Ton sourire sur ta photo m'a fait sourire aussi, donc merci pour ça 😄"
+      ],
+      flirty: [
+        "Tu sais quoi ? Je suis content(e) d'avoir swipé à droite, t'as l'air vraiment cool 💜",
+        "J'espère que t'es aussi intéressant(e) en vrai que sur ton profil, sinon je vais être déçu(e) 😏",
+        "Si ton humour est aussi bon que tes photos, on va bien s'entendre 😉",
+        "Je ne crois pas au hasard... mais notre match me fait reconsidérer la question 🦋",
+        "Tu viens souvent ici ? Ah non attends, on n'est pas dans un bar 😂"
+      ],
+      funny: [
+        "Plot twist : je suis plus drôle en vrai qu'en écrivant. Le suspense est insoutenable, non ? 😄",
+        "Attention, je préviens : mes blagues sont nulles mais mon cœur est en or ⭐",
+        "J'ai passé 10 minutes à réfléchir au message parfait. Voilà le résultat. Impressionnant, hein ? 😂",
+        "On dit que le rire c'est la clé du bonheur. J'ai la clé, tu veux bien me laisser entrer ? 🔑",
+        "Je suis nul(le) pour les premiers messages, mais excellent(e) pour les conversations. Aide-moi ! 😅"
+      ],
+      deep: [
+        "Si tu pouvais voyager n'importe où demain, tu irais où et pourquoi ? 🌍",
+        "C'est quoi pour toi un moment parfait ? J'aime bien apprendre à connaître les gens par leurs petits bonheurs ☀️",
+        "Qu'est-ce qui te fait vibrer dans la vie ? J'aime les personnes passionnées 💫",
+        "Si tu devais me convaincre de regarder UN film/série ce soir, ce serait lequel/laquelle ? 🎬",
+        "C'est quoi le dernier truc qui t'a fait sourire vraiment ? 😊"
+      ],
+      date: [
+        "Dis, ça te dirait qu'on se retrouve autour d'un café un de ces jours ? ☕",
+        "Et si on continuait cette conversation de vive voix ? Un verre ce week-end ? 🍷",
+        "Je me demandais... tu serais partant(e) pour une petite balade ? 🚶‍♂️",
+        "J'ai découvert un super spot récemment. Ça te dit qu'on y aille ensemble ? 📍",
+        "Le temps est beau, les terrasses appellent... tu viens ? ☀️"
+      ]
+    };
+
+    window.toggleAIAssistant = function() {
+      const userTier = currentUser?.subscription_tier;
+      
+      if (userTier !== 'cupidon') {
+        // Afficher modal upgrade
+        document.getElementById('aiUpgradeModal').style.display = 'flex';
+        return;
+      }
+      
+      const panel = document.getElementById('aiSuggestionsPanel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    window.closeAISuggestions = function() {
+      document.getElementById('aiSuggestionsPanel').style.display = 'none';
+    }
+
+    window.getAISuggestions = function(category) {
+      const suggestions = AI_SUGGESTIONS[category] || [];
+      const shuffled = suggestions.sort(() => Math.random() - 0.5).slice(0, 3);
+      
+      const listContainer = document.getElementById('aiSuggestionsList');
+      listContainer.innerHTML = shuffled.map((suggestion, index) => `
+        <button onclick="useSuggestion(this)" style="text-align: left; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; cursor: pointer; color: var(--text); font-size: 0.9rem; line-height: 1.4; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+          ${suggestion}
+        </button>
+      `).join('');
+      
+      // Ajouter bouton pour plus de suggestions
+      listContainer.innerHTML += `
+        <button onclick="getAISuggestions('${category}')" style="background: none; border: none; color: var(--primary); font-size: 0.85rem; cursor: pointer; padding: 8px; text-align: center;">
+          🔄 Autres suggestions
+        </button>
+      `;
+    }
+
+    window.useSuggestion = function(btn) {
+      const suggestion = btn.textContent.trim();
+      document.getElementById('chatMessageInput').value = suggestion;
+      document.getElementById('chatMessageInput').focus();
+      closeAISuggestions();
+    }
+
+    window.closeModal = function(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // ============================================
+    // LISTE DES CONVERSATIONS
+    // ============================================
+    window.loadConversations = async function() {
+      const container = document.getElementById('conversationsContainer');
+      container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-lighter);">Chargement...</div>';
+      
+      if (!currentUser) return;
+      
+      try {
+        // Récupérer les matchs confirmés
+        const { data: matches, error } = await supabase
+          .from('matches')
+          .select(`
+            id,
+            user_id,
+            liked_user_id,
+            matched_at,
+            status
+          `)
+          .or(`user_id.eq.${currentUser.id},liked_user_id.eq.${currentUser.id}`)
+          .eq('status', 'matched')
+          .order('matched_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (!matches || matches.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:60px 20px;">
+              <div style="font-size: 4rem; margin-bottom: 16px;">◯</div>
+              <p style="color: var(--text-lighter); font-size: 1rem; margin-bottom: 8px;">Aucune conversation</p>
+              <p style="color: var(--text-lighter); font-size: 0.85rem;">Matche avec quelqu'un pour commencer à discuter !</p>
+            </div>
+          `;
+          document.getElementById('messagesCountBadge').style.display = 'none';
+          return;
+        }
+        
+        // Récupérer les infos des utilisateurs
+        const otherUserIds = matches.map(m => 
+          m.user_id === currentUser.id ? m.liked_user_id : m.user_id
+        );
+        
+        const { data: users } = await supabase
+          .from('users')
+          .select('id, firstname, photos, is_online')
+          .in('id', otherUserIds);
+        
+        const usersMap = {};
+        users?.forEach(u => usersMap[u.id] = u);
+        
+        // Récupérer le dernier message de chaque match
+        const conversationsHtml = await Promise.all(matches.map(async (match) => {
+          const otherUserId = match.user_id === currentUser.id ? match.liked_user_id : match.user_id;
+          const otherUser = usersMap[otherUserId] || { firstname: 'Utilisateur', photos: [] };
+          const photo = otherUser.photos?.[0] || '/assets/images/default-avatar.png';
+          
+          // Dernier message
+          const { data: lastMsg } = await supabase
+            .from('messages')
+            .select('content, created_at, sender_id, read')
+            .eq('match_id', match.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+          
+          // Compter messages non lus
+          const { count: unreadCount } = await supabase
+            .from('messages')
+            .select('id', { count: 'exact', head: true })
+            .eq('match_id', match.id)
+            .eq('receiver_id', currentUser.id)
+            .eq('read', false);
+          
+          const lastMsgText = lastMsg ? 
+            (lastMsg.sender_id === currentUser.id ? 'Toi: ' : '') + lastMsg.content.substring(0, 40) + (lastMsg.content.length > 40 ? '...' : '') :
+            'Dis bonjour ! 👋';
+          
+          const lastMsgTime = lastMsg ? formatMessageTime(lastMsg.created_at) : '';
+          
+          return `
+            <div onclick="openChat('${otherUserId}', '${otherUser.firstname}', '${photo}')" 
+                 style="display: flex; gap: 14px; align-items: center; padding: 14px; background: var(--bg-card); border-radius: 16px; cursor: pointer; transition: transform 0.2s; box-shadow: var(--shadow);"
+                 onmouseover="this.style.transform='translateY(-2px)'"
+                 onmouseout="this.style.transform='none'">
+              <div style="position: relative;">
+                <img src="${photo}" alt="${otherUser.firstname}" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover;">
+                ${otherUser.is_online ? '<div style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: var(--success); border: 2px solid var(--bg-card); border-radius: 50%;"></div>' : ''}
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <span style="font-weight: 600; color: var(--text);">${otherUser.firstname}</span>
+                  <span style="font-size: 0.75rem; color: var(--text-lighter);">${lastMsgTime}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <p style="color: ${unreadCount > 0 ? 'var(--text)' : 'var(--text-lighter)'}; font-size: 0.85rem; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: ${unreadCount > 0 ? '600' : '400'}; max-width: 200px;">
+                    ${lastMsgText}
+                  </p>
+                  ${unreadCount > 0 ? `<span style="background: var(--primary); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">${unreadCount}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }));
+        
+        container.innerHTML = conversationsHtml.join('');
+        
+        // Mettre à jour le badge
+        const totalUnread = await countTotalUnreadMessages();
+        const badge = document.getElementById('messagesCountBadge');
+        if (totalUnread > 0) {
+          badge.textContent = totalUnread;
+          badge.style.display = 'inline-block';
+        } else {
+          badge.style.display = 'none';
+        }
+        
+      } catch (error) {
+        console.error('Error loading conversations:', error);
+        container.innerHTML = `
+          <div style="text-align:center; padding:60px 20px;">
+            <p style="color: var(--text-lighter);">Erreur de chargement</p>
+          </div>
+        `;
+      }
+    }
+
+    async function countTotalUnreadMessages() {
+      const { count } = await supabase
+        .from('messages')
+        .select('id', { count: 'exact', head: true })
+        .eq('receiver_id', currentUser.id)
+        .eq('read', false);
+      
+      return count || 0;
+    }
+
+    function formatMessageTime(timestamp) {
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diff = now - date;
+      
+      if (diff < 60000) return 'À l\'instant';
+      if (diff < 3600000) return Math.floor(diff / 60000) + ' min';
+      if (diff < 86400000) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      if (diff < 604800000) return ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][date.getDay()];
+      return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    }
+
+    // ============================================
+    // STRIPE CONFIGURATION
+    // ============================================
+    const STRIPE_PUBLIC_KEY = 'pk_live_51QicTOGL6nMNahkvpVtrDyCQgDlyL9i2lXt35FSnJLaesJn2zWsax7kmrwwoc1w9QmYsMRyb5UT0jAnYZDmouXBU00OexIGkdz';
+    let stripe = null;
+    
+    // Initialiser Stripe
+    function initStripe() {
+      if (typeof Stripe !== 'undefined') {
+        stripe = Stripe(STRIPE_PUBLIC_KEY);
+      }
+    }
+    
+    // IDs des prix Stripe (à créer dans le dashboard Stripe)
+    const STRIPE_PRICES = {
+      // Abonnements
+      'kama': 'price_kama_weekly', // À remplacer par le vrai price ID
+      'cupidon': 'price_cupidon_weekly', // À remplacer par le vrai price ID
+      // Packs de Brumes
+      'brumes_50': 'price_brumes_50',
+      'brumes_100': 'price_brumes_100',
+      'brumes_200': 'price_brumes_200',
+      'brumes_500': 'price_brumes_500'
+    };
+
     // SHOP FUNCTIONS
     window.subscribeTo = async function(tier) {
       if (!currentUser) return;
@@ -4223,13 +4824,50 @@
         'cupidon': '💜 CUPIDON'
       };
       
-      // TODO: Intégration Stripe pour paiement réel
-      const confirmed = confirm(`Souscrire à l'abonnement ${tierLabels[tier]} pour ${prices[tier]}€/semaine ?\n\n(Paiement via Stripe à intégrer en production)`);
+      // Vérifier si Stripe est disponible
+      if (!stripe) {
+        initStripe();
+      }
+      
+      if (stripe && STRIPE_PRICES[tier] && !STRIPE_PRICES[tier].includes('price_')) {
+        // Paiement réel via Stripe Checkout
+        try {
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              priceId: STRIPE_PRICES[tier],
+              userId: currentUser.id,
+              mode: 'subscription',
+              successUrl: window.location.origin + '/shop?success=true&tier=' + tier,
+              cancelUrl: window.location.origin + '/shop?canceled=true'
+            })
+          });
+          
+          const session = await response.json();
+          
+          if (session.url) {
+            window.location.href = session.url;
+          } else {
+            throw new Error('Erreur création session');
+          }
+        } catch (error) {
+          console.error('Stripe error:', error);
+          // Fallback sur simulation
+          simulateSubscription(tier, tierLabels, prices);
+        }
+      } else {
+        // Mode simulation (backend pas encore configuré)
+        simulateSubscription(tier, tierLabels, prices);
+      }
+    }
+    
+    async function simulateSubscription(tier, tierLabels, prices) {
+      const confirmed = confirm(`Souscrire à l'abonnement ${tierLabels[tier]} pour ${prices[tier]}€/semaine ?\n\n⚠️ Mode test - Le paiement Stripe sera activé prochainement.`);
       
       if (!confirmed) return;
       
       try {
-        // Pour le moment, simuler le paiement
         const { error } = await supabase
           .from('users')
           .update({ 
@@ -4252,13 +4890,53 @@
     window.buyBrumes = async function(amount, price) {
       if (!currentUser) return;
       
-      // TODO: Intégration Stripe pour paiement réel
-      const confirmed = confirm(`Acheter ${amount} 💎 Brumes pour ${price}€ ?\n\n(Paiement via Stripe à intégrer en production)`);
+      // Vérifier si Stripe est disponible
+      if (!stripe) {
+        initStripe();
+      }
+      
+      const priceKey = `brumes_${amount}`;
+      
+      if (stripe && STRIPE_PRICES[priceKey] && !STRIPE_PRICES[priceKey].includes('price_')) {
+        // Paiement réel via Stripe Checkout
+        try {
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              priceId: STRIPE_PRICES[priceKey],
+              userId: currentUser.id,
+              mode: 'payment',
+              metadata: { brumes_amount: amount },
+              successUrl: window.location.origin + '/shop?success=true&brumes=' + amount,
+              cancelUrl: window.location.origin + '/shop?canceled=true'
+            })
+          });
+          
+          const session = await response.json();
+          
+          if (session.url) {
+            window.location.href = session.url;
+          } else {
+            throw new Error('Erreur création session');
+          }
+        } catch (error) {
+          console.error('Stripe error:', error);
+          // Fallback sur simulation
+          simulateBuyBrumes(amount, price);
+        }
+      } else {
+        // Mode simulation (backend pas encore configuré)
+        simulateBuyBrumes(amount, price);
+      }
+    }
+    
+    async function simulateBuyBrumes(amount, price) {
+      const confirmed = confirm(`Acheter ${amount} 💎 Brumes pour ${price}€ ?\n\n⚠️ Mode test - Le paiement Stripe sera activé prochainement.`);
       
       if (!confirmed) return;
       
       try {
-        // Récupérer le solde actuel
         const { data: userData, error: fetchError } = await supabase
           .from('users')
           .select('brumes_balance')
@@ -4270,13 +4948,22 @@
         const currentBalance = userData.brumes_balance || 0;
         const newBalance = currentBalance + amount;
         
-        // Mettre à jour le solde
         const { error: updateError } = await supabase
           .from('users')
           .update({ brumes_balance: newBalance })
           .eq('id', currentUser.id);
         
         if (updateError) throw updateError;
+        
+        // Enregistrer la transaction
+        await supabase
+          .from('brumes_transactions')
+          .insert({
+            user_id: currentUser.id,
+            type: 'achat',
+            amount: amount,
+            description: `Achat de ${amount} Brumes (${price}€) - Mode test`
+          });
         
         alert(`✅ ${amount} 💎 Brumes ajoutées !\nNouveau solde : ${newBalance} Brumes`);
         window.loadProfile();

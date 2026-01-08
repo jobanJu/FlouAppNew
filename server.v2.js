@@ -22,6 +22,19 @@ const { generalLimiter, authLimiter, signupLimiter, getClientIP } = require('./s
 const { verifyTurnstile } = require('./src/middleware/turnstile');
 const { securityHeaders, corsMiddleware, requestLogger, sanitizeInput } = require('./src/middleware/security');
 
+// Stripe
+let stripe = null;
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+if (STRIPE_SECRET_KEY) {
+  try {
+    const Stripe = require('stripe');
+    stripe = new Stripe(STRIPE_SECRET_KEY);
+    console.log('✅ Stripe initialized');
+  } catch (e) {
+    console.warn('⚠️ Stripe not available:', e.message);
+  }
+}
+
 const PORT = config.server.port;
 const publicDir = path.join(__dirname, 'public');
 
@@ -188,6 +201,165 @@ const apiRoutes = {
   // Stats cache
   'GET /api/cache/stats': (req, res) => {
     sendJSON(res, 200, cacheService.getStats());
+  },
+
+  // ==================== STRIPE ROUTES ====================
+  
+  // Créer une session Stripe Checkout
+  'POST /api/create-checkout-session': async (req, res, query, body) => {
+    if (!stripe) {
+      return sendError(res, 503, 'Service de paiement non disponible');
+    }
+
+    const { priceId, userId, mode, metadata, successUrl, cancelUrl } = body || {};
+
+    if (!priceId || !userId) {
+      return sendError(res, 400, 'priceId et userId requis');
+    }
+
+    try {
+      const sessionConfig = {
+        payment_method_types: ['card'],
+        line_items: [{
+          price: priceId,
+          quantity: 1,
+        }],
+        mode: mode || 'payment', // 'payment' ou 'subscription'
+        success_url: successUrl || `${config.server.baseUrl}/shop?success=true`,
+        cancel_url: cancelUrl || `${config.server.baseUrl}/shop?canceled=true`,
+        metadata: {
+          userId: userId,
+          ...(metadata || {})
+        },
+        client_reference_id: userId
+      };
+
+      const session = await stripe.checkout.sessions.create(sessionConfig);
+      
+      logger.info('Stripe checkout session created', { 
+        sessionId: session.id, 
+        userId, 
+        mode,
+        priceId 
+      });
+
+      sendJSON(res, 200, { 
+        sessionId: session.id,
+        url: session.url 
+      });
+    } catch (error) {
+      logger.error('Stripe checkout error', { error: error.message, userId });
+      sendError(res, 500, 'Erreur création session de paiement', error.message);
+    }
+  },
+
+  // Webhook Stripe (pour les événements de paiement)
+  'POST /api/stripe-webhook': async (req, res, query, body) => {
+    if (!stripe) {
+      return sendError(res, 503, 'Service de paiement non disponible');
+    }
+
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const sig = req.headers['stripe-signature'];
+
+    let event;
+
+    try {
+      // Pour les webhooks, le body doit être raw
+      if (endpointSecret && sig) {
+        event = stripe.webhooks.constructEvent(req.rawBody || JSON.stringify(body), sig, endpointSecret);
+      } else {
+        // Mode sans vérification (dev/test)
+        event = body;
+      }
+    } catch (err) {
+      logger.error('Stripe webhook signature verification failed', { error: err.message });
+      return sendError(res, 400, `Webhook Error: ${err.message}`);
+    }
+
+    // Gérer les événements Stripe
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object;
+        const userId = session.metadata?.userId || session.client_reference_id;
+        
+        logger.info('Payment completed', { 
+          sessionId: session.id, 
+          userId,
+          amount: session.amount_total,
+          mode: session.mode
+        });
+        
+        // TODO: Mettre à jour Supabase selon le type d'achat
+        // - Si subscription: mettre à jour subscription_tier
+        // - Si achat Brumes: créditer le compte
+        break;
+      }
+      
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object;
+        logger.info('Subscription event', { 
+          subscriptionId: subscription.id,
+          status: subscription.status,
+          type: event.type
+        });
+        break;
+      }
+      
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object;
+        logger.info('Subscription canceled', { 
+          subscriptionId: subscription.id 
+        });
+        // TODO: Révoquer l'abonnement dans Supabase
+        break;
+      }
+
+      case 'payment_intent.payment_failed': {
+        const paymentIntent = event.data.object;
+        logger.warn('Payment failed', { 
+          paymentIntentId: paymentIntent.id,
+          error: paymentIntent.last_payment_error?.message
+        });
+        break;
+      }
+
+      default:
+        logger.debug('Unhandled Stripe event', { type: event.type });
+    }
+
+    sendJSON(res, 200, { received: true });
+  },
+
+  // Récupérer les prix Stripe disponibles
+  'GET /api/stripe-prices': async (req, res) => {
+    if (!stripe) {
+      return sendError(res, 503, 'Service de paiement non disponible');
+    }
+
+    try {
+      const prices = await stripe.prices.list({
+        active: true,
+        expand: ['data.product'],
+        limit: 20
+      });
+
+      const formattedPrices = prices.data.map(price => ({
+        id: price.id,
+        productId: price.product.id,
+        productName: price.product.name,
+        amount: price.unit_amount / 100, // Convertir centimes en euros
+        currency: price.currency,
+        type: price.type, // 'one_time' ou 'recurring'
+        interval: price.recurring?.interval
+      }));
+
+      sendJSON(res, 200, { prices: formattedPrices });
+    } catch (error) {
+      logger.error('Get Stripe prices error', { error: error.message });
+      sendError(res, 500, 'Erreur récupération des prix');
+    }
   }
 };
 

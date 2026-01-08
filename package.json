@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "agora-token": "^2.0.5",
-    "dotenv": "^16.6.1"
+    "dotenv": "^16.6.1",
+    "stripe": "^14.25.0"
   },
   "optionalDependencies": {
     "redis": "^4.6.12"
