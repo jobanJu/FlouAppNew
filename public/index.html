@@ -1857,9 +1857,13 @@
             <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);" id="liveRoomStats">0 participants • 0 spectateurs</div>
             <div style="font-size: 0.8rem; color: rgba(139, 92, 246, 0.9); margin-top: 4px;" id="liveRoomDescription"></div>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <!-- Bouton paramètres (visible uniquement pour le créateur) -->
-            <button id="liveSettingsBtn" onclick="showLiveSettings()" style="display: none; background: rgba(255,255,255,0.1); border: none; border-radius: 12px; padding: 10px 14px; color: white; cursor: pointer;">⚙️</button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <!-- Bouton paramètres (⚙️) - toujours visible pour le créateur -->
+            <button id="liveSettingsBtn" onclick="showLiveSettings()" style="display: none; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; color: white; cursor: pointer; font-size: 1.2rem; transition: all 0.3s;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: block; margin: auto;">
+                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </button>
             <button class="live-room-close" id="liveCloseBtn" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
           </div>
         </div>
@@ -1924,28 +1928,84 @@
 
     <!-- MODAL PARAMÈTRES LIVE (pour le créateur) -->
     <div id="liveSettingsModal" class="modal-overlay" style="display: none;">
-      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 400px; border-radius: 24px; padding: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h3 style="color: white; font-size: 1.3rem; margin: 0;">⚙️ Paramètres du Live</h3>
-          <button onclick="closeLiveSettings()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 400px; border-radius: 24px; padding: 0; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h3 style="color: white; font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Paramètres
+          </h3>
+          <button onclick="closeLiveSettings()" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.3rem; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
         
-        <!-- Message aux fans -->
-        <div style="margin-bottom: 20px;">
-          <label style="color: rgba(255,255,255,0.7); font-size: 0.9rem; display: block; margin-bottom: 8px;">📢 Message aux fans</label>
-          <textarea id="fanMessageInput" placeholder="Ex: Je suis en live, je fais des gâteaux, venez nombreux !" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: white; font-size: 0.95rem; resize: none; height: 80px;"></textarea>
-          <button onclick="sendFanMessage()" style="width: 100%; margin-top: 10px; padding: 12px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer;">
-            📨 Envoyer aux fans
-          </button>
-        </div>
-        
-        <!-- Liste des participants à modérer -->
-        <div>
-          <label style="color: rgba(255,255,255,0.7); font-size: 0.9rem; display: block; margin-bottom: 12px;">👥 Participants en caméra</label>
-          <div id="moderationList" style="max-height: 200px; overflow-y: auto;">
-            <!-- Liste générée dynamiquement -->
+        <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+          
+          <!-- Section: Message aux fans -->
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.2rem;">📢</span>
+              <span style="color: white; font-weight: 600;">Message aux fans</span>
+            </div>
+            <textarea id="fanMessageInput" placeholder="Ex: Je suis en live, venez nombreux !" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; color: white; font-size: 0.95rem; resize: none; height: 80px; outline: none;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"></textarea>
+            <button onclick="sendFanMessage()" style="width: 100%; margin-top: 10px; padding: 14px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+              Envoyer la notification
+            </button>
           </div>
+          
+          <!-- Section: Gérer les Nimbes (modérateurs) -->
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.2rem;">🌟</span>
+              <span style="color: white; font-weight: 600;">Mes Nimbes</span>
+              <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-left: auto;">Modérateurs</span>
+            </div>
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 14px; padding: 14px; margin-bottom: 12px;">
+              <p style="color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0 0 10px 0;">Les Nimbes peuvent modérer ton live : retirer quelqu'un de la caméra ou l'expulser.</p>
+              <div id="nimbesList" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Aucun Nimbe pour le moment</span>
+              </div>
+            </div>
+            <button onclick="showAddNimbeModal()" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.2); border-radius: 14px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+              <span style="font-size: 1.2rem;">+</span> Ajouter un Nimbe
+            </button>
+          </div>
+          
+          <!-- Section: Participants en caméra -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.2rem;">📷</span>
+              <span style="color: white; font-weight: 600;">Participants en caméra</span>
+            </div>
+            <div id="moderationList" style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-align: center; padding: 20px;">Aucun participant pour le moment</span>
+            </div>
+          </div>
+          
         </div>
+      </div>
+    </div>
+    
+    <!-- MODAL AJOUT NIMBE -->
+    <div id="addNimbeModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 380px; border-radius: 24px; padding: 24px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 1.8rem;">🌟</span>
+          </div>
+          <h3 style="color: white; margin: 0 0 6px 0;">Ajouter un Nimbe</h3>
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">Choisis un spectateur pour le promouvoir</p>
+        </div>
+        
+        <div id="spectatorsList" style="max-height: 250px; overflow-y: auto; margin-bottom: 16px;">
+          <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; display: block; text-align: center; padding: 20px;">Aucun spectateur disponible</span>
+        </div>
+        
+        <button onclick="closeAddNimbeModal()" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.1); border: none; border-radius: 14px; color: white; cursor: pointer;">
+          Annuler
+        </button>
       </div>
     </div>
 
@@ -4882,21 +4942,32 @@
         currentLiveHostId = live.host_id;
         currentRoomName = live.room_url;
         
-        // Cacher le bouton paramètres (pas le créateur)
-        document.getElementById('liveSettingsBtn').style.display = 'none';
+        // Vérifier si c'est un Nimbe existant
+        const { data: existingRole } = await supabase
+          .from('live_participants')
+          .select('role')
+          .eq('live_id', liveId)
+          .eq('user_id', currentUser.id)
+          .single();
+        
+        const isNimbe = existingRole?.role === 'nimbe';
+        const isHost = currentUser.id === live.host_id;
+        
+        // Afficher le bouton paramètres si Host ou Nimbe
+        document.getElementById('liveSettingsBtn').style.display = (isHost || isNimbe) ? 'flex' : 'none';
         document.getElementById('liveCloseBtn').textContent = 'Quitter';
         document.getElementById('liveCloseBtn').style.background = '#EF4444';
         
         document.getElementById('liveRoomTitle').textContent = live.title;
         document.getElementById('liveRoomDescription').textContent = live.description || '';
         
-        // Ajouter comme spectateur
+        // Ajouter comme spectateur (ou garder le rôle existant)
         await supabase
           .from('live_participants')
           .upsert({
             live_id: liveId,
             user_id: currentUser.id,
-            role: 'spectator',
+            role: isNimbe ? 'nimbe' : 'spectator',
             pseudo: userName,
             on_cam: false,
             slot_number: null
@@ -5805,10 +5876,144 @@
     window.showLiveSettings = function() {
       document.getElementById('liveSettingsModal').style.display = 'flex';
       loadModerationList();
+      loadNimbesList();
     }
 
     window.closeLiveSettings = function() {
       document.getElementById('liveSettingsModal').style.display = 'none';
+    }
+    
+    // ============================================
+    // SYSTÈME DES NIMBES (MODÉRATEURS)
+    // ============================================
+    
+    let currentLiveNimbes = [];
+    
+    // Charger la liste des Nimbes
+    async function loadNimbesList() {
+      const list = document.getElementById('nimbesList');
+      
+      const { data: nimbes } = await supabase
+        .from('live_participants')
+        .select(`
+          user_id,
+          users:user_id (firstname, photo_url)
+        `)
+        .eq('live_id', currentLiveId)
+        .eq('role', 'nimbe')
+        .is('left_at', null);
+      
+      currentLiveNimbes = nimbes || [];
+      
+      if (!nimbes || nimbes.length === 0) {
+        list.innerHTML = '<span style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Aucun Nimbe pour le moment</span>';
+        return;
+      }
+      
+      list.innerHTML = nimbes.map(n => `
+        <div style="display: flex; align-items: center; gap: 8px; background: rgba(139, 92, 246, 0.2); padding: 6px 10px 6px 6px; border-radius: 20px;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            ${n.users?.photo_url ? `<img src="${n.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(3px);">` : '<span style="font-size: 0.8rem;">🌟</span>'}
+          </div>
+          <span style="color: white; font-size: 0.85rem;">${n.users?.firstname || 'Nimbe'}</span>
+          <button onclick="removeNimbe('${n.user_id}')" style="background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1rem; padding: 0 4px;">×</button>
+        </div>
+      `).join('');
+    }
+    
+    // Afficher le modal pour ajouter un Nimbe
+    window.showAddNimbeModal = async function() {
+      document.getElementById('addNimbeModal').style.display = 'flex';
+      await loadSpectatorsList();
+    }
+    
+    window.closeAddNimbeModal = function() {
+      document.getElementById('addNimbeModal').style.display = 'none';
+    }
+    
+    // Charger la liste des spectateurs disponibles
+    async function loadSpectatorsList() {
+      const list = document.getElementById('spectatorsList');
+      
+      const nimbeIds = currentLiveNimbes.map(n => n.user_id);
+      
+      const { data: spectators } = await supabase
+        .from('live_participants')
+        .select(`
+          user_id,
+          users:user_id (firstname, photo_url)
+        `)
+        .eq('live_id', currentLiveId)
+        .eq('role', 'spectator')
+        .is('left_at', null)
+        .neq('user_id', currentUser.id);
+      
+      // Filtrer ceux qui sont déjà Nimbes
+      const availableSpectators = spectators?.filter(s => !nimbeIds.includes(s.user_id)) || [];
+      
+      if (availableSpectators.length === 0) {
+        list.innerHTML = '<span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; display: block; text-align: center; padding: 20px;">Aucun spectateur disponible</span>';
+        return;
+      }
+      
+      list.innerHTML = availableSpectators.map(s => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              ${s.users?.photo_url ? `<img src="${s.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(3px);">` : '<span style="color: white;">👤</span>'}
+            </div>
+            <span style="color: white;">${s.users?.firstname || 'Spectateur'}</span>
+          </div>
+          <button onclick="promoteToNimbe('${s.user_id}', '${s.users?.firstname || 'Spectateur'}')" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 10px; padding: 8px 14px; color: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;">
+            🌟 Promouvoir
+          </button>
+        </div>
+      `).join('');
+    }
+    
+    // Promouvoir un spectateur en Nimbe
+    window.promoteToNimbe = async function(userId, userName) {
+      try {
+        await supabase
+          .from('live_participants')
+          .update({ role: 'nimbe' })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', userId);
+        
+        // Message système
+        await supabase
+          .from('live_messages')
+          .insert({
+            live_id: currentLiveId,
+            user_id: currentUser.id,
+            message: `🌟 ${userName} est maintenant Nimbe !`,
+            is_system: true
+          });
+        
+        closeAddNimbeModal();
+        await loadNimbesList();
+        
+      } catch (error) {
+        console.error('Erreur promotion Nimbe:', error);
+      }
+    }
+    
+    // Retirer le statut Nimbe
+    window.removeNimbe = async function(userId) {
+      if (!confirm('Retirer ce Nimbe ?')) return;
+      
+      try {
+        await supabase
+          .from('live_participants')
+          .update({ role: 'spectator' })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', userId);
+        
+        await loadNimbesList();
+        
+      } catch (error) {
+        console.error('Erreur retrait Nimbe:', error);
+      }
     }
 
     // Charger la liste des participants pour modération
