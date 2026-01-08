@@ -77,6 +77,14 @@
       --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Aliases pour compatibilité */
+      --bg: var(--bg-primary);
+      --text: #1C1917;
+      --text-light: #57534E;
+      --text-lighter: #78716C;
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: var(--shadow-md);
     }
 
     * { 
@@ -919,6 +927,19 @@
                 <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 6px;">Recherche</div>
                 <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
               </div>
+            </div>
+          </div>
+
+          <!-- Catchphrase & Bio -->
+          <div id="profileBioSection" style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); display: none;">
+            <div id="profileCatchphraseContainer" style="margin-bottom: 16px; display: none;">
+              <div style="font-size: 1.1rem; font-style: italic; color: var(--text); text-align: center; padding: 12px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.08)); border-radius: 12px; border-left: 3px solid var(--primary);">
+                "<span id="profileCatchphrase"></span>"
+              </div>
+            </div>
+            <div id="profileBioContainer" style="display: none;">
+              <div style="font-weight: 600; margin-bottom: 10px; color: var(--text); font-size: 0.9rem;">À propos de moi</div>
+              <div id="profileBio" style="font-size: 0.95rem; color: var(--text-light); line-height: 1.6;"></div>
             </div>
           </div>
 
@@ -2016,8 +2037,43 @@
         document.getElementById('profileAgeHeader').textContent = data.age || '-';
         document.getElementById('profileCity').textContent = data.city || 'Non renseigné';
         document.getElementById('profileCityHeader').textContent = data.city || 'Non renseigné';
-        document.getElementById('profileGender').textContent = data.gender || '-';
-        document.getElementById('profileSexuality').textContent = data.sexuality || '-';
+        
+        // Gender with labels
+        const genderLabels = { 'homme': 'Homme', 'femme': 'Femme', 'non-binaire': 'Non-binaire' };
+        document.getElementById('profileGender').textContent = genderLabels[data.gender] || '-';
+        
+        // Seeking with labels
+        const seekingLabels = { 'homme': 'Homme', 'femme': 'Femme', 'tous': 'Tout le monde' };
+        document.getElementById('profileSexuality').textContent = seekingLabels[data.seeking] || '-';
+        
+        // Bio and catchphrase
+        const catchphraseEl = document.getElementById('profileCatchphrase');
+        const bioEl = document.getElementById('profileBio');
+        const bioSection = document.getElementById('profileBioSection');
+        const catchphraseContainer = document.getElementById('profileCatchphraseContainer');
+        const bioContainer = document.getElementById('profileBioContainer');
+        
+        let showBioSection = false;
+        
+        if (data.catchphrase && catchphraseEl && catchphraseContainer) {
+          catchphraseEl.textContent = data.catchphrase;
+          catchphraseContainer.style.display = 'block';
+          showBioSection = true;
+        } else if (catchphraseContainer) {
+          catchphraseContainer.style.display = 'none';
+        }
+        
+        if (data.bio && bioEl && bioContainer) {
+          bioEl.textContent = data.bio;
+          bioContainer.style.display = 'block';
+          showBioSection = true;
+        } else if (bioContainer) {
+          bioContainer.style.display = 'none';
+        }
+        
+        if (bioSection) {
+          bioSection.style.display = showBioSection ? 'block' : 'none';
+        }
         
         // Profile photo with proper loading state
         const profilePhoto = document.getElementById('profilePhoto');
