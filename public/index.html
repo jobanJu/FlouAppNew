@@ -862,22 +862,34 @@
 
     <!-- Vue Matches -->
     <div id="matchesListView" class="app-view">
-      <div class="top-nav">
-        <div style="font-size:1.5rem; font-weight:bold;">Mes Matches</div>
+      <div style="padding: 20px; background: var(--bg);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+          <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text); margin: 0;">♡ Mes Matchs</h1>
+          <span id="matchesCountBadge" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">0</span>
+        </div>
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">Les personnes avec qui tu as matché</p>
       </div>
-      <div class="matches-grid" id="matchesGrid">
-        <div style="grid-column: 1/-1; text-align:center; padding:40px; opacity:0.7;">Chargement...</div>
+      <div id="matchesGrid" style="padding: 0 20px 100px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="text-align:center; padding:40px; color: var(--text-lighter);">Chargement...</div>
       </div>
     </div>
 
     <!-- Vue Messages -->
     <div id="messagesView" class="app-view">
       <div id="conversationsList">
-        <div class="top-nav">
-          <div style="font-size:1.5rem; font-weight:bold;">Messages</div>
+        <div style="padding: 20px; background: var(--bg);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text); margin: 0;">◯ Messages</h1>
+            <span id="messagesCountBadge" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: none;">0</span>
+          </div>
+          <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 10px;">Tes conversations avec tes matchs</p>
         </div>
-        <div id="conversationsContainer" style="padding:20px;">
-          <div style="text-align:center; padding:40px; opacity:0.7;">Aucune conversation pour le moment</div>
+        <div id="conversationsContainer" style="padding: 0 20px 100px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="text-align:center; padding:60px 20px;">
+            <div style="font-size: 4rem; margin-bottom: 16px;">◯</div>
+            <p style="color: var(--text-lighter); font-size: 1rem; margin-bottom: 8px;">Aucune conversation</p>
+            <p style="color: var(--text-lighter); font-size: 0.85rem;">Matche avec quelqu'un pour commencer à discuter !</p>
+          </div>
         </div>
       </div>
       <div id="chatView" style="display:none;">
@@ -1421,44 +1433,48 @@
   </div>
 
   <!-- Modal Profil Détaillé -->
-  <div id="profileModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; overflow-y:auto;">
-    <div style="max-width:500px; margin:20px auto; position:relative;">
-      <button onclick="closeProfileModal()" style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.2); border:none; color:white; width:40px; height:40px; border-radius:50%; font-size:1.5rem; cursor:pointer; z-index:10;">×</button>
-      
-      <div style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding:30px; border-radius:15px; color:white;">
-        <div style="text-align:center; margin-bottom:20px;">
-          <img id="modalProfilePhoto" src="" alt="Photo" style="width:150px; height:150px; border-radius:50%; object-fit:cover; border:4px solid rgba(255,255,255,0.3);">
+  <div id="profileModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index:10000; overflow-y:auto;">
+    <div style="max-width:500px; margin:40px auto; position:relative; padding: 20px;">
+      <div style="background: var(--bg-card, #FFFFFF); border-radius:24px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden;">
+        <button onclick="closeProfileModal()" style="position:absolute; top:50px; right:30px; background: rgba(255,255,255,0.9); border:none; color: #1C1917; width:40px; height:40px; border-radius:50%; font-size:1.3rem; cursor:pointer; z-index:10; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">×</button>
+        
+        <!-- Header avec photo -->
+        <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 40px 30px 50px; text-align: center;">
+          <img id="modalProfilePhoto" src="" alt="Photo" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+          <h2 id="modalProfileName" style="font-size:1.8rem; font-weight:700; margin: 16px 0 4px; color: white;">-</h2>
+          <div id="modalProfileAge" style="font-size:1.1rem; color: rgba(255,255,255,0.9);">- ans</div>
+          <div id="modalProfileCity" style="font-size:0.95rem; color: rgba(255,255,255,0.8); margin-top: 6px;">📍 -</div>
         </div>
         
-        <div style="text-align:center; margin-bottom:30px;">
-          <h2 id="modalProfileName" style="font-size:2rem; font-weight:700; margin-bottom:5px;">-</h2>
-          <div id="modalProfileAge" style="font-size:1.2rem; opacity:0.9; margin-bottom:10px;">-</div>
-          <div id="modalProfileCity" style="font-size:1rem; opacity:0.8;">📍 -</div>
-        </div>
-
-        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
-          <div style="font-weight:600; margin-bottom:10px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">Phrase d'accroche</div>
-          <div id="modalProfileCatchphrase" style="font-style:italic; font-size:1.1rem; line-height:1.5;">-</div>
-        </div>
-
-        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
-          <div style="font-weight:600; margin-bottom:10px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">À propos</div>
-          <div id="modalProfileBio" style="font-size:1rem; line-height:1.6; white-space:pre-wrap;">-</div>
-        </div>
-
-        <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:10px; margin-bottom:20px;">
-          <div style="font-weight:600; margin-bottom:15px; font-size:0.9rem; opacity:0.8; text-transform:uppercase;">Intérêts</div>
-          <div id="modalProfileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; text-align:center;">
-            <div style="font-size:0.85rem; opacity:0.8; margin-bottom:5px;">Genre</div>
-            <div id="modalProfileGender" style="font-weight:600; font-size:1.1rem;">-</div>
+        <!-- Contenu -->
+        <div style="padding: 24px; margin-top: -20px; background: var(--bg-card, #FFFFFF); border-radius: 20px 20px 0 0;">
+          <!-- Catchphrase -->
+          <div id="modalCatchphraseSection" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.08)); padding: 16px; border-radius: 14px; margin-bottom: 16px; border-left: 3px solid #8B5CF6;">
+            <div id="modalProfileCatchphrase" style="font-style:italic; font-size:1rem; color: var(--text, #1C1917); line-height:1.5;">-</div>
           </div>
-          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; text-align:center;">
-            <div style="font-size:0.85rem; opacity:0.8; margin-bottom:5px;">Sexualité</div>
-            <div id="modalProfileSexuality" style="font-weight:600; font-size:1.1rem;">-</div>
+
+          <!-- Bio -->
+          <div id="modalBioSection" style="margin-bottom: 16px;">
+            <div style="font-weight:600; margin-bottom:10px; font-size:0.8rem; color: var(--text-lighter, #78716C); text-transform:uppercase; letter-spacing: 0.5px;">À propos</div>
+            <div id="modalProfileBio" style="font-size:0.95rem; line-height:1.6; color: var(--text-light, #57534E); white-space:pre-wrap;">-</div>
+          </div>
+
+          <!-- Intérêts -->
+          <div style="margin-bottom: 16px;">
+            <div style="font-weight:600; margin-bottom:12px; font-size:0.8rem; color: var(--text-lighter, #78716C); text-transform:uppercase; letter-spacing: 0.5px;">Intérêts</div>
+            <div id="modalProfileInterests" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+          </div>
+
+          <!-- Info Grid -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom: 20px;">
+            <div style="background: var(--bg-secondary, #F5F5F4); padding:14px; border-radius:14px; text-align:center;">
+              <div style="font-size:0.75rem; color: var(--text-lighter, #78716C); margin-bottom:4px; text-transform: uppercase;">Genre</div>
+              <div id="modalProfileGender" style="font-weight:600; font-size:1rem; color: var(--text, #1C1917);">-</div>
+            </div>
+            <div style="background: var(--bg-secondary, #F5F5F4); padding:14px; border-radius:14px; text-align:center;">
+              <div style="font-size:0.75rem; color: var(--text-lighter, #78716C); margin-bottom:4px; text-transform: uppercase;">Recherche</div>
+              <div id="modalProfileSexuality" style="font-weight:600; font-size:1rem; color: var(--text, #1C1917);">-</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1466,15 +1482,18 @@
   </div>
 
   <!-- Modal Favoris Live -->
-  <div id="favoritesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; overflow-y:auto;">
-    <div style="max-width:600px; margin:20px auto; position:relative;">
-      <button onclick="closeFavoritesModal()" style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.2); border:none; color:white; width:40px; height:40px; border-radius:50%; font-size:1.5rem; cursor:pointer; z-index:10;">×</button>
-      
-      <div style="background:rgba(30,30,30,0.95); padding:30px; border-radius:15px; color:white;">
-        <h2 style="font-size:1.8rem; font-weight:700; margin-bottom:20px; text-align:center;">⭐ Tes Favoris</h2>
-        <p style="text-align:center; opacity:0.8; margin-bottom:30px;">Clique sur un profil pour matcher</p>
+  <div id="favoritesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index:10000; overflow-y:auto;">
+    <div style="max-width:500px; margin:40px auto; position:relative; padding: 20px;">
+      <div style="background: var(--bg-card, #FFFFFF); padding:30px; border-radius:24px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+        <button onclick="closeFavoritesModal()" style="position:absolute; top:40px; right:30px; background: var(--bg-secondary, #F5F5F4); border:none; color: var(--text, #1C1917); width:40px; height:40px; border-radius:50%; font-size:1.3rem; cursor:pointer; z-index:10; display: flex; align-items: center; justify-content: center;">×</button>
         
-        <div id="favoritesList" style="display:grid; gap:15px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 2.5rem; margin-bottom: 8px;">★</div>
+          <h2 style="font-size:1.5rem; font-weight:700; color: var(--text, #1C1917); margin: 0;">Mes Favoris</h2>
+          <p style="color: var(--text-light, #57534E); font-size: 0.9rem; margin-top: 8px;">Personnes que tu as ajoutées en favori pendant un Live</p>
+        </div>
+        
+        <div id="favoritesList" style="display:flex; flex-direction: column; gap:12px; max-height: 60vh; overflow-y: auto;">
           <!-- Favoris générés dynamiquement -->
         </div>
       </div>
@@ -1973,45 +1992,80 @@
 
     // LOAD MY MATCHES
     window.loadMyMatches = async function() {
-      if (!currentUser) return;
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) currentUser = session.user;
+        else return;
+      }
+      
       try {
         const { data, error } = await supabase
           .from('matches')
           .select('*, users!matches_liked_user_id_fkey(*)')
           .eq('user_id', currentUser.id)
-          .eq('status', 'matched');
+          .eq('status', 'matched')
+          .order('matched_at', { ascending: false });
         
         if (error) throw error;
         
         const grid = document.getElementById('matchesGrid');
+        const countBadge = document.getElementById('matchesCountBadge');
+        
+        if (countBadge) {
+          countBadge.textContent = data?.length || 0;
+        }
+        
         if (!data || data.length === 0) {
-          grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; opacity:0.7;">Aucun match pour le moment 💔</div>';
+          grid.innerHTML = `
+            <div style="text-align:center; padding:60px 20px;">
+              <div style="font-size: 4rem; margin-bottom: 16px;">♡</div>
+              <p style="color: var(--text-lighter); font-size: 1rem; margin-bottom: 8px;">Aucun match pour le moment</p>
+              <p style="color: var(--text-lighter); font-size: 0.85rem;">Continue à swiper pour trouver ton match !</p>
+            </div>
+          `;
           return;
         }
         
         const matchesWithBlur = await Promise.all(data.map(async m => {
           const user = m.users;
+          if (!user) return '';
           const blurLevel = await window.getBlurLevel(m.id, m.matched_at);
+          const matchDate = m.matched_at ? new Date(m.matched_at).toLocaleDateString('fr-FR') : '';
+          
           return `
-            <div class="match-item" onclick="openChat('${user.id}', '${user.firstname}')">
-              <img src="${user.photo_url || '/assets/images/homme1.jpeg'}" class="match-item-img" alt="${user.firstname}" style="filter: blur(${blurLevel}px);">
-              <div class="match-item-info">
-                <div class="match-item-name">${user.firstname}, ${user.age}</div>
-                <div class="match-item-preview">💬 Dites-vous bonjour !</div>
+            <div onclick="openChat('${user.id}', '${user.firstname}')" style="display:flex; gap:14px; align-items:center; padding:16px; background: var(--bg-card); border-radius:18px; cursor:pointer; transition:all 0.2s; box-shadow: var(--shadow);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+              <div style="position: relative;">
+                <img src="${user.photo_url || '/assets/images/default-avatar.png'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; filter: blur(${blurLevel}px); border: 3px solid ${blurLevel === 0 ? '#10B981' : 'var(--primary-light)'};">
+                ${blurLevel === 0 ? '<div style="position: absolute; bottom: 0; right: 0; background: #10B981; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--bg-card); display: flex; align-items: center; justify-content: center;"><span style="color: white; font-size: 10px;">✓</span></div>' : ''}
+              </div>
+              <div style="flex:1; min-width: 0;">
+                <div style="font-weight:600; font-size:1.05rem; color: var(--text); margin-bottom:4px;">${user.firstname}, ${user.age || '?'}</div>
+                <div style="font-size:0.8rem; color: var(--text-light); margin-bottom:2px;">📍 ${user.city || 'Ville inconnue'}</div>
+                <div style="font-size:0.75rem; color: var(--text-lighter);">Match le ${matchDate}</div>
+              </div>
+              <div style="background: linear-gradient(135deg, #8B5CF6, #EC4899); padding:10px 16px; border-radius:12px; color: white; font-size: 0.85rem; font-weight: 600;">
+                💬
               </div>
             </div>
           `;
         }));
         
-        grid.innerHTML = matchesWithBlur.join('');
+        grid.innerHTML = matchesWithBlur.filter(m => m).join('');
         
-        // Update badge
+        // Update badge in nav
         const badge = document.getElementById('matchesBadge');
-        if (data.length > 0) {
+        if (badge && data.length > 0) {
           badge.textContent = data.length;
-          badge.style.display = 'block';
+          badge.style.display = 'flex';
         }
-      } catch (error) { console.error('Load matches error:', error); }
+      } catch (error) { 
+        console.error('Load matches error:', error);
+        document.getElementById('matchesGrid').innerHTML = `
+          <div style="text-align:center; padding:40px; color: var(--text-lighter);">
+            Erreur lors du chargement
+          </div>
+        `;
+      }
     }
 
     // LOAD PROFILE - Fixed to display all data properly
@@ -3662,7 +3716,13 @@
 
     window.showFavoritesModal = async function() {
       try {
-        // Charger les favoris du Live actuel (ou du dernier Live)
+        if (!currentUser) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) currentUser = session.user;
+          else return;
+        }
+        
+        // Charger les favoris de l'utilisateur
         const { data: favorites, error } = await supabase
           .from('live_favorites')
           .select(`
@@ -3672,24 +3732,36 @@
           .eq('host_id', currentUser.id)
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error loading favorites:', error);
+        }
 
         const list = document.getElementById('favoritesList');
         
         if (!favorites || favorites.length === 0) {
-          list.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.7;">Aucun favori</div>';
-        } else {
-          list.innerHTML = favorites.map(fav => `
-            <div onclick="matchFromFavorite('${fav.user_id}')" style="display:flex; gap:15px; align-items:center; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; cursor:pointer; transition:all 0.3s; border:2px solid transparent;" onmouseover="this.style.borderColor='#667eea'" onmouseout="this.style.borderColor='transparent'">
-              <img src="${fav.users.photo_url || '/assets/images/default-avatar.png'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; filter:blur(8px);">
-              <div style="flex:1;">
-                <div style="font-weight:600; font-size:1.1rem; margin-bottom:4px;">${fav.users.firstname}, ${fav.users.age} ans</div>
-                <div style="font-size:0.85rem; opacity:0.7; margin-bottom:5px;">📍 ${fav.users.city || 'Ville non renseignée'}</div>
-                ${fav.users.catchphrase ? `<div style="font-size:0.85rem; font-style:italic; opacity:0.8;">"${fav.users.catchphrase.substring(0, 50)}..."</div>` : ''}
-              </div>
-              <div style="background:#667eea; padding:8px 16px; border-radius:8px; font-weight:600;">💜 Liker</div>
+          list.innerHTML = `
+            <div style="text-align:center; padding:40px 20px;">
+              <div style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;">★</div>
+              <p style="color: var(--text-lighter, #78716C); font-size: 0.95rem;">Aucun favori pour le moment</p>
+              <p style="color: var(--text-lighter, #78716C); font-size: 0.85rem; margin-top: 8px;">Ajoute des personnes en favori pendant un Live !</p>
             </div>
-          `).join('');
+          `;
+        } else {
+          list.innerHTML = favorites.map(fav => {
+            const user = fav.users;
+            if (!user) return '';
+            return `
+              <div onclick="matchFromFavorite('${fav.user_id}')" style="display:flex; gap:14px; align-items:center; padding:14px; background: var(--bg-secondary, #F5F5F4); border-radius:16px; cursor:pointer; transition:all 0.2s; border:2px solid transparent;" onmouseover="this.style.borderColor='#8B5CF6'" onmouseout="this.style.borderColor='transparent'">
+                <img src="${user.photo_url || '/assets/images/default-avatar.png'}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; filter:blur(8px); border: 2px solid var(--primary-light, #A78BFA);">
+                <div style="flex:1; min-width: 0;">
+                  <div style="font-weight:600; font-size:1rem; color: var(--text, #1C1917); margin-bottom:2px;">${user.firstname || 'Anonyme'}, ${user.age || '?'} ans</div>
+                  <div style="font-size:0.8rem; color: var(--text-light, #57534E);">📍 ${user.city || 'Ville inconnue'}</div>
+                  ${user.catchphrase ? `<div style="font-size:0.8rem; font-style:italic; color: var(--text-lighter, #78716C); margin-top:4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">"${user.catchphrase}"</div>` : ''}
+                </div>
+                <div style="background: linear-gradient(135deg, #8B5CF6, #EC4899); padding:10px 16px; border-radius:12px; font-weight:600; color: white; font-size: 0.85rem; white-space: nowrap;">♡ Liker</div>
+              </div>
+            `;
+          }).join('');
         }
 
         document.getElementById('favoritesModal').style.display = 'block';
