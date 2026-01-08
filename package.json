@@ -1,22 +1,29 @@
 {
   "name": "flou-app",
-  "version": "1.0.0",
-  "description": "Flou - Dating App",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Flou - Dating App with secure architecture",
+  "main": "server.v2.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server.v2.js",
+    "start:legacy": "node server.js",
+    "dev": "NODE_ENV=development node server.v2.js",
+    "test": "echo \"Tests coming soon\" && exit 0"
   },
   "keywords": [
     "dating",
-    "app"
+    "app",
+    "flou"
   ],
-  "author": "",
+  "author": "Flou Team",
   "license": "ISC",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
-    "agora-token": "^2.0.5"
+    "agora-token": "^2.0.5",
+    "dotenv": "^16.6.1"
+  },
+  "optionalDependencies": {
+    "redis": "^4.6.12"
   }
 }

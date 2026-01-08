@@ -476,6 +476,192 @@
       border-color: #8B5CF6;
     }
 
+    /* CTA amélioré */
+    .btn-cta {
+      position: relative;
+      overflow: hidden;
+      font-size: 1rem;
+      padding: 14px 32px;
+    }
+    
+    .btn-cta::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-cta:hover::after {
+      left: 100%;
+    }
+
+    /* Input wrapper avec icône de validation */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    
+    .input-wrapper .form-input {
+      padding-right: 45px;
+      margin-bottom: 12px;
+    }
+    
+    .validation-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-70%);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .validation-icon.valid::before {
+      content: '✓';
+      color: #10B981;
+    }
+    
+    .validation-icon.invalid::before {
+      content: '✗';
+      color: #EF4444;
+    }
+    
+    /* Input states */
+    .validated-input.input-valid {
+      border-color: #10B981 !important;
+      background: rgba(16, 185, 129, 0.05) !important;
+    }
+    
+    .validated-input.input-invalid {
+      border-color: #EF4444 !important;
+      background: rgba(239, 68, 68, 0.05) !important;
+    }
+
+    /* Choice buttons améliorés */
+    .choice-btn.choice-animated {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .choice-btn.choice-animated:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+    }
+    
+    .choice-btn.choice-animated.selected {
+      transform: scale(1.02);
+      animation: pulse-selected 0.3s ease-out;
+    }
+    
+    @keyframes pulse-selected {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1.02); }
+    }
+
+    /* Password strength indicator */
+    .password-strength {
+      display: flex;
+      gap: 4px;
+      height: 4px;
+    }
+    
+    .password-strength .strength-bar {
+      flex: 1;
+      height: 100%;
+      border-radius: 2px;
+      background: var(--bg-secondary);
+      transition: background 0.3s;
+    }
+    
+    .password-strength.weak .strength-bar:nth-child(1) { background: #EF4444; }
+    .password-strength.medium .strength-bar:nth-child(1),
+    .password-strength.medium .strength-bar:nth-child(2) { background: #F59E0B; }
+    .password-strength.strong .strength-bar:nth-child(1),
+    .password-strength.strong .strength-bar:nth-child(2),
+    .password-strength.strong .strength-bar:nth-child(3) { background: #10B981; }
+    .password-strength.very-strong .strength-bar { background: #10B981; }
+
+    /* Security badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(16, 185, 129, 0.08);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--text-lighter);
+    }
+
+    /* Trust badges pour le profil */
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-card);
+      color: var(--text-lighter);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .trust-badge.verified {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #10B981;
+    }
+    
+    .trust-badge.verified svg { stroke: #10B981; }
+    
+    .trust-badge.pending {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #F59E0B;
+    }
+    
+    .trust-badge.pending svg { stroke: #F59E0B; }
+
+    /* Photo preview amélioré */
+    #photoPreviewContainer.has-photo {
+      border: 3px solid #10B981 !important;
+      border-style: solid !important;
+    }
+
+    /* Micro-animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .form-step.active {
+      animation: fadeInUp 0.4s ease-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    .shake-error {
+      animation: shake 0.3s ease-in-out;
+    }
+
     .error-message {
       color: var(--accent-danger);
       font-size: 0.9rem;
@@ -530,10 +716,13 @@
 
     /* BOTTOM NAV - Premium White Milk Design */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #FEFDFB; backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 0 max(12px, env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -2px 20px rgba(0,0,0,0.03); }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; cursor: pointer; color: #A8A29E; transition: all 0.3s ease; text-decoration: none; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; cursor: pointer; color: #A8A29E; transition: all 0.3s ease; text-decoration: none; position: relative; }
     .nav-item.active { color: #8B5CF6; }
+    .nav-item.active .nav-icon svg { stroke: #8B5CF6; }
     .nav-item:hover { color: #7C3AED; }
-    .nav-icon { font-size: 1.5rem; font-weight: 300; }
+    .nav-item:hover .nav-icon svg { stroke: #7C3AED; }
+    .nav-icon { font-size: 1.5rem; font-weight: 300; display: flex; align-items: center; justify-content: center; }
+    .nav-icon svg { width: 24px; height: 24px; stroke: currentColor; transition: all 0.3s ease; }
     .nav-label { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.02em; }
     .nav-badge { position: absolute; top: 2px; right: 20%; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 600; min-width: 18px; text-align: center; }
 
@@ -779,143 +968,184 @@
     </div>
   </div>
 
-  <!-- SIGNUP PAGE -->
+  <!-- SIGNUP PAGE - Onboarding ameliore -->
   <div id="signupPage" class="page">
     <div class="signup-form">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <!-- Header avec progression -->
+      <div style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 0.8rem; color: var(--text-lighter);">Etape <span id="currentStepNum">1</span>/11</span>
+          <span style="font-size: 0.8rem; color: var(--primary); font-weight: 600;" id="progressPercent">9%</span>
+        </div>
+        <div class="progress-bar" style="height: 6px; border-radius: 3px;"><div class="progress-fill" id="progressFill" style="border-radius: 3px;"></div></div>
+      </div>
+      
+      <!-- Bouton Explorer (visible des l'etape 6) -->
+      <div id="skipToExplore" style="display: none; text-align: center; margin-bottom: 16px;">
+        <button onclick="skipToExplore()" style="background: none; border: none; color: var(--primary); font-size: 0.85rem; cursor: pointer; text-decoration: underline;">
+          Explorer l'app d'abord →
+        </button>
+      </div>
 
       <div class="form-step active" data-step="1">
-        <div class="form-title">Quel est ton prénom ?</div>
-        <div class="form-subtitle">Commence par le commencement</div>
-        <input type="text" class="form-input" id="firstName" placeholder="Ton prénom" maxlength="50">
+        <div class="form-title">Comment tu t'appelles ?</div>
+        <div class="form-subtitle">C'est le prenom qui sera affiche sur ton profil</div>
+        <div class="input-wrapper">
+          <input type="text" class="form-input validated-input" id="firstName" placeholder="Ton prenom" maxlength="50" oninput="validateField('firstName')">
+          <span class="validation-icon" id="firstName-icon"></span>
+        </div>
         <div id="error1" class="error-message"></div>
-        <div class="form-actions"><button class="btn-small btn-next" onclick="nextStep()">Suivant</button></div>
+        <div class="form-actions">
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
+        </div>
       </div>
 
       <div class="form-step" data-step="2">
-        <div class="form-title">Quel est ton âge ?</div>
-        <div class="form-subtitle">Flou est réservé aux personnes de 20 ans et plus</div>
-        <input type="number" class="form-input" id="age" placeholder="Ton âge" min="20" max="100">
+        <div class="form-title">Tu as quel age ?</div>
+        <div class="form-subtitle">L'app est reservee aux 20 ans et plus</div>
+        <div class="input-wrapper">
+          <input type="number" class="form-input validated-input" id="age" placeholder="Ton age" min="20" max="100" oninput="validateField('age')">
+          <span class="validation-icon" id="age-icon"></span>
+        </div>
         <div id="error2" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="3">
-        <div class="form-title">Où es-tu ?</div>
-        <div class="form-subtitle">Active la localisation ou saisis ta ville</div>
+        <div class="form-title">Tu habites ou ?</div>
+        <div class="form-subtitle">Pour trouver des profils pres de toi</div>
         <div style="display:flex; gap:10px; margin-bottom:15px; position: relative;">
-          <input type="text" class="form-input" id="city" placeholder="Saisis ta ville" style="margin-bottom:0;" oninput="searchCity(this.value)" autocomplete="off">
-          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px; font-size:1.2rem;" title="Géolocalisation">📍</button>
+          <div class="input-wrapper" style="flex: 1;">
+            <input type="text" class="form-input validated-input" id="city" placeholder="Ta ville" style="margin-bottom:0;" oninput="searchCity(this.value); validateField('city')" autocomplete="off">
+            <span class="validation-icon" id="city-icon"></span>
+          </div>
+          <button class="btn-secondary" onclick="geolocateUser()" style="padding:12px 16px; font-size:0.9rem;" title="Localiser automatiquement">Localiser</button>
         </div>
-        <div id="citySuggestions" style="position:absolute; background:#1a1a2e; border-radius:12px; max-height:200px; overflow-y:auto; z-index:100; width:calc(100% - 70px); display:none;"></div>
+        <div id="citySuggestions" style="position:absolute; background:var(--bg-card); border-radius:12px; max-height:200px; overflow-y:auto; z-index:100; width:calc(100% - 100px); display:none; box-shadow: var(--shadow-lg);"></div>
         <div id="error3" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="4">
-        <div class="form-title">Quel est ton genre ?</div>
-        <div class="form-subtitle">Simplement pour te connaître</div>
+        <div class="form-title">Tu es...</div>
+        <div class="form-subtitle">Selectionne ton genre</div>
         <div class="choices">
-          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Homme')">♂ Homme</button>
-          <button class="choice-btn" onclick="selectChoice(this, 'gender', 'Femme')">♀ Femme</button>
+          <button class="choice-btn choice-animated" onclick="selectChoice(this, 'gender', 'Homme')">Homme</button>
+          <button class="choice-btn choice-animated" onclick="selectChoice(this, 'gender', 'Femme')">Femme</button>
         </div>
         <div id="error4" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="5">
-        <div class="form-title">Quelle est ta sexualité ?</div>
-        <div class="form-subtitle">Juste pour qu'on se comprenne</div>
+        <div class="form-title">Tu recherches...</div>
+        <div class="form-subtitle">Qui veux-tu rencontrer ?</div>
         <div class="choices" id="sexualityChoices">
-          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Hétérosexuel')">Hétérosexuel</button>
-          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Gay')" id="gayBtn">Gay</button>
-          <button class="choice-btn" onclick="selectChoice(this, 'sexuality', 'Bisexuel')">Bisexuel</button>
+          <button class="choice-btn choice-animated" onclick="selectChoice(this, 'seeking', 'Femme')">Des femmes</button>
+          <button class="choice-btn choice-animated" onclick="selectChoice(this, 'seeking', 'Homme')">Des hommes</button>
+          <button class="choice-btn choice-animated" onclick="selectChoice(this, 'seeking', 'Les deux')">Les deux</button>
         </div>
         <div id="error5" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="6">
-        <div class="form-title">Tes intérêts ?</div>
-        <div class="form-subtitle">Sélectionne au minimum 5 (max 10 conseillé)</div>
+        <div class="form-title">Tes centres d'interet</div>
+        <div class="form-subtitle">Choisis-en au moins 5 pour de meilleurs matchs</div>
+        <div style="text-align: center; margin-bottom: 12px;">
+          <span id="interestsCount" style="font-size: 0.9rem; color: var(--primary); font-weight: 600;">0/5 minimum</span>
+        </div>
         <div class="interests-grid" id="interestsGrid"></div>
         <div id="error6" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="7">
-        <div class="form-title">Ta photo ?</div>
-        <div class="form-subtitle">Sélectionne une photo de toi (elle sera floutée au début)</div>
+        <div class="form-title">Ta meilleure photo</div>
+        <div class="form-subtitle">Elle sera floutee jusqu'au match - choisis bien !</div>
         <div style="text-align:center; margin-bottom:20px;">
-          <div id="photoPreviewContainer" style="width:150px; height:150px; border-radius:10px; background:rgba(255,255,255,0.1); margin:0 auto 20px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 2px dashed rgba(255,255,255,0.3);">
-            <span id="photoPlaceholder" style="font-size:2rem; opacity:0.5;">○</span>
-            <img id="photoPreview" src="" alt="Aperçu" style="width:100%; height:100%; object-fit:cover; display:none;">
+          <div id="photoPreviewContainer" style="width:150px; height:150px; border-radius:50%; background:var(--bg-secondary); margin:0 auto 20px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 3px dashed var(--border); transition: all 0.3s;">
+            <span id="photoPlaceholder" style="font-size:2.5rem; color: var(--text-lighter);">+</span>
+            <img id="photoPreview" src="" alt="Apercu" style="width:100%; height:100%; object-fit:cover; display:none;">
           </div>
           <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
-          <button class="btn-secondary" onclick="document.getElementById('photoInput').click()">Choisir une photo</button>
+          <button class="btn-secondary" onclick="document.getElementById('photoInput').click()" style="padding: 12px 24px;">Choisir une photo</button>
         </div>
         <div id="error7" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="8">
-        <div class="form-title">Ta phrase d'accroche ?</div>
-        <div class="form-subtitle">Une phrase courte qui te représente (visible sur ta carte)</div>
-        <textarea class="form-input" id="catchphrase" placeholder="Ex: J'aime les ananas et les couchers de soleil 🌅" rows="3" maxlength="100" style="resize:none; font-family:inherit;"></textarea>
-        <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="catchphraseCount">0</span>/100</div>
+        <div class="form-title">Ta phrase d'accroche</div>
+        <div class="form-subtitle">Fais une bonne premiere impression !</div>
+        <textarea class="form-input" id="catchphrase" placeholder="Ex: Amateur de cafe et de longues discussions..." rows="3" maxlength="100" style="resize:none; font-family:inherit;" oninput="updateCharCount('catchphrase', 100)"></textarea>
+        <div style="text-align:right; font-size:0.8rem; color: var(--text-lighter); margin-top:5px;"><span id="catchphraseCount">0</span>/100</div>
         <div id="error8" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="9">
-        <div class="form-title">Parle-nous de toi</div>
-        <div class="form-subtitle">Une description plus détaillée (visible dans ton profil)</div>
-        <textarea class="form-input" id="bio" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="6" maxlength="500" style="resize:none; font-family:inherit;"></textarea>
-        <div style="text-align:right; font-size:0.85rem; opacity:0.6; margin-top:5px;"><span id="bioCount">0</span>/500</div>
+        <div class="form-title">A propos de toi</div>
+        <div class="form-subtitle">Parle de toi, tes passions, ce que tu cherches</div>
+        <textarea class="form-input" id="bio" placeholder="Decris-toi en quelques lignes..." rows="5" maxlength="500" style="resize:none; font-family:inherit;" oninput="updateCharCount('bio', 500)"></textarea>
+        <div style="text-align:right; font-size:0.8rem; color: var(--text-lighter); margin-top:5px;"><span id="bioCount">0</span>/500</div>
         <div id="error9" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="10">
-        <div class="form-title">Ton email ?</div>
-        <div class="form-subtitle">Pour te connecter ensuite</div>
-        <input type="email" class="form-input" id="email" placeholder="ton@email.com">
+        <div class="form-title">Ton email</div>
+        <div class="form-subtitle">Pour te connecter et recevoir tes notifications</div>
+        <div class="input-wrapper">
+          <input type="email" class="form-input validated-input" id="email" placeholder="ton@email.com" oninput="validateField('email')">
+          <span class="validation-icon" id="email-icon"></span>
+        </div>
+        <div class="security-badge" style="margin-top: 12px;">
+          <span style="color: var(--accent-success);">●</span> Ton email reste prive et securise
+        </div>
         <div id="error10" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
-          <button class="btn-small btn-next" onclick="nextStep()">Suivant</button>
+          <button class="btn-small btn-next btn-cta" onclick="nextStep()">Continuer</button>
         </div>
       </div>
 
       <div class="form-step" data-step="11">
-        <div class="form-title">Crée un mot de passe</div>
-        <div class="form-subtitle">Minimum 6 caractères</div>
-        <input type="password" class="form-input" id="password" placeholder="Mot de passe" minlength="6">
-        <input type="password" class="form-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" style="margin-top: -10px;">
+        <div class="form-title">Ton mot de passe</div>
+        <div class="form-subtitle">Minimum 6 caracteres pour ta securite</div>
+        <div class="input-wrapper">
+          <input type="password" class="form-input validated-input" id="password" placeholder="Mot de passe" minlength="6" oninput="validatePassword()">
+          <span class="validation-icon" id="password-icon"></span>
+        </div>
+        <div class="input-wrapper" style="margin-top: 12px;">
+          <input type="password" class="form-input validated-input" id="passwordConfirm" placeholder="Confirme le mot de passe" minlength="6" oninput="validatePassword()">
+          <span class="validation-icon" id="passwordConfirm-icon"></span>
+        </div>
+        <div class="password-strength" id="passwordStrength" style="margin-top: 8px;"></div>
         <div id="error11" class="error-message"></div>
         <div class="form-actions">
           <button class="btn-small btn-back" onclick="prevStep()">Retour</button>
@@ -1162,6 +1392,22 @@
 
         <div style="margin-top: -40px; padding: 0 16px;">
           
+          <!-- Badges de securite et verification -->
+          <div id="securityBadges" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px;">
+            <div id="badgeEmailVerified" class="trust-badge verified" style="display: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Email verifie
+            </div>
+            <div id="badgePhotoVerified" class="trust-badge pending" style="display: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Photo en attente
+            </div>
+            <div id="badgeProfileComplete" class="trust-badge" style="display: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Profil complet
+            </div>
+          </div>
+
           <!-- Abonnement & Brumes -->
           <div style="background: var(--bg-card); padding: 18px; border-radius: 16px; text-align: center; box-shadow: var(--shadow-lg); margin-bottom: 16px;">
             <div id="userSubscription" style="font-size: 0.95rem; font-weight: 600; color: #8B5CF6; margin-bottom: 6px;">CLASSIQUE</div>
@@ -1757,25 +2003,47 @@
     <!-- Bottom Navigation - Premium White Milk Design -->
     <div class="bottom-nav">
       <div class="nav-item active" onclick="switchView('discover')">
-        <div class="nav-icon">◇</div>
+        <div class="nav-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
         <div class="nav-label">Découvrir</div>
       </div>
       <div class="nav-item" onclick="switchView('matches')">
-        <div class="nav-icon">♡</div>
+        <div class="nav-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
         <div class="nav-label">Matches</div>
         <span id="matchesBadge" class="nav-badge" style="display:none;">0</span>
       </div>
       <div class="nav-item" onclick="switchView('messages')">
-        <div class="nav-icon">◯</div>
+        <div class="nav-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
         <div class="nav-label">Messages</div>
         <span id="messagesBadge" class="nav-badge" style="display:none;">0</span>
       </div>
       <div class="nav-item" onclick="switchView('live')">
-        <div class="nav-icon">▸</div>
+        <div class="nav-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"/>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+        </div>
         <div class="nav-label">Live</div>
       </div>
       <div class="nav-item" onclick="switchView('profile')">
-        <div class="nav-icon">○</div>
+        <div class="nav-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
         <div class="nav-label">Profil</div>
       </div>
     </div>
@@ -2235,26 +2503,146 @@
         formData.photoFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
+          const container = document.getElementById('photoPreviewContainer');
           document.getElementById('photoPreview').src = e.target.result;
           document.getElementById('photoPreview').style.display = 'block';
           document.getElementById('photoPlaceholder').style.display = 'none';
+          // Ajouter l'effet visuel de succès
+          container.classList.add('has-photo');
+          container.style.animation = 'pulse-selected 0.3s ease-out';
         }
         reader.readAsDataURL(file);
       }
     }
 
-    window.updateProgress = function() { document.getElementById('progressFill').style.width = (currentStep / totalSteps) * 100 + '%'; }
+    window.updateProgress = function() { 
+      const percent = Math.round((currentStep / totalSteps) * 100);
+      document.getElementById('progressFill').style.width = percent + '%'; 
+      document.getElementById('progressPercent').textContent = percent + '%';
+      document.getElementById('currentStepNum').textContent = currentStep;
+      
+      // Afficher le bouton "Explorer" à partir de l'étape 6
+      const skipBtn = document.getElementById('skipToExplore');
+      if (skipBtn) {
+        skipBtn.style.display = currentStep >= 6 ? 'block' : 'none';
+      }
+    }
+    
     window.showStep = function(step) {
       document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
       document.querySelector(`[data-step="${step}"]`)?.classList.add('active');
       window.updateProgress();
     }
-    window.nextStep = function() { 
-      if (!window.validateStep(currentStep)) return; 
-      if (currentStep === 4 && formData.gender) {
-        const gayBtn = document.getElementById('gayBtn');
-        if (gayBtn) gayBtn.textContent = formData.gender === 'Homme' ? 'Gay' : 'Lesbienne';
+    
+    // Validation en temps réel des champs
+    window.validateField = function(fieldId) {
+      const input = document.getElementById(fieldId);
+      const icon = document.getElementById(fieldId + '-icon');
+      let isValid = false;
+      
+      if (fieldId === 'firstName') {
+        isValid = input.value.trim().length >= 2;
+      } else if (fieldId === 'age') {
+        const age = parseInt(input.value);
+        isValid = age >= 20 && age <= 100;
+      } else if (fieldId === 'city') {
+        isValid = input.value.trim().length >= 2;
+      } else if (fieldId === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        isValid = emailRegex.test(input.value.trim());
       }
+      
+      if (input.value.length === 0) {
+        input.classList.remove('input-valid', 'input-invalid');
+        if (icon) icon.className = 'validation-icon';
+      } else {
+        input.classList.toggle('input-valid', isValid);
+        input.classList.toggle('input-invalid', !isValid);
+        if (icon) icon.className = 'validation-icon ' + (isValid ? 'valid' : 'invalid');
+      }
+      
+      return isValid;
+    }
+    
+    // Validation du mot de passe avec indicateur de force
+    window.validatePassword = function() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('passwordConfirm').value;
+      const pwIcon = document.getElementById('password-icon');
+      const confirmIcon = document.getElementById('passwordConfirm-icon');
+      const strengthDiv = document.getElementById('passwordStrength');
+      
+      // Calculer la force du mot de passe
+      let strength = 0;
+      if (password.length >= 6) strength++;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      
+      // Afficher l'indicateur de force
+      let strengthClass = '';
+      if (password.length === 0) {
+        strengthDiv.innerHTML = '';
+      } else {
+        if (strength <= 1) strengthClass = 'weak';
+        else if (strength <= 2) strengthClass = 'medium';
+        else if (strength <= 3) strengthClass = 'strong';
+        else strengthClass = 'very-strong';
+        
+        strengthDiv.innerHTML = '<div class="strength-bar"></div><div class="strength-bar"></div><div class="strength-bar"></div><div class="strength-bar"></div>';
+        strengthDiv.className = 'password-strength ' + strengthClass;
+      }
+      
+      // Validation des icônes
+      const pwValid = password.length >= 6;
+      document.getElementById('password').classList.toggle('input-valid', pwValid);
+      document.getElementById('password').classList.toggle('input-invalid', password.length > 0 && !pwValid);
+      if (pwIcon) pwIcon.className = 'validation-icon ' + (password.length === 0 ? '' : (pwValid ? 'valid' : 'invalid'));
+      
+      // Confirmation
+      const confirmValid = confirm.length > 0 && password === confirm;
+      document.getElementById('passwordConfirm').classList.toggle('input-valid', confirmValid);
+      document.getElementById('passwordConfirm').classList.toggle('input-invalid', confirm.length > 0 && !confirmValid);
+      if (confirmIcon) confirmIcon.className = 'validation-icon ' + (confirm.length === 0 ? '' : (confirmValid ? 'valid' : 'invalid'));
+    }
+    
+    // Compteur de caractères
+    window.updateCharCount = function(fieldId, max) {
+      const field = document.getElementById(fieldId);
+      const counter = document.getElementById(fieldId + 'Count');
+      if (field && counter) {
+        counter.textContent = field.value.length;
+      }
+    }
+    
+    // Fonction pour sauter l'inscription et explorer
+    window.skipToExplore = function() {
+      if (confirm('Tu pourras compléter ton profil plus tard. Continuer vers l\'exploration ?')) {
+        // Sauvegarder les données actuelles temporairement
+        localStorage.setItem('pendingProfile', JSON.stringify(formData));
+        // Aller vers la page d'exploration avec profil incomplet
+        window.showApp('matchesView', true); // true = mode preview
+      }
+    }
+    
+    window.nextStep = function() { 
+      const errorDiv = document.getElementById(`error${currentStep}`);
+      if (!window.validateStep(currentStep)) {
+        // Animation shake sur erreur
+        const step = document.querySelector(`[data-step="${currentStep}"]`);
+        if (step) {
+          step.classList.add('shake-error');
+          setTimeout(() => step.classList.remove('shake-error'), 300);
+        }
+        return; 
+      }
+      
+      // Mettre à jour le compteur d'intérêts
+      if (currentStep === 6) {
+        document.getElementById('interestsCount').textContent = formData.interests.length + '/5 minimum';
+      }
+      
       if (currentStep < totalSteps) { currentStep++; window.showStep(currentStep); } 
     }
     window.prevStep = function() { if (currentStep > 1) { currentStep--; window.showStep(currentStep); } }
@@ -2262,31 +2650,48 @@
     window.validateStep = function(step) {
       const error = document.getElementById(`error${step}`);
       if (error) error.textContent = '';
-      if (step === 1) { const n = document.getElementById('firstName').value.trim(); if (n.length < 2) { if (error) error.textContent = 'Prénom trop court'; return false; } formData.firstName = n; }
-      else if (step === 2) { const a = parseInt(document.getElementById('age').value); if (!a || a < 20) { if (error) error.textContent = '20 ans minimum'; return false; } formData.age = a; }
-      else if (step === 3) { const c = document.getElementById('city').value.trim(); if (!c && !formData.location) { if (error) error.textContent = 'Entre une ville'; return false; } formData.city = c; }
-      else if (step === 4) { if (!formData.gender) { if (error) error.textContent = 'Sélectionne un genre'; return false; } }
-      else if (step === 5) { if (!formData.sexuality) { if (error) error.textContent = 'Sélectionne une option'; return false; } }
-      else if (step === 6) { if (formData.interests.length < 5) { if (error) error.textContent = 'Au moins 5 intérêts'; return false; } }
-      else if (step === 7) { if (!formData.photoFile) { if (error) error.textContent = 'Photo obligatoire'; return false; } }
-      else if (step === 8) { const cp = document.getElementById('catchphrase').value.trim(); if (cp.length < 10) { if (error) error.textContent = 'Phrase d\'accroche trop courte (min 10 caractères)'; return false; } formData.catchphrase = cp; }
-      else if (step === 9) { const b = document.getElementById('bio').value.trim(); if (b.length < 20) { if (error) error.textContent = 'Description trop courte (min 20 caractères)'; return false; } formData.bio = b; }
-      else if (step === 10) { const e = document.getElementById('email').value.trim(); if (!e || !e.includes('@')) { if (error) error.textContent = 'Email invalide'; return false; } formData.email = e; }
-      else if (step === 11) { const p = document.getElementById('password').value, pc = document.getElementById('passwordConfirm').value; if (p.length < 6) { if (error) error.textContent = 'Mot de passe trop court'; return false; } if (p !== pc) { if (error) error.textContent = 'Mots de passe différents'; return false; } formData.password = p; }
+      if (step === 1) { const n = document.getElementById('firstName').value.trim(); if (n.length < 2) { if (error) error.textContent = 'Prénom trop court (min 2 caractères)'; return false; } formData.firstName = n; }
+      else if (step === 2) { const a = parseInt(document.getElementById('age').value); if (!a || a < 20) { if (error) error.textContent = '20 ans minimum requis'; return false; } formData.age = a; }
+      else if (step === 3) { const c = document.getElementById('city').value.trim(); if (!c && !formData.location) { if (error) error.textContent = 'Entre ta ville ou utilise la géolocalisation'; return false; } formData.city = c; }
+      else if (step === 4) { if (!formData.gender) { if (error) error.textContent = 'Sélectionne ton genre'; return false; } }
+      else if (step === 5) { if (!formData.seeking) { if (error) error.textContent = 'Sélectionne qui tu recherches'; return false; } }
+      else if (step === 6) { if (formData.interests.length < 5) { if (error) error.textContent = 'Choisis au moins 5 centres d\'intérêt'; return false; } }
+      else if (step === 7) { if (!formData.photoFile) { if (error) error.textContent = 'Ta photo est obligatoire pour commencer'; return false; } }
+      else if (step === 8) { const cp = document.getElementById('catchphrase').value.trim(); if (cp.length < 10) { if (error) error.textContent = 'Ta phrase d\'accroche doit faire au moins 10 caractères'; return false; } formData.catchphrase = cp; }
+      else if (step === 9) { const b = document.getElementById('bio').value.trim(); if (b.length < 20) { if (error) error.textContent = 'Parle un peu plus de toi (min 20 caractères)'; return false; } formData.bio = b; }
+      else if (step === 10) { const e = document.getElementById('email').value.trim(); if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { if (error) error.textContent = 'Entre une adresse email valide'; return false; } formData.email = e; }
+      else if (step === 11) { const p = document.getElementById('password').value, pc = document.getElementById('passwordConfirm').value; if (p.length < 6) { if (error) error.textContent = '6 caractères minimum pour la sécurité'; return false; } if (p !== pc) { if (error) error.textContent = 'Les mots de passe ne correspondent pas'; return false; } formData.password = p; }
       return true;
     }
 
     window.selectChoice = function(btn, field, value) {
-      document.querySelectorAll(`[data-field="${field}"]`).forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected'); btn.setAttribute('data-field', field); formData[field] = value;
+      const container = btn.parentElement;
+      container.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected'); 
+      formData[field] = value;
     }
     window.toggleInterest = function(btn, interest) {
-      if (formData.interests.includes(interest)) { formData.interests = formData.interests.filter(i => i !== interest); btn.classList.remove('selected'); }
-      else { if (formData.interests.length < 10) { formData.interests.push(interest); btn.classList.add('selected'); } }
+      if (formData.interests.includes(interest)) { 
+        formData.interests = formData.interests.filter(i => i !== interest); 
+        btn.classList.remove('selected'); 
+      }
+      else { 
+        if (formData.interests.length < 10) { 
+          formData.interests.push(interest); 
+          btn.classList.add('selected'); 
+        } 
+      }
+      // Mettre à jour le compteur
+      const counter = document.getElementById('interestsCount');
+      if (counter) {
+        const count = formData.interests.length;
+        counter.textContent = count + '/5 minimum';
+        counter.style.color = count >= 5 ? '#10B981' : 'var(--primary)';
+      }
     }
     window.renderInterests = function() {
       const grid = document.getElementById('interestsGrid');
-      if (grid) grid.innerHTML = interests.map(i => `<button class="interest-tag" onclick="toggleInterest(this, '${i}')">${i}</button>`).join('');
+      if (grid) grid.innerHTML = interests.map(i => `<button class="interest-tag choice-animated" onclick="toggleInterest(this, '${i}')">${i}</button>`).join('');
     }
 
     window.createUserProfile = async function(user) {
@@ -2311,7 +2716,7 @@
           latitude: formData.location?.lat,
           longitude: formData.location?.lng,
           gender: formData.gender,
-          sexuality: formData.sexuality,
+          seeking: formData.seeking,
           interests: formData.interests,
           catchphrase: formData.catchphrase,
           bio: formData.bio,
@@ -3071,6 +3476,40 @@
         const subElement = document.getElementById('userSubscription');
         subElement.textContent = subLabels[subscription] || subLabels.classique;
         subElement.style.color = subColors[subscription] || subColors.classique;
+        
+        // Mise à jour des badges de confiance
+        const emailBadge = document.getElementById('badgeEmailVerified');
+        const photoBadge = document.getElementById('badgePhotoVerified');
+        const profileBadge = document.getElementById('badgeProfileComplete');
+        
+        // Email vérifié (si l'utilisateur est connecté, l'email est vérifié)
+        if (emailBadge && currentUser?.email_confirmed_at) {
+          emailBadge.style.display = 'inline-flex';
+          emailBadge.classList.add('verified');
+        }
+        
+        // Photo vérifiée ou en attente
+        if (photoBadge) {
+          if (data.photo_url) {
+            photoBadge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Photo ajoutee';
+            photoBadge.classList.remove('pending');
+            photoBadge.classList.add('verified');
+            photoBadge.style.display = 'inline-flex';
+          } else {
+            photoBadge.style.display = 'none';
+          }
+        }
+        
+        // Profil complet
+        if (profileBadge) {
+          const isComplete = data.firstname && data.age && data.city && data.gender && data.seeking && data.photo_url && data.interests?.length >= 5;
+          if (isComplete) {
+            profileBadge.classList.add('verified');
+            profileBadge.style.display = 'inline-flex';
+          } else {
+            profileBadge.style.display = 'none';
+          }
+        }
         
       } catch (error) { 
         console.error('Load profile error:', error); 
