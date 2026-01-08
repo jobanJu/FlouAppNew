@@ -109,6 +109,13 @@ const server = http.createServer((req, res) => {
         ext === ".mp4" ? "video/mp4" :
         "application/octet-stream";
 
+      // Headers anti-cache pour HTML et JS
+      if (ext === ".html" || ext === ".js") {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+      }
+
       send(res, 200, data, contentType);
     });
   } catch (err) {

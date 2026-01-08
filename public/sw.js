@@ -1,7 +1,5 @@
-const CACHE_NAME = 'flou-v2-20260108';
+const CACHE_NAME = 'flou-v3-' + Date.now();
 const urlsToCache = [
-  '/',
-  '/index.html',
   '/manifest.json',
   '/assets/logos/FLOU.png',
   '/FLOU.svg'
@@ -38,13 +36,15 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Stratégie: Network First, fallback to Cache
+// Stratégie: Network First - TOUJOURS chercher sur le réseau d'abord
 self.addEventListener('fetch', event => {
-  // Ne pas cacher les requêtes POST, les APIs Supabase ou Agora
+  // Ne JAMAIS cacher index.html, les requêtes POST, les APIs
   if (event.request.method !== 'GET' || 
       event.request.url.includes('supabase.co') ||
       event.request.url.includes('agora.io') ||
-      event.request.url.includes('/api/')) {
+      event.request.url.includes('/api/') ||
+      event.request.url.includes('index.html') ||
+      event.request.url.endsWith('/')) {
     return;
   }
 
