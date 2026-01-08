@@ -25,3 +25,5 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+*.json
+client_secret*
