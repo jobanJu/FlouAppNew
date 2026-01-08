@@ -2923,6 +2923,17 @@
 
     // Vérifier si on revient d'un reset password (AVANT la vérification de session)
     window.checkPasswordResetFlow();
+    
+    // Vérifier si on revient de Google OAuth (hash contient access_token)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hasOAuthToken = hashParams.has('access_token') || hashParams.has('refresh_token');
+    if (hasOAuthToken) {
+      console.log('🔑 Token OAuth détecté dans URL, nettoyage...');
+      // Nettoyer l'URL après que Supabase ait traité le hash
+      setTimeout(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 100);
+    }
 
     // Check auth state on load
     supabase.auth.getSession().then(async ({ data: { session }, error }) => {
@@ -2996,14 +3007,22 @@
       
       if (event === 'SIGNED_IN' && session?.user) {
         currentUser = session.user;
+        console.log('🔑 SIGNED_IN event - User:', session.user.email);
         
         // Vérifier si c'est une connexion Google (provider = google)
         const isGoogleUser = session.user.app_metadata?.provider === 'google' || 
                             session.user.identities?.some(i => i.provider === 'google');
         
+        console.log('🔍 Is Google user:', isGoogleUser);
+        
         if (isGoogleUser) {
           // Gérer le callback Google
-          await window.handleGoogleCallback();
+          console.log('🚀 Calling handleGoogleCallback...');
+          try {
+            await window.handleGoogleCallback();
+          } catch (err) {
+            console.error('❌ Error in handleGoogleCallback:', err);
+          }
         } else if (session.user.email_confirmed_at) {
           // Ne pas rediriger si on est sur la page de reset
           const resetPage = document.getElementById('resetPasswordPage');
@@ -3404,11 +3423,22 @@
     // Gérer le callback après connexion Google
     window.handleGoogleCallback = async function() {
       console.log('🔄 handleGoogleCallback appelé');
-      const { data: { session }, error } = await supabase.auth.getSession();
       
-      if (session && session.user) {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('❌ Erreur session:', sessionError);
+          return;
+        }
+        
+        if (!session || !session.user) {
+          console.error('❌ Pas de session valide');
+          return;
+        }
+        
         currentUser = session.user;
-        console.log('👤 User Google:', currentUser.email);
+        console.log('👤 User Google:', currentUser.email, 'ID:', currentUser.id);
         
         // Vérifier si le profil existe déjà et est complet
         const { data: existingProfile, error: profileError } = await supabase
@@ -3417,7 +3447,7 @@
           .eq('id', currentUser.id)
           .single();
         
-        console.log('📋 Profil existant:', existingProfile, 'Erreur:', profileError);
+        console.log('📋 Profil existant:', existingProfile ? 'Oui' : 'Non', 'Erreur:', profileError?.message || 'Aucune');
         
         // Profil complet = firstname + gender + seeking renseignés
         const isProfileComplete = existingProfile && 
@@ -3426,14 +3456,20 @@
           existingProfile.seeking;
         
         if (isProfileComplete) {
-          console.log('✅ Profil complet, vers matches');
-          window.goToMatches();
+          console.log('✅ Profil complet, redirection vers matches...');
+          // Cacher toutes les pages et afficher l'app
+          document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+          document.getElementById('appPage').classList.add('active');
+          window.switchView('discover');
+          window.loadMatches();
+          window.loadMyMatches();
+          window.loadProfile();
         } else {
-          console.log('⚠️ Profil incomplet, vers complétion');
+          console.log('⚠️ Profil incomplet, vers complétion...');
           // Nouveau user Google ou profil incomplet
           const userMetadata = currentUser.user_metadata || {};
           
-          if (!existingProfile) {
+          if (!existingProfile || profileError) {
             // Créer une entrée minimale
             console.log('📝 Création profil minimal...');
             const { error: insertError } = await supabase.from('users').upsert({
@@ -3447,33 +3483,30 @@
           }
           
           // Rediriger vers la complétion du profil
-          window.goToGoogleSignupCompletion();
+          console.log('🔀 Redirection vers googleSignupPage...');
+          document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+          document.getElementById('googleSignupPage').classList.add('active');
+          
+          // Pré-remplir les champs
+          if (userMetadata.full_name) {
+            const firstNameInput = document.getElementById('googleFirstName');
+            if (firstNameInput) firstNameInput.value = userMetadata.full_name.split(' ')[0];
+          }
+          
+          // Photo Google
+          const photoPreview = document.getElementById('googlePhotoPreview');
+          const photoPlaceholder = document.getElementById('googlePhotoPlaceholder');
+          if (photoPreview && (userMetadata.avatar_url || userMetadata.picture)) {
+            photoPreview.src = userMetadata.avatar_url || userMetadata.picture;
+            photoPreview.style.display = 'block';
+            if (photoPlaceholder) photoPlaceholder.style.display = 'none';
+          }
+          
+          window.renderGoogleInterests();
         }
+      } catch (err) {
+        console.error('❌ Erreur handleGoogleCallback:', err);
       }
-    }
-
-    // Page de complétion pour les users Google
-    window.goToGoogleSignupCompletion = function() {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('googleSignupPage').classList.add('active');
-      
-      // Pré-remplir avec les données Google si disponibles
-      const userMetadata = currentUser?.user_metadata || {};
-      const firstNameInput = document.getElementById('googleFirstName');
-      if (firstNameInput && userMetadata.full_name) {
-        firstNameInput.value = userMetadata.full_name.split(' ')[0];
-      }
-      
-      // Afficher la photo Google si disponible
-      const photoPreview = document.getElementById('googlePhotoPreview');
-      const photoPlaceholder = document.getElementById('googlePhotoPlaceholder');
-      if (photoPreview && (userMetadata.avatar_url || userMetadata.picture)) {
-        photoPreview.src = userMetadata.avatar_url || userMetadata.picture;
-        photoPreview.style.display = 'block';
-        if (photoPlaceholder) photoPlaceholder.style.display = 'none';
-      }
-      
-      window.renderGoogleInterests();
     }
 
     // Variables pour le profil Google
