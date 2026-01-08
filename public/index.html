@@ -641,6 +641,11 @@
       from { opacity: 0; transform: translateY(30px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 
   <!-- LANDING PAGE -->
@@ -1460,7 +1465,7 @@
             <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);" id="liveRoomStats">0 participants • 0 spectateurs</div>
             <div style="font-size: 0.8rem; color: rgba(139, 92, 246, 0.9); margin-top: 4px;" id="liveRoomDescription"></div>
           </div>
-          <button class="live-room-close" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
+          <button class="live-room-close" id="liveCloseBtn" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
         </div>
 
         <div class="live-video-area" id="liveVideoArea" style="background: linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.03) 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px;">
@@ -1985,22 +1990,31 @@
 
     // AUTHENTIFICATION GOOGLE
     window.signInWithGoogle = async function() {
+      console.log('🔑 Démarrage connexion Google...');
       try {
+        const redirectUrl = window.location.origin;
+        console.log('🔗 Redirect URL:', redirectUrl);
+        
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: window.location.origin,
-            queryParams: {
-              access_type: 'offline',
-              prompt: 'consent',
-            }
+            redirectTo: redirectUrl,
+            skipBrowserRedirect: false
           }
         });
-        if (error) throw error;
+        
+        console.log('📦 Réponse Google Auth:', data, error);
+        
+        if (error) {
+          console.error('❌ Erreur Google:', error);
+          throw error;
+        }
+        
         // La redirection vers Google se fait automatiquement
+        console.log('✅ Redirection vers Google...');
       } catch (err) {
-        console.error('Erreur Google Auth:', err);
-        alert('Erreur de connexion Google: ' + err.message);
+        console.error('❌ Erreur Google Auth:', err);
+        alert('Erreur de connexion Google: ' + (err.message || 'Erreur inconnue'));
       }
     }
 
@@ -3138,12 +3152,18 @@
         // Gérer les utilisateurs distants
         agoraClient.on('user-published', async (user, mediaType) => {
           await agoraClient.subscribe(user, mediaType);
-          console.log('✅ Utilisateur distant connecté:', user.uid);
+          console.log('✅ Utilisateur distant connecté:', user.uid, mediaType);
           
           if (mediaType === 'video') {
             const remoteVideoTrack = user.videoTrack;
             remoteUsers[user.uid] = user;
             displayRemoteVideo(user, containerId);
+            // Retirer le loader si présent
+            const container = document.querySelector(`[data-uid="${user.uid}"]`);
+            if (container) {
+              const loader = container.querySelector('.video-loader');
+              if (loader) loader.remove();
+            }
           }
           if (mediaType === 'audio') {
             const remoteAudioTrack = user.audioTrack;
@@ -3153,7 +3173,22 @@
         
         agoraClient.on('user-unpublished', (user, mediaType) => {
           if (mediaType === 'video') {
-            removeRemoteVideo(user.uid);
+            // Afficher le loader au lieu de supprimer la vidéo
+            const container = document.querySelector(`[data-uid="${user.uid}"]`);
+            if (container) {
+              let loader = container.querySelector('.video-loader');
+              if (!loader) {
+                loader = document.createElement('div');
+                loader.className = 'video-loader';
+                loader.innerHTML = `
+                  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: 16px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #EC4899; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p style="color: white; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Caméra en pause</p>
+                  </div>
+                `;
+                container.appendChild(loader);
+              }
+            }
           }
         });
         
@@ -3206,13 +3241,19 @@
         // Gérer les utilisateurs distants
         agoraClient.on('user-published', async (user, mediaType) => {
           await agoraClient.subscribe(user, mediaType);
-          console.log('✅ Utilisateur distant connecté:', user.uid);
+          console.log('✅ Utilisateur distant connecté:', user.uid, mediaType);
           
           if (mediaType === 'video') {
             remoteUsers[user.uid] = user;
             displayRemoteVideo(user, containerId);
             currentCamCount = Object.keys(remoteUsers).length;
             updateJoinCamButton();
+            // Retirer le loader si présent
+            const container = document.querySelector(`[data-uid="${user.uid}"]`);
+            if (container) {
+              const loader = container.querySelector('.video-loader');
+              if (loader) loader.remove();
+            }
           }
           if (mediaType === 'audio') {
             const remoteAudioTrack = user.audioTrack;
@@ -3222,7 +3263,22 @@
         
         agoraClient.on('user-unpublished', (user, mediaType) => {
           if (mediaType === 'video') {
-            removeRemoteVideo(user.uid);
+            // Afficher le loader au lieu de supprimer la vidéo
+            const container = document.querySelector(`[data-uid="${user.uid}"]`);
+            if (container) {
+              let loader = container.querySelector('.video-loader');
+              if (!loader) {
+                loader = document.createElement('div');
+                loader.className = 'video-loader';
+                loader.innerHTML = `
+                  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: 16px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #EC4899; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p style="color: white; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Caméra en pause</p>
+                  </div>
+                `;
+                container.appendChild(loader);
+              }
+            }
           }
         });
         
@@ -3475,9 +3531,36 @@
         const camBtn = document.getElementById('camBtn');
         if (camBtn) {
           camBtn.textContent = !enabled ? '◉ Caméra' : '◉ Caméra OFF';
+          camBtn.style.background = !enabled ? 'rgba(255,255,255,0.1)' : '#EF4444';
+        }
+        
+        // Afficher/masquer le loader sur ma vidéo
+        const myVideoContainer = document.querySelector(`[data-uid="${agoraClient?.uid}"]`);
+        if (myVideoContainer) {
+          let loader = myVideoContainer.querySelector('.video-loader');
+          if (!enabled) {
+            // Caméra activée - retirer le loader
+            if (loader) loader.remove();
+          } else {
+            // Caméra désactivée - afficher le loader
+            if (!loader) {
+              loader = document.createElement('div');
+              loader.className = 'video-loader';
+              loader.innerHTML = `
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;">
+                  <div style="width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #EC4899; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                  <p style="color: white; margin-top: 12px; font-size: 0.85rem; opacity: 0.8;">Caméra en pause</p>
+                </div>
+              `;
+              myVideoContainer.appendChild(loader);
+            }
+          }
         }
       }
     }
+    
+    // Variable pour stocker l'ID de l'hôte du live actuel
+    let currentLiveHostId = null;
 
     let currentLiveId = null;
     let currentLiveType = null;
@@ -3867,6 +3950,19 @@
         }
 
         console.log('✅ Live chargé:', live);
+        
+        // Stocker l'host_id pour savoir si on est le créateur
+        currentLiveHostId = live.host_id;
+        
+        // Changer le texte du bouton selon si on est créateur ou non
+        const closeBtn = document.getElementById('liveCloseBtn');
+        if (live.host_id === currentUser.id) {
+          closeBtn.textContent = '✕ Fermer le live';
+          closeBtn.style.background = '#DC2626';
+        } else {
+          closeBtn.textContent = 'Quitter';
+          closeBtn.style.background = '#EF4444';
+        }
 
         document.getElementById('liveRoomTitle').textContent = live.title;
         document.getElementById('liveRoomDescription').textContent = live.description || '';
@@ -4326,6 +4422,14 @@
 
     window.leaveLive = async function() {
       if (!currentLiveId) return;
+      
+      const isHost = currentLiveHostId === currentUser.id;
+      
+      // Confirmation si c'est le créateur
+      if (isHost) {
+        const confirmed = confirm('Tu es le créateur de ce live. Fermer le live va déconnecter tous les participants. Continuer ?');
+        if (!confirmed) return;
+      }
 
       try {
         // Quitter la room Agora
@@ -4341,23 +4445,20 @@
           .eq('live_id', currentLiveId)
           .eq('user_id', currentUser.id);
 
-        // Si c'est l'hôte, terminer le Live
-        const { data: live } = await supabase
-          .from('lives')
-          .select('host_id')
-          .eq('id', currentLiveId)
-          .single();
-
-        if (live.host_id === currentUser.id) {
+        // Si c'est l'hôte, terminer le Live pour tout le monde
+        if (isHost) {
           await supabase
             .from('lives')
             .update({ status: 'ended', ended_at: new Date().toISOString() })
             .eq('id', currentLiveId);
+          
+          console.log('🔴 Live fermé par le créateur');
         }
 
         currentLiveId = null;
         currentLiveType = null;
         currentRoomName = null;
+        currentLiveHostId = null;
         switchView('live');
 
       } catch (error) {
