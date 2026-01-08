@@ -1789,171 +1789,203 @@
     <div id="shopView" class="app-view">
       <div class="profile-container">
         <div style="display:flex; align-items:center; margin-bottom:30px;">
-          <button onclick="switchView('profile')" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; padding:0; margin-right:15px;">←</button>
-          <h2 style="font-size:1.5rem; font-weight:700; margin:0;">🛒 Boutique</h2>
+          <button onclick="switchView('profile')" style="background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer; padding:0; margin-right:15px;">←</button>
+          <h2 style="font-size:1.5rem; font-weight:700; margin:0; color:var(--text);">🛒 Boutique</h2>
         </div>
 
         <!-- Solde actuel -->
         <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); padding:20px; border-radius:15px; text-align:center; margin-bottom:30px;">
-          <div style="font-size:0.9rem; opacity:0.9; margin-bottom:5px;">Mon solde</div>
-          <div style="font-size:2rem; font-weight:700;">💎 <span id="shopBrumes">0</span> Brumes</div>
+          <div style="font-size:0.9rem; color:rgba(0,0,0,0.7); margin-bottom:5px;">Mon solde</div>
+          <div style="font-size:2rem; font-weight:700; color:#1C1917;">💎 <span id="shopBrumes">0</span> Brumes</div>
+        </div>
+
+        <!-- Toggle Semaine/Mois -->
+        <div style="display:flex; background:var(--bg-secondary); border-radius:12px; padding:4px; margin-bottom:20px;">
+          <button id="pricingWeekBtn" onclick="setPricingMode('week')" style="flex:1; padding:10px; border:none; border-radius:10px; background:var(--primary); color:white; font-weight:600; cursor:pointer; transition:all 0.2s;">Par semaine</button>
+          <button id="pricingMonthBtn" onclick="setPricingMode('month')" style="flex:1; padding:10px; border:none; border-radius:10px; background:transparent; color:var(--text-light); font-weight:600; cursor:pointer; transition:all 0.2s;">Par mois <span style="font-size:0.7rem; background:var(--success); color:white; padding:2px 6px; border-radius:8px; margin-left:4px;">-20%</span></button>
         </div>
 
         <!-- Abonnements -->
         <div style="margin-bottom:40px;">
-          <h3 style="font-size:1.3rem; font-weight:600; margin-bottom:20px;">Formules d'abonnement</h3>
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; color:var(--text);">Formules d'abonnement</h3>
           
-          <!-- Classique -->
-          <div style="background: rgba(255,255,255,0.05); padding:20px; border-radius:15px; margin-bottom:15px; border: 2px solid rgba(255,255,255,0.1);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <!-- Gratuit -->
+          <div id="planFree" style="background:var(--bg-card); padding:18px; border-radius:16px; margin-bottom:12px; border:2px solid var(--border); box-shadow:var(--shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <div>
-                <div style="font-size:1.2rem; font-weight:600;">⚪ CLASSIQUE</div>
-                <div style="font-size:1.5rem; font-weight:700; color:#10b981;">GRATUIT</div>
+                <div style="font-size:1.1rem; font-weight:700; color:var(--text);">⚪ GRATUIT</div>
+                <div style="font-size:1.3rem; font-weight:700; color:var(--success);">0€</div>
               </div>
-              <button class="btn btn-secondary" style="font-size:0.9rem; padding:8px 16px;" disabled>Actuel</button>
+              <button id="btnFree" class="btn btn-secondary" style="font-size:0.85rem; padding:8px 14px; opacity:0.6;" disabled>Actuel</button>
             </div>
-            <div style="font-size:0.85rem; opacity:0.8; line-height:1.6;">
-              ✓ 10 matches / jour<br>
+            <div style="font-size:0.8rem; color:var(--text-light); line-height:1.7;">
+              ✓ Matches limités / jour<br>
               ✓ Blur niveau standard<br>
-              ✓ 1 Live VS Love / jour<br>
-              ✓ 10 Brumes gratuites au démarrage
+              ✓ Messages texte illimités<br>
+              ✓ Brumes via activité
             </div>
           </div>
 
-          <!-- Kama -->
-          <div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding:20px; border-radius:15px; margin-bottom:15px; position:relative; overflow:hidden;">
-            <div style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.3); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:600;">POPULAIRE</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <!-- KAMA -->
+          <div id="planKama" style="background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding:18px; border-radius:16px; margin-bottom:12px; position:relative; overflow:hidden;">
+            <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.25); padding:3px 10px; border-radius:12px; font-size:0.7rem; font-weight:600; color:white;">POPULAIRE</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <div>
-                <div style="font-size:1.2rem; font-weight:600;">🔵 KAMA</div>
-                <div style="font-size:1.5rem; font-weight:700;">4,99€<span style="font-size:0.9rem; opacity:0.8;">/sem</span></div>
+                <div style="font-size:1.1rem; font-weight:700; color:white;">🔵 KAMA ⭐</div>
+                <div style="font-size:1.3rem; font-weight:700; color:white;"><span class="price-week">4,99€</span><span class="price-month" style="display:none;">15,99€</span><span style="font-size:0.8rem; opacity:0.8;" class="price-period">/sem</span></div>
               </div>
-              <button class="btn btn-primary" onclick="subscribeTo('kama')" style="background:rgba(255,255,255,0.9); color:#2563eb; font-size:0.9rem; padding:8px 16px;">Souscrire</button>
+              <button id="btnKama" class="btn" onclick="subscribeTo('kama')" style="background:rgba(255,255,255,0.95); color:#2563eb; font-size:0.85rem; padding:8px 14px; font-weight:600;">Souscrire</button>
             </div>
-            <div style="font-size:0.85rem; line-height:1.6;">
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.95); line-height:1.7;">
               ✓ 20 matches / jour<br>
-              ✓ Blur -1 niveau (déblocage accéléré)<br>
-              ✓ Accès Vocaux inclus (messages vocaux)<br>
+              ✓ Blur –1 niveau (déblocage accéléré)<br>
+              ✓ Messages vocaux inclus<br>
               ✓ 2 Live VS Love / jour<br>
-              ✓ Déblocage réseaux 50 Brumes (au lieu de 100)<br>
-              ✓ +50 Brumes / semaine<br>
-              ✓ Badge Kama sur profil
+              ✓ Déblocage réseaux : 50 💎<br>
+              ✓ +50 💎 Brumes / semaine<br>
+              ✓ Badge KAMA sur profil
             </div>
           </div>
 
-          <!-- Cupidon -->
-          <div style="background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%); padding:20px; border-radius:15px; margin-bottom:15px; position:relative; overflow:hidden;">
-            <div style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.3); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:600;">PREMIUM</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <!-- CUPIDON -->
+          <div id="planCupidon" style="background:linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%); padding:18px; border-radius:16px; margin-bottom:12px; position:relative; overflow:hidden; border:2px solid #c4b5fd;">
+            <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.25); padding:3px 10px; border-radius:12px; font-size:0.7rem; font-weight:600; color:white;">PREMIUM</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <div>
-                <div style="font-size:1.2rem; font-weight:600;">💜 CUPIDON</div>
-                <div style="font-size:1.5rem; font-weight:700;">14,99€<span style="font-size:0.9rem; opacity:0.8;">/sem</span></div>
+                <div style="font-size:1.1rem; font-weight:700; color:white;">💜 CUPIDON ⭐⭐⭐</div>
+                <div style="font-size:1.3rem; font-weight:700; color:white;"><span class="price-week">9,99€</span><span class="price-month" style="display:none;">31,99€</span><span style="font-size:0.8rem; opacity:0.8;" class="price-period">/sem</span></div>
               </div>
-              <button class="btn btn-primary" onclick="subscribeTo('cupidon')" style="background:rgba(255,255,255,0.9); color:#8b5cf6; font-size:0.9rem; padding:8px 16px;">Souscrire</button>
+              <button id="btnCupidon" class="btn" onclick="subscribeTo('cupidon')" style="background:rgba(255,255,255,0.95); color:#8b5cf6; font-size:0.85rem; padding:8px 14px; font-weight:600;">Souscrire</button>
             </div>
-            <div style="font-size:0.85rem; line-height:1.6;">
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.95); line-height:1.7;">
               ✓ Matches illimités<br>
-              ✓ Blur -2 niveaux (déblocage rapide)<br>
+              ✓ Blur –2 niveaux (déblocage rapide)<br>
               ✓ Vocaux illimités<br>
               ✓ Live VS Love illimités<br>
               ✓ Déblocage réseaux GRATUIT<br>
-              ✓ +150 Brumes / semaine<br>
-              ✓ Badge Cupidon sur profil<br>
-              ✓ Bio vidéo incluse<br>
-              ✓ Assistance IA pour messages<br>
-              ✓ Priorité visibilité & boosts gratuits
+              ✓ +150 💎 Brumes / semaine<br>
+              ✓ Badge CUPIDON + Bio vidéo<br>
+              ✓ 🤖 Assistant IA messages<br>
+              ✓ Priorité visibilité + Boosts gratuits
+            </div>
+          </div>
+
+          <!-- CUPIDON ELITE -->
+          <div id="planElite" style="background:linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%); padding:18px; border-radius:16px; margin-bottom:12px; position:relative; overflow:hidden; border:3px solid #fcd34d; box-shadow:0 4px 20px rgba(251, 191, 36, 0.4);">
+            <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.3); padding:3px 10px; border-radius:12px; font-size:0.7rem; font-weight:700; color:white;">👑 VIP</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <div style="font-size:1.1rem; font-weight:700; color:white;">👑 ELITE ⭐⭐⭐⭐⭐</div>
+                <div style="font-size:1.3rem; font-weight:700; color:white;"><span class="price-week">14,99€</span><span class="price-month" style="display:none;">47,99€</span><span style="font-size:0.8rem; opacity:0.8;" class="price-period">/sem</span></div>
+              </div>
+              <button id="btnElite" class="btn" onclick="subscribeTo('elite')" style="background:rgba(255,255,255,0.95); color:#dc2626; font-size:0.85rem; padding:8px 14px; font-weight:700;">Souscrire</button>
+            </div>
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.95); line-height:1.7;">
+              ✓ Tout CUPIDON +<br>
+              ✓ +250 💎 Brumes / semaine<br>
+              ✓ Badge ELITE animé 👑<br>
+              ✓ 👨‍💼 Coach dating humain (WhatsApp)<br>
+              ✓ Accompagnement personnalisé 1-to-1<br>
+              ✓ Live VS Love prioritaire<br>
+              ✓ Visibilité MAXIMALE<br>
+              ✓ Boost quotidien garanti
             </div>
           </div>
         </div>
 
         <!-- Packs de Brumes -->
         <div style="margin-bottom:40px;">
-          <h3 style="font-size:1.3rem; font-weight:600; margin-bottom:20px;">💎 Acheter des Brumes</h3>
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; color:var(--text);">💎 Acheter des Brumes</h3>
           
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
             <!-- Pack 50 -->
-            <div style="background: rgba(251, 191, 36, 0.1); border:2px solid #fbbf24; padding:20px; border-radius:15px; text-align:center;">
-              <div style="font-size:2rem; margin-bottom:10px;">💎</div>
-              <div style="font-size:1.5rem; font-weight:700; color:#fbbf24; margin-bottom:5px;">50</div>
-              <div style="font-size:0.9rem; opacity:0.8; margin-bottom:15px;">Brumes</div>
-              <div style="font-size:1.2rem; font-weight:600; margin-bottom:10px;">5,00€</div>
-              <button class="btn btn-secondary" onclick="buyBrumes(50, 5)" style="width:100%; font-size:0.9rem; padding:8px;">Acheter</button>
+            <div style="background:var(--bg-card); border:2px solid #fbbf24; padding:16px; border-radius:14px; text-align:center;">
+              <div style="font-size:1.8rem; margin-bottom:8px;">💎</div>
+              <div style="font-size:1.4rem; font-weight:700; color:#fbbf24; margin-bottom:4px;">50</div>
+              <div style="font-size:0.8rem; color:var(--text-lighter); margin-bottom:12px;">Brumes</div>
+              <div style="font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:10px;">4,99€</div>
+              <button class="btn btn-secondary" onclick="buyBrumes(50, 4.99)" style="width:100%; font-size:0.85rem; padding:8px;">Acheter</button>
             </div>
 
             <!-- Pack 100 -->
-            <div style="background: rgba(251, 191, 36, 0.1); border:2px solid #fbbf24; padding:20px; border-radius:15px; text-align:center;">
-              <div style="font-size:2rem; margin-bottom:10px;">💎💎</div>
-              <div style="font-size:1.5rem; font-weight:700; color:#fbbf24; margin-bottom:5px;">100</div>
-              <div style="font-size:0.9rem; opacity:0.8; margin-bottom:15px;">Brumes</div>
-              <div style="font-size:1.2rem; font-weight:600; margin-bottom:10px;">10,00€</div>
-              <button class="btn btn-secondary" onclick="buyBrumes(100, 10)" style="width:100%; font-size:0.9rem; padding:8px;">Acheter</button>
+            <div style="background:var(--bg-card); border:2px solid #fbbf24; padding:16px; border-radius:14px; text-align:center;">
+              <div style="font-size:1.8rem; margin-bottom:8px;">💎💎</div>
+              <div style="font-size:1.4rem; font-weight:700; color:#fbbf24; margin-bottom:4px;">100</div>
+              <div style="font-size:0.8rem; color:var(--text-lighter); margin-bottom:12px;">Brumes</div>
+              <div style="font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:10px;">9,99€</div>
+              <button class="btn btn-secondary" onclick="buyBrumes(100, 9.99)" style="width:100%; font-size:0.85rem; padding:8px;">Acheter</button>
             </div>
 
-            <!-- Pack 200 -->
-            <div style="background: rgba(251, 191, 36, 0.15); border:2px solid #fbbf24; padding:20px; border-radius:15px; text-align:center; position:relative;">
-              <div style="position:absolute; top:5px; right:5px; background:#10b981; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:600;">+5% BONUS</div>
-              <div style="font-size:2rem; margin-bottom:10px;">💎💎💎</div>
-              <div style="font-size:1.5rem; font-weight:700; color:#fbbf24; margin-bottom:5px;">200</div>
-              <div style="font-size:0.9rem; opacity:0.8; margin-bottom:15px;">Brumes</div>
-              <div style="font-size:1.2rem; font-weight:600; margin-bottom:10px;">20,00€</div>
-              <button class="btn btn-primary" onclick="buyBrumes(200, 20)" style="width:100%; font-size:0.9rem; padding:8px; background:#fbbf24;">Acheter</button>
+            <!-- Pack 250 -->
+            <div style="background:var(--bg-card); border:2px solid #fbbf24; padding:16px; border-radius:14px; text-align:center; position:relative;">
+              <div style="position:absolute; top:5px; right:5px; background:#10b981; padding:2px 8px; border-radius:10px; font-size:0.65rem; font-weight:600; color:white;">+10%</div>
+              <div style="font-size:1.8rem; margin-bottom:8px;">💎💎💎</div>
+              <div style="font-size:1.4rem; font-weight:700; color:#fbbf24; margin-bottom:4px;">250</div>
+              <div style="font-size:0.8rem; color:var(--text-lighter); margin-bottom:12px;">Brumes</div>
+              <div style="font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:10px;">19,99€</div>
+              <button class="btn" onclick="buyBrumes(250, 19.99)" style="width:100%; font-size:0.85rem; padding:8px; background:#fbbf24; color:#1C1917;">Acheter</button>
             </div>
 
             <!-- Pack 500 -->
-            <div style="background: rgba(251, 191, 36, 0.2); border:3px solid #fbbf24; padding:20px; border-radius:15px; text-align:center; position:relative;">
-              <div style="position:absolute; top:5px; right:5px; background:#10b981; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:600;">+10% BONUS</div>
-              <div style="font-size:2.5rem; margin-bottom:10px;">💎💎💎💎</div>
-              <div style="font-size:1.8rem; font-weight:700; color:#fbbf24; margin-bottom:5px;">500</div>
-              <div style="font-size:0.9rem; opacity:0.8; margin-bottom:15px;">Brumes</div>
-              <div style="font-size:1.3rem; font-weight:700; margin-bottom:10px;">45,00€</div>
-              <button class="btn btn-primary" onclick="buyBrumes(500, 45)" style="width:100%; font-size:0.9rem; padding:8px; background:#fbbf24;">Acheter</button>
+            <div style="background:linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.2)); border:3px solid #fbbf24; padding:16px; border-radius:14px; text-align:center; position:relative;">
+              <div style="position:absolute; top:5px; right:5px; background:#10b981; padding:2px 8px; border-radius:10px; font-size:0.65rem; font-weight:600; color:white;">+20%</div>
+              <div style="font-size:2rem; margin-bottom:8px;">💎💎💎💎</div>
+              <div style="font-size:1.5rem; font-weight:700; color:#fbbf24; margin-bottom:4px;">500</div>
+              <div style="font-size:0.8rem; color:var(--text-lighter); margin-bottom:12px;">Brumes</div>
+              <div style="font-size:1.2rem; font-weight:700; color:var(--text); margin-bottom:10px;">34,99€</div>
+              <button class="btn" onclick="buyBrumes(500, 34.99)" style="width:100%; font-size:0.85rem; padding:8px; background:#fbbf24; color:#1C1917; font-weight:700;">Acheter</button>
             </div>
           </div>
         </div>
 
         <!-- Utilisation des Brumes -->
         <div style="margin-bottom:20px;">
-          <h3 style="font-size:1.3rem; font-weight:600; margin-bottom:20px;">🎯 À quoi servent les Brumes ?</h3>
+          <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:16px; color:var(--text);">🎯 À quoi servent les Brumes ?</h3>
           
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">🎤 Messages Vocaux</span>
+          <div style="background:var(--bg-card); padding:14px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:600; color:var(--text);">🎤 Messages Vocaux</span>
+              <span style="color:#fbbf24; font-weight:600;">50 💎</span>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-lighter);">Envoie des messages audio à tes matchs</div>
+          </div>
+
+          <div style="background:var(--bg-card); padding:14px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:600; color:var(--text);">📱 Déblocage Réseaux</span>
               <span style="color:#fbbf24; font-weight:600;">100 💎</span>
             </div>
-            <div style="font-size:0.85rem; opacity:0.7;">Envoie des messages audio à tes matchs</div>
+            <div style="font-size:0.8rem; color:var(--text-lighter);">Accède aux comptes Insta/Snap d'un profil</div>
           </div>
 
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">📱 Déblocage Réseaux Sociaux</span>
-              <span style="color:#fbbf24; font-weight:600;">100 💎</span>
+          <div style="background:var(--bg-card); padding:14px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:600; color:var(--text);">✨ Déflouttage Partiel</span>
+              <span style="color:#fbbf24; font-weight:600;">75 💎</span>
             </div>
-            <div style="font-size:0.85rem; opacity:0.7;">Accède aux comptes Instagram/Snapchat d'un profil</div>
+            <div style="font-size:0.8rem; color:var(--text-lighter);">Réduis immédiatement le blur d'un match</div>
           </div>
 
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">✨ Déflouttage Partiel</span>
-              <span style="color:#fbbf24; font-weight:600;">100 💎</span>
+          <div style="background:var(--bg-card); padding:14px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:600; color:var(--text);">🚀 Boost de Profil</span>
+              <span style="color:#fbbf24; font-weight:600;">200 💎</span>
             </div>
-            <div style="font-size:0.85rem; opacity:0.7;">Réduis immédiatement le blur d'un match</div>
+            <div style="font-size:0.8rem; color:var(--text-lighter);">20 minutes de visibilité maximale</div>
           </div>
 
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">🚀 Boost de Profil</span>
-              <span style="color:#fbbf24; font-weight:600;">300 💎</span>
+          <div style="background:var(--bg-card); padding:14px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:600; color:var(--text);">🎁 Cadeaux Live</span>
+              <span style="color:#fbbf24; font-weight:600;">5-300 💎</span>
             </div>
-            <div style="font-size:0.85rem; opacity:0.7;">20 minutes de visibilité maximale</div>
+            <div style="font-size:0.8rem; color:var(--text-lighter);">Envoie des cadeaux aux créateurs en Live</div>
           </div>
+        </div>
 
-          <div style="background: rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-              <span style="font-weight:600;">🎥 Bio Vidéo Premium</span>
-              <span style="color:#fbbf24; font-weight:600;">300 💎</span>
-            </div>
-            <div style="font-size:0.85rem; opacity:0.7;">Ajoute une vidéo à ton profil (si non-Cupidon)</div>
-          </div>
+        <!-- Lien règlement -->
+        <div style="text-align:center; margin-top:20px; padding-bottom:40px;">
+          <a href="/reglement-brumes.html" target="_blank" style="color:var(--text-lighter); font-size:0.8rem; text-decoration:underline;">📜 Règlement des Brumes</a>
         </div>
 
       </div>
@@ -3986,24 +4018,37 @@
         
         // Load subscription and Brumes balance
         const brumesBalance = data.brumes_balance || 0;
-        const subscription = data.subscription_tier || 'classique';
+        const subscription = data.subscription_tier || 'free';
         
         document.getElementById('userBrumes').textContent = brumesBalance;
         
         const subLabels = {
-          'classique': '⚪ CLASSIQUE',
-          'kama': '🔵 KAMA',
-          'cupidon': '💜 CUPIDON'
+          'free': '⚪ GRATUIT',
+          'kama': '🔵 KAMA ⭐',
+          'cupidon': '💜 CUPIDON ⭐⭐⭐',
+          'elite': '👑 ELITE ⭐⭐⭐⭐⭐'
         };
-        const subColors = {
-          'classique': '#8B5CF6',
-          'kama': '#3B82F6',
-          'cupidon': '#A855F7'
+        const subStyles = {
+          'free': { bg: 'rgba(255,255,255,0.2)', color: 'white' },
+          'kama': { bg: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white' },
+          'cupidon': { bg: 'linear-gradient(135deg, #a78bfa, #8b5cf6)', color: 'white' },
+          'elite': { bg: 'linear-gradient(135deg, #fbbf24, #f59e0b, #dc2626)', color: 'white', animation: true }
         };
         
         const subElement = document.getElementById('userSubscription');
-        subElement.textContent = subLabels[subscription] || subLabels.classique;
-        subElement.style.color = subColors[subscription] || subColors.classique;
+        const style = subStyles[subscription] || subStyles.free;
+        subElement.textContent = subLabels[subscription] || subLabels.free;
+        subElement.style.background = style.bg;
+        subElement.style.color = style.color;
+        
+        // Animation pour Elite
+        if (style.animation) {
+          subElement.style.animation = 'pulse 2s infinite';
+          subElement.style.boxShadow = '0 0 15px rgba(251, 191, 36, 0.5)';
+        } else {
+          subElement.style.animation = 'none';
+          subElement.style.boxShadow = 'none';
+        }
         
         // Mise à jour des badges de confiance
         const emailBadge = document.getElementById('badgeEmailVerified');
@@ -4790,6 +4835,7 @@
     // ============================================
     const STRIPE_PUBLIC_KEY = 'pk_live_51QicTOGL6nMNahkvpVtrDyCQgDlyL9i2lXt35FSnJLaesJn2zWsax7kmrwwoc1w9QmYsMRyb5UT0jAnYZDmouXBU00OexIGkdz';
     let stripe = null;
+    let currentPricingMode = 'week'; // 'week' ou 'month'
     
     // Initialiser Stripe
     function initStripe() {
@@ -4800,45 +4846,101 @@
     
     // IDs des prix Stripe (à créer dans le dashboard Stripe)
     const STRIPE_PRICES = {
-      // Abonnements
-      'kama': 'price_kama_weekly', // À remplacer par le vrai price ID
-      'cupidon': 'price_cupidon_weekly', // À remplacer par le vrai price ID
+      // Abonnements semaine
+      'kama_week': 'price_kama_weekly',
+      'cupidon_week': 'price_cupidon_weekly',
+      'elite_week': 'price_elite_weekly',
+      // Abonnements mois
+      'kama_month': 'price_kama_monthly',
+      'cupidon_month': 'price_cupidon_monthly',
+      'elite_month': 'price_elite_monthly',
       // Packs de Brumes
       'brumes_50': 'price_brumes_50',
       'brumes_100': 'price_brumes_100',
-      'brumes_200': 'price_brumes_200',
+      'brumes_250': 'price_brumes_250',
       'brumes_500': 'price_brumes_500'
     };
+
+    // Configuration des formules
+    const SUBSCRIPTION_CONFIG = {
+      'kama': {
+        label: '🔵 KAMA ⭐',
+        priceWeek: 4.99,
+        priceMonth: 15.99,
+        color: '#2563eb',
+        brumesWeekly: 50,
+        features: ['20 matches/jour', 'Blur -1 niveau', 'Vocaux inclus', '2 Live VS Love/jour']
+      },
+      'cupidon': {
+        label: '💜 CUPIDON ⭐⭐⭐',
+        priceWeek: 9.99,
+        priceMonth: 31.99,
+        color: '#8b5cf6',
+        brumesWeekly: 150,
+        features: ['Matches illimités', 'Blur -2 niveaux', 'Vocaux illimités', 'Live illimités', 'Assistant IA', 'Bio vidéo', 'Boosts gratuits']
+      },
+      'elite': {
+        label: '👑 ELITE ⭐⭐⭐⭐⭐',
+        priceWeek: 14.99,
+        priceMonth: 47.99,
+        color: '#dc2626',
+        brumesWeekly: 250,
+        features: ['Tout CUPIDON +', 'Coach dating humain', 'Accompagnement 1-to-1', 'Visibilité MAX', 'Boost quotidien']
+      }
+    };
+
+    // Toggle mode tarification
+    window.setPricingMode = function(mode) {
+      currentPricingMode = mode;
+      const weekBtn = document.getElementById('pricingWeekBtn');
+      const monthBtn = document.getElementById('pricingMonthBtn');
+      
+      if (mode === 'week') {
+        weekBtn.style.background = 'var(--primary)';
+        weekBtn.style.color = 'white';
+        monthBtn.style.background = 'transparent';
+        monthBtn.style.color = 'var(--text-light)';
+        document.querySelectorAll('.price-week').forEach(el => el.style.display = 'inline');
+        document.querySelectorAll('.price-month').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.price-period').forEach(el => el.textContent = '/sem');
+      } else {
+        monthBtn.style.background = 'var(--primary)';
+        monthBtn.style.color = 'white';
+        weekBtn.style.background = 'transparent';
+        weekBtn.style.color = 'var(--text-light)';
+        document.querySelectorAll('.price-week').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.price-month').forEach(el => el.style.display = 'inline');
+        document.querySelectorAll('.price-period').forEach(el => el.textContent = '/mois');
+      }
+    }
 
     // SHOP FUNCTIONS
     window.subscribeTo = async function(tier) {
       if (!currentUser) return;
       
-      const prices = {
-        'kama': 4.99,
-        'cupidon': 14.99
-      };
+      const config = SUBSCRIPTION_CONFIG[tier];
+      if (!config) return;
       
-      const tierLabels = {
-        'kama': '🔵 KAMA',
-        'cupidon': '💜 CUPIDON'
-      };
+      const price = currentPricingMode === 'week' ? config.priceWeek : config.priceMonth;
+      const period = currentPricingMode === 'week' ? 'semaine' : 'mois';
+      const priceKey = `${tier}_${currentPricingMode}`;
       
       // Vérifier si Stripe est disponible
       if (!stripe) {
         initStripe();
       }
       
-      if (stripe && STRIPE_PRICES[tier] && !STRIPE_PRICES[tier].includes('price_')) {
+      if (stripe && STRIPE_PRICES[priceKey] && !STRIPE_PRICES[priceKey].includes('price_')) {
         // Paiement réel via Stripe Checkout
         try {
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              priceId: STRIPE_PRICES[tier],
+              priceId: STRIPE_PRICES[priceKey],
               userId: currentUser.id,
               mode: 'subscription',
+              metadata: { tier, billingPeriod: currentPricingMode },
               successUrl: window.location.origin + '/shop?success=true&tier=' + tier,
               cancelUrl: window.location.origin + '/shop?canceled=true'
             })
@@ -4853,17 +4955,15 @@
           }
         } catch (error) {
           console.error('Stripe error:', error);
-          // Fallback sur simulation
-          simulateSubscription(tier, tierLabels, prices);
+          simulateSubscription(tier, config, price, period);
         }
       } else {
-        // Mode simulation (backend pas encore configuré)
-        simulateSubscription(tier, tierLabels, prices);
+        simulateSubscription(tier, config, price, period);
       }
     }
     
-    async function simulateSubscription(tier, tierLabels, prices) {
-      const confirmed = confirm(`Souscrire à l'abonnement ${tierLabels[tier]} pour ${prices[tier]}€/semaine ?\n\n⚠️ Mode test - Le paiement Stripe sera activé prochainement.`);
+    async function simulateSubscription(tier, config, price, period) {
+      const confirmed = confirm(`Souscrire à l'abonnement ${config.label} pour ${price}€/${period} ?\n\n⚠️ Mode test - Le paiement Stripe sera activé prochainement.`);
       
       if (!confirmed) return;
       
@@ -4878,7 +4978,13 @@
         
         if (error) throw error;
         
-        alert(`✅ Abonnement ${tierLabels[tier]} activé avec succès !`);
+        // Si Elite, afficher info Coach
+        if (tier === 'elite') {
+          alert(`✅ Abonnement ${config.label} activé !\n\n👨‍💼 Un coach dating te contactera sous 24h sur WhatsApp pour ton accompagnement personnalisé.`);
+        } else {
+          alert(`✅ Abonnement ${config.label} activé avec succès !`);
+        }
+        
         window.loadProfile();
         window.loadShop();
       } catch (error) {
@@ -4986,7 +5092,54 @@
         if (error) throw error;
         
         const brumesBalance = data.brumes_balance || 0;
+        const tier = data.subscription_tier || 'free';
+        
         document.getElementById('shopBrumes').textContent = brumesBalance;
+        
+        // Mettre à jour les boutons selon l'abonnement actuel
+        const btnFree = document.getElementById('btnFree');
+        const btnKama = document.getElementById('btnKama');
+        const btnCupidon = document.getElementById('btnCupidon');
+        const btnElite = document.getElementById('btnElite');
+        
+        // Reset tous les boutons
+        [btnFree, btnKama, btnCupidon, btnElite].forEach(btn => {
+          if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+          }
+        });
+        
+        // Marquer l'abonnement actuel
+        const tierButtons = {
+          'free': btnFree,
+          'kama': btnKama,
+          'cupidon': btnCupidon,
+          'elite': btnElite
+        };
+        
+        const currentBtn = tierButtons[tier];
+        if (currentBtn) {
+          currentBtn.textContent = '✓ Actuel';
+          currentBtn.disabled = true;
+          currentBtn.style.opacity = '0.7';
+        }
+        
+        // Désactiver les formules inférieures
+        const tierOrder = ['free', 'kama', 'cupidon', 'elite'];
+        const currentIndex = tierOrder.indexOf(tier);
+        
+        tierOrder.forEach((t, idx) => {
+          if (idx < currentIndex) {
+            const btn = tierButtons[t];
+            if (btn && t !== 'free') {
+              btn.textContent = 'Inclus';
+              btn.disabled = true;
+              btn.style.opacity = '0.5';
+            }
+          }
+        });
+        
       } catch (error) {
         console.error('Load shop error:', error);
       }

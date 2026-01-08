@@ -18,43 +18,74 @@ pk_live_51QicTOGL6nMNahkvpVtrDyCQgDlyL9i2lXt35FSnJLaesJn2zWsax7kmrwwoc1w9QmYsMRy
 
 ## 2. Créer les produits et prix dans Stripe Dashboard
 
-### Abonnements
+### Abonnements KAMA 🔵
 
 Va sur https://dashboard.stripe.com/products et crée :
 
-#### 🔵 KAMA (4.99€/semaine)
-- Nom: `Flou KAMA`
-- Description: `Abonnement KAMA - Likes illimités, 3 Super Likes/jour`
+#### KAMA Semaine (4.99€/semaine)
+- Nom: `Flou KAMA - Hebdomadaire`
+- Description: `20 matches/jour, Blur -1, Vocaux inclus, +50 Brumes/sem`
 - Prix: `4.99 EUR` - Récurrent (weekly)
-- **Note le Price ID** (ex: `price_1Qic...`)
+- **Note le Price ID** → `price_kama_weekly`
 
-#### 💜 CUPIDON (14.99€/semaine)
-- Nom: `Flou CUPIDON`
-- Description: `Abonnement CUPIDON - Tout KAMA + visibilité prioritaire, filtres avancés`
+#### KAMA Mois (15.99€/mois)
+- Nom: `Flou KAMA - Mensuel`
+- Prix: `15.99 EUR` - Récurrent (monthly)
+- **Note le Price ID** → `price_kama_monthly`
+
+---
+
+### Abonnements CUPIDON 💜
+
+#### CUPIDON Semaine (9.99€/semaine)
+- Nom: `Flou CUPIDON - Hebdomadaire`
+- Description: `Matches illimités, Blur -2, Vocaux illimités, Assistant IA, +150 Brumes/sem`
+- Prix: `9.99 EUR` - Récurrent (weekly)
+- **Note le Price ID** → `price_cupidon_weekly`
+
+#### CUPIDON Mois (31.99€/mois)
+- Nom: `Flou CUPIDON - Mensuel`
+- Prix: `31.99 EUR` - Récurrent (monthly)
+- **Note le Price ID** → `price_cupidon_monthly`
+
+---
+
+### Abonnements ELITE 👑
+
+#### ELITE Semaine (14.99€/semaine)
+- Nom: `Flou ELITE - Hebdomadaire`
+- Description: `Tout CUPIDON + Coach dating humain, Visibilité MAX, +250 Brumes/sem`
 - Prix: `14.99 EUR` - Récurrent (weekly)
-- **Note le Price ID**
+- **Note le Price ID** → `price_elite_weekly`
 
-### Packs de Brumes
+#### ELITE Mois (47.99€/mois)
+- Nom: `Flou ELITE - Mensuel`
+- Prix: `47.99 EUR` - Récurrent (monthly)
+- **Note le Price ID** → `price_elite_monthly`
 
-#### 💎 50 Brumes (1.99€)
+---
+
+### Packs de Brumes 💎
+
+#### 50 Brumes (4.99€)
 - Nom: `50 Brumes`
-- Prix: `1.99 EUR` - Paiement unique
-- Metadata: `brumes_amount: 50`
+- Prix: `4.99 EUR` - Paiement unique
+- **Note le Price ID** → `price_brumes_50`
 
-#### 💎 100 Brumes (3.99€)
+#### 100 Brumes (9.99€)
 - Nom: `100 Brumes`  
-- Prix: `3.99 EUR` - Paiement unique
-- Metadata: `brumes_amount: 100`
+- Prix: `9.99 EUR` - Paiement unique
+- **Note le Price ID** → `price_brumes_100`
 
-#### 💎 200 Brumes (6.99€)
-- Nom: `200 Brumes`
-- Prix: `6.99 EUR` - Paiement unique
-- Metadata: `brumes_amount: 200`
+#### 250 Brumes (19.99€) - +10% Bonus
+- Nom: `250 Brumes`
+- Prix: `19.99 EUR` - Paiement unique
+- **Note le Price ID** → `price_brumes_250`
 
-#### 💎 500 Brumes (14.99€)
+#### 500 Brumes (34.99€) - +20% Bonus
 - Nom: `500 Brumes`
-- Prix: `14.99 EUR` - Paiement unique
-- Metadata: `brumes_amount: 500`
+- Prix: `34.99 EUR` - Paiement unique
+- **Note le Price ID** → `price_brumes_500`
 
 ---
 
