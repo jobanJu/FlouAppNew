@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Règlement des Brumes - Flou</title>
+  <title>Règlement des Brumes & Abonnements - Flou</title>
   <style>
     :root {
       --primary: #8B5CF6;
@@ -11,13 +11,16 @@
       --card-bg: #1E1E32;
       --text: #F5F5F5;
       --text-muted: #9CA3AF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
       padding: 20px;
       max-width: 800px;
       margin: 0 auto;
@@ -29,7 +32,7 @@
       font-size: 2rem;
       margin-bottom: 10px;
     }
-    .subtitle { color: var(--text-muted); margin-bottom: 30px; }
+    .subtitle { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
     .section {
       background: var(--card-bg);
       border-radius: 16px;
@@ -42,8 +45,9 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      color: #A78BFA;
     }
-    h3 { font-size: 1.1rem; margin: 16px 0 10px; color: #A78BFA; }
+    h3 { font-size: 1.1rem; margin: 20px 0 12px; color: #EC4899; }
     p { margin-bottom: 12px; }
     ul { margin-left: 20px; margin-bottom: 16px; }
     li { margin-bottom: 8px; }
@@ -55,8 +59,22 @@
       margin: 16px 0;
     }
     .warning {
+      background: rgba(245, 158, 11, 0.2);
+      border-left: 4px solid var(--warning);
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+    }
+    .danger {
       background: rgba(239, 68, 68, 0.2);
-      border-left: 4px solid #EF4444;
+      border-left: 4px solid var(--danger);
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+    }
+    .success {
+      background: rgba(16, 185, 129, 0.2);
+      border-left: 4px solid var(--success);
       padding: 16px;
       border-radius: 0 12px 12px 0;
       margin: 16px 0;
@@ -81,174 +99,335 @@
       margin-bottom: 20px;
     }
     .emoji { font-size: 1.4rem; }
+    .taux-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .taux-card {
+      background: rgba(139, 92, 246, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .taux-card.achat { border: 2px solid var(--success); }
+    .taux-card.retrait { border: 2px solid var(--warning); }
+    .taux-value { font-size: 1.8rem; font-weight: 700; margin: 10px 0; }
+    .taux-label { color: var(--text-muted); font-size: 0.9rem; }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .nav-links a {
+      background: var(--card-bg);
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .nav-links a:hover { background: var(--primary); }
   </style>
 </head>
 <body>
   <a href="/" class="back-btn">← Retour à l'application</a>
   
-  <h1>💎 Règlement des Brumes</h1>
-  <p class="subtitle">Conditions d'utilisation de la monnaie virtuelle Flou</p>
+  <h1>💎 Règlement des Brumes & Abonnements</h1>
+  <p class="subtitle">Conditions Générales d'Utilisation - Flou</p>
   
-  <div class="section">
-    <h2><span class="emoji">📜</span> Article 1 - Définitions</h2>
-    <p><strong>« Brumes »</strong> : Monnaie virtuelle utilisée exclusivement sur la plateforme Flou, permettant d'acheter des fonctionnalités premium et d'envoyer des cadeaux virtuels.</p>
-    <p><strong>« Créateur »</strong> : Utilisateur diffusant des Lives et pouvant recevoir des Brumes sous forme de cadeaux.</p>
-    <p><strong>« Cadeau »</strong> : Élément virtuel qu'un utilisateur peut envoyer à un créateur pendant un Live.</p>
+  <div class="nav-links">
+    <a href="#taux">💱 Taux officiels</a>
+    <a href="#brumes">💎 CGU Brumes</a>
+    <a href="#createurs">👤 CGU Créateurs</a>
+    <a href="#abonnements">⭐ Abonnements</a>
   </div>
 
-  <div class="section">
-    <h2><span class="emoji">💰</span> Article 2 - Acquisition des Brumes</h2>
-    <h3>2.1 Méthodes d'acquisition</h3>
-    <ul>
-      <li><strong>Achat direct</strong> : Via la boutique de l'application aux tarifs en vigueur</li>
-      <li><strong>Bonus d'inscription</strong> : 10 Brumes offertes à la création du compte</li>
-      <li><strong>Bonus abonnement</strong> : 50 Brumes/semaine (Kama) ou 150 Brumes/semaine (Cupidon)</li>
-      <li><strong>Réception de cadeaux</strong> : En tant que créateur de Live</li>
-    </ul>
+  <!-- SECTION TAUX OFFICIELS -->
+  <div class="section" id="taux">
+    <h2><span class="emoji">💱</span> Taux Officiels des Brumes (FIGÉS)</h2>
     
-    <h3>2.2 Tarifs d'achat</h3>
-    <table>
-      <tr><th>Brumes</th><th>Prix</th><th>Bonus</th></tr>
-      <tr><td>50 💎</td><td>5,00 €</td><td>-</td></tr>
-      <tr><td>100 💎</td><td>10,00 €</td><td>-</td></tr>
-      <tr><td>200 💎</td><td>20,00 €</td><td>+5%</td></tr>
-      <tr><td>500 💎</td><td>45,00 €</td><td>+10%</td></tr>
-    </table>
+    <div class="taux-box">
+      <div class="taux-card achat">
+        <div class="taux-label">🔹 ACHAT (utilisateurs)</div>
+        <div class="taux-value">1€ = 800 💎</div>
+        <div class="taux-label">Taux d'acquisition</div>
+      </div>
+      <div class="taux-card retrait">
+        <div class="taux-label">🔹 RETRAIT (créateurs)</div>
+        <div class="taux-value">1€ = 1 000 💎</div>
+        <div class="taux-label">Taux de conversion</div>
+      </div>
+    </div>
     
     <div class="highlight">
-      <strong>Important :</strong> Les Brumes achetées ne sont ni remboursables, ni transférables à d'autres utilisateurs (hors cadeaux Live).
+      <strong>👉 Différence volontaire et assumée :</strong>
+      <ul style="margin-top: 10px; margin-bottom: 0;">
+        <li>Couvre les frais (stores, infrastructure, fraude)</li>
+        <li>Protège la rentabilité de la plateforme</li>
+        <li>Standard sur les plateformes de live streaming</li>
+      </ul>
     </div>
-  </div>
 
-  <div class="section">
-    <h2><span class="emoji">🎁</span> Article 3 - Utilisation des Brumes</h2>
-    <h3>3.1 Fonctionnalités premium</h3>
+    <h3>💶 Seuil minimum de retrait</h3>
     <table>
-      <tr><th>Action</th><th>Coût</th></tr>
-      <tr><td>🎤 Messages Vocaux</td><td>100 💎</td></tr>
-      <tr><td>📱 Déblocage Réseaux Sociaux</td><td>100 💎</td></tr>
-      <tr><td>✨ Déflouttage Partiel</td><td>100 💎</td></tr>
-      <tr><td>🚀 Boost de Profil (20 min)</td><td>300 💎</td></tr>
-      <tr><td>🎥 Bio Vidéo Premium</td><td>300 💎</td></tr>
+      <tr>
+        <th>Condition</th>
+        <th>Valeur</th>
+      </tr>
+      <tr>
+        <td>Seuil minimum</td>
+        <td><strong>5 000 💎 Brumes</strong> (soit 5€)</td>
+      </tr>
+      <tr>
+        <td>Délai de traitement</td>
+        <td>7 à 14 jours ouvrés</td>
+      </tr>
+      <tr>
+        <td>Plafond mensuel</td>
+        <td>500€ / créateur (au lancement)</td>
+      </tr>
     </table>
-    
-    <h3>3.2 Cadeaux Live</h3>
-    <table>
-      <tr><th>Cadeau</th><th>Coût</th></tr>
-      <tr><td>❤️ Coeur</td><td>5 💎</td></tr>
-      <tr><td>🌹 Rose</td><td>10 💎</td></tr>
-      <tr><td>💋 Bisou</td><td>15 💎</td></tr>
-      <tr><td>⭐ Étoile</td><td>20 💎</td></tr>
-      <tr><td>💎 Diamant</td><td>50 💎</td></tr>
-      <tr><td>👑 Couronne</td><td>100 💎</td></tr>
-      <tr><td>🌈 Arc-en-ciel</td><td>75 💎</td></tr>
-      <tr><td>🍾 Champagne</td><td>150 💎</td></tr>
-      <tr><td>🚀 Fusée</td><td>200 💎</td></tr>
-      <tr><td>🦄 Licorne</td><td>300 💎</td></tr>
-    </table>
-  </div>
-
-  <div class="section">
-    <h2><span class="emoji">💶</span> Article 4 - Conversion Brumes → Euros (Créateurs)</h2>
-    
-    <h3>4.1 Taux de conversion</h3>
-    <div class="highlight">
-      <strong>Taux fixe :</strong> 100 Brumes = 0,50 € (après commission Flou de 20%)
-    </div>
-    <p>Lorsqu'un utilisateur envoie un cadeau, le créateur reçoit <strong>80%</strong> de la valeur en Brumes. Les 20% restants constituent la commission Flou.</p>
-    
-    <h3>4.2 Conditions de conversion</h3>
-    <ul>
-      <li><strong>Minimum :</strong> 1 000 Brumes (équivalent 5,00 €)</li>
-      <li><strong>Délai de traitement :</strong> 5 à 10 jours ouvrés après vérification</li>
-      <li><strong>Fréquence :</strong> Maximum 1 demande par semaine</li>
-    </ul>
-    
-    <h3>4.3 Procédure de vérification obligatoire</h3>
-    <p>Pour garantir la sécurité des transactions et respecter les obligations légales anti-blanchiment, la première conversion nécessite :</p>
-    <ol>
-      <li><strong>Appel téléphonique</strong> de vérification par l'équipe Flou</li>
-      <li><strong>Envoi d'une pièce d'identité</strong> (CNI ou passeport) en cours de validité</li>
-      <li><strong>Signature électronique</strong> de l'accord de transparence et anti-fraude</li>
-      <li><strong>Validation des coordonnées bancaires</strong> via lien sécurisé Revolut</li>
-    </ol>
     
     <div class="warning">
-      <strong>⚠️ Attention :</strong> Toute tentative de fraude, blanchiment d'argent ou utilisation de faux documents entraînera la suspension immédiate du compte et le signalement aux autorités compétentes.
+      <strong>⏳ Important :</strong> En dessous de 5 000 Brumes, le retrait est impossible. Flou peut ajuster ces seuils à tout moment.
     </div>
   </div>
 
-  <div class="section">
-    <h2><span class="emoji">🔒</span> Article 5 - Sécurité et Conformité</h2>
+  <!-- SECTION CGU BRUMES -->
+  <div class="section" id="brumes">
+    <h2><span class="emoji">💎</span> CGU Brumes & Abonnements</h2>
     
-    <h3>5.1 Protection des données bancaires</h3>
-    <p>Les informations bancaires sont :</p>
+    <h3>Article 1 — Abonnements</h3>
+    <p>Flou propose des abonnements hebdomadaires et mensuels :</p>
+    <table>
+      <tr>
+        <th>Formule</th>
+        <th>Prix/sem</th>
+        <th>Prix/mois</th>
+        <th>Brumes incluses</th>
+      </tr>
+      <tr>
+        <td>🔵 KAMA</td>
+        <td>4,99€</td>
+        <td>15,99€</td>
+        <td>+50 💎/sem</td>
+      </tr>
+      <tr>
+        <td>💜 CUPIDON</td>
+        <td>9,99€</td>
+        <td>31,99€</td>
+        <td>+150 💎/sem</td>
+      </tr>
+      <tr>
+        <td>👑 ELITE</td>
+        <td>14,99€</td>
+        <td>47,99€</td>
+        <td>+250 💎/sem</td>
+      </tr>
+    </table>
+    <p>Les avantages sont accessibles <strong>uniquement pendant la durée active</strong> de l'abonnement.</p>
+
+    <h3>Article 2 — Paiement & renouvellement</h3>
+    <p>Les abonnements :</p>
     <ul>
-      <li>Chiffrées selon la norme AES-256</li>
-      <li>Stockées sur des serveurs sécurisés conformes RGPD</li>
-      <li>Jamais partagées avec des tiers non autorisés</li>
-      <li>Traitées via notre partenaire Revolut Pro (agrée ACPR)</li>
+      <li>Sont payants via Stripe (carte bancaire)</li>
+      <li>Se renouvellent automatiquement à échéance</li>
+      <li>Peuvent être résiliés à tout moment depuis la plateforme d'achat</li>
     </ul>
+    <div class="warning">
+      <strong>⚠️ Toute période entamée est due.</strong>
+    </div>
+
+    <h3>Article 3 — Non-remboursement</h3>
+    <p>Les abonnements et Brumes sont :</p>
+    <ul>
+      <li><strong>Non remboursables</strong></li>
+      <li>Non échangeables</li>
+      <li>Non transférables</li>
+    </ul>
+    <div class="danger">
+      <strong>👉 Aucune erreur de manipulation, utilisation par un tiers ou par un mineur ne peut justifier un remboursement</strong>, sauf obligation légale expresse.
+    </div>
+
+    <h3>Article 4 — Suspension pour infraction</h3>
+    <p>En cas de violation des règles :</p>
+    <ul>
+      <li>L'abonnement peut être suspendu ou résilié</li>
+      <li>Sans remboursement</li>
+      <li>Même si la période n'est pas écoulée</li>
+    </ul>
+
+    <h3>Article 5 — Utilisation abusive des Brumes</h3>
+    <p>Tout outrage, harcèlement ou abus peut entraîner :</p>
+    <ul>
+      <li>Retrait ou gel des Brumes</li>
+      <li>Redistribution partielle ou totale à la ou aux victimes</li>
+      <li>Suspension ou suppression du compte</li>
+    </ul>
+    <p>Flou se réserve le droit d'apprécier chaque situation.</p>
+
+    <h3>Article 6 — Modération & recours</h3>
+    <p>Les décisions sont prises sur la base des éléments disponibles. L'utilisateur peut demander un réexamen via le support, <strong>sans garantie de modification</strong>.</p>
+
+    <h3>Article 7 — Acceptation</h3>
+    <p>L'utilisation de Flou implique l'acceptation pleine et entière :</p>
+    <ul>
+      <li>Des présentes CGU</li>
+      <li>Des règles Brumes</li>
+      <li>Des règles Créateurs</li>
+    </ul>
+    <div class="danger">
+      <strong>Tout refus implique l'arrêt immédiat de l'utilisation de l'application.</strong>
+    </div>
+  </div>
+
+  <!-- SECTION CGU CRÉATEURS -->
+  <div class="section" id="createurs">
+    <h2><span class="emoji">👤</span> CGU Créateurs</h2>
     
-    <h3>5.2 Lutte anti-fraude et anti-blanchiment</h3>
-    <p>Conformément aux réglementations européennes (5e directive AML), Flou :</p>
+    <h3>Article 1 — Statut du créateur</h3>
+    <p>Le créateur est un utilisateur disposant d'un compte Flou actif, autorisé à recevoir des Brumes via :</p>
     <ul>
-      <li>Vérifie l'identité de tout créateur demandant une conversion</li>
-      <li>Surveille les transactions inhabituelles</li>
-      <li>Signale toute activité suspecte aux autorités (TRACFIN)</li>
-      <li>Se réserve le droit de bloquer les fonds en cas de doute</li>
+      <li>Cadeaux virtuels</li>
+      <li>Interactions live</li>
+      <li>Soutiens volontaires d'utilisateurs</li>
     </ul>
+    <div class="highlight">
+      <strong>Le créateur agit en son nom propre</strong> et n'est ni salarié, ni représentant de Flou.
+    </div>
+
+    <h3>Article 2 — Nature des Brumes</h3>
+    <p>Les Brumes sont une <strong>monnaie virtuelle interne</strong> :</p>
+    <ul>
+      <li>Sans valeur légale</li>
+      <li>Non cessible hors Flou</li>
+      <li>Non remboursable</li>
+    </ul>
+    <p>La conversion en euros est une <strong>faculté conditionnelle</strong>, non un droit automatique.</p>
+
+    <h3>Article 3 — Conditions d'éligibilité au cash-out</h3>
+    <p>Un créateur peut demander un retrait uniquement s'il :</p>
+    <ul>
+      <li>✅ Atteint le seuil minimum requis (5 000 💎)</li>
+      <li>✅ A un compte conforme et non sanctionné</li>
+      <li>✅ Accepte les procédures de vérification</li>
+      <li>✅ Fournit des informations exactes</li>
+    </ul>
+    <div class="warning">
+      <strong>Flou se réserve le droit de refuser une demande sans justification publique.</strong>
+    </div>
+
+    <h3>Article 4 — Procédure de retrait sécurisée</h3>
+    <p>Le retrait comprend <strong>obligatoirement</strong> :</p>
+    <ol style="margin-left: 20px; margin-bottom: 16px;">
+      <li>Une demande in-app</li>
+      <li>Un appel de vérification humaine</li>
+      <li>La signature d'un accord de transparence & anti-fraude</li>
+      <li>Une vérification d'identité (CNI / passeport + selfie)</li>
+      <li>Un paiement via un prestataire bancaire tiers (ex : Revolut Pro)</li>
+    </ol>
+    <div class="success">
+      <strong>👉 Flou ne collecte ni ne stocke aucune donnée bancaire.</strong>
+    </div>
+
+    <h3>Article 5 — Lutte contre la fraude & blanchiment</h3>
+    <p>Le créateur déclare sur l'honneur :</p>
+    <ul>
+      <li>Que les Brumes proviennent d'une activité licite</li>
+      <li>Ne pas utiliser Flou à des fins frauduleuses</li>
+      <li>Accepter tout contrôle raisonnable</li>
+    </ul>
+    <p><strong>Flou peut :</strong></p>
+    <ul>
+      <li>Geler les Brumes</li>
+      <li>Différer ou annuler un paiement</li>
+      <li>Transmettre des éléments aux autorités si requis par la loi</li>
+    </ul>
+
+    <h3>Article 6 — Sanctions</h3>
+    <p>En cas de fraude, abus ou violation :</p>
+    <ul>
+      <li>🚫 Retrait ou gel des Brumes</li>
+      <li>🚫 Annulation des gains</li>
+      <li>🚫 Suspension ou suppression du compte</li>
+      <li>🚫 Interdiction définitive de cash-out</li>
+    </ul>
+    <div class="danger">
+      <strong>Aucun retrait annulé pour infraction ne donne lieu à indemnisation.</strong>
+    </div>
+
+    <h3>Article 7 — Responsabilité</h3>
+    <p>Flou agit comme <strong>intermédiaire technique</strong>. Le paiement est exécuté par un prestataire externe.</p>
+    <p>Flou ne saurait être tenu responsable :</p>
+    <ul>
+      <li>Des délais bancaires</li>
+      <li>D'un refus de paiement du prestataire</li>
+      <li>D'informations erronées fournies par le créateur</li>
+    </ul>
+  </div>
+
+  <!-- SECTION ABONNEMENTS DÉTAILLÉS -->
+  <div class="section" id="abonnements">
+    <h2><span class="emoji">⭐</span> Détail des formules</h2>
     
-    <h3>5.3 Accord de transparence</h3>
-    <p>Avant tout paiement, le créateur doit signer un accord attestant :</p>
+    <h3>⚪ GRATUIT</h3>
     <ul>
-      <li>L'authenticité de ses informations personnelles</li>
-      <li>La légalité de l'origine des Brumes</li>
-      <li>Son accord pour les vérifications d'identité</li>
-      <li>Son engagement à déclarer ses revenus aux impôts</li>
+      <li>Matches limités / jour</li>
+      <li>Blur niveau standard</li>
+      <li>Messages texte illimités</li>
+      <li>Brumes via activité uniquement</li>
+    </ul>
+
+    <h3>🔵 KAMA — 4,99€/sem ou 15,99€/mois</h3>
+    <ul>
+      <li>20 matches / jour</li>
+      <li>Blur –1 niveau (déblocage accéléré)</li>
+      <li>Messages vocaux inclus</li>
+      <li>2 Live VS Love / jour</li>
+      <li>Déblocage réseaux : 50 💎 (au lieu de 100)</li>
+      <li>+50 💎 Brumes / semaine</li>
+      <li>Badge KAMA ⭐ sur profil</li>
+    </ul>
+
+    <h3>💜 CUPIDON — 9,99€/sem ou 31,99€/mois</h3>
+    <ul>
+      <li>✅ Matches illimités</li>
+      <li>✅ Blur –2 niveaux (déblocage rapide)</li>
+      <li>✅ Vocaux illimités</li>
+      <li>✅ Live VS Love illimités</li>
+      <li>✅ Déblocage réseaux GRATUIT</li>
+      <li>✅ +150 💎 Brumes / semaine</li>
+      <li>✅ Badge CUPIDON ⭐⭐⭐ sur profil</li>
+      <li>✅ Bio vidéo incluse</li>
+      <li>✅ 🤖 Assistant IA messages</li>
+      <li>✅ Priorité visibilité + Boosts gratuits</li>
+    </ul>
+
+    <h3>👑 CUPIDON ELITE — 14,99€/sem ou 47,99€/mois</h3>
+    <ul>
+      <li>✅ Tout CUPIDON +</li>
+      <li>✅ +250 💎 Brumes / semaine</li>
+      <li>✅ Badge ELITE animé 👑 ⭐⭐⭐⭐⭐</li>
+      <li>✅ 👨‍💼 Coach dating humain (WhatsApp)</li>
+      <li>✅ Accompagnement personnalisé 1-to-1</li>
+      <li>✅ Live VS Love prioritaire</li>
+      <li>✅ Visibilité MAXIMALE</li>
+      <li>✅ Boost quotidien garanti</li>
     </ul>
   </div>
 
   <div class="section">
-    <h2><span class="emoji">⚖️</span> Article 6 - Fiscalité</h2>
-    <p>Les revenus générés par la conversion de Brumes sont imposables. Le créateur est seul responsable de la déclaration de ses revenus auprès des autorités fiscales de son pays de résidence.</p>
-    <p>Pour les résidents français, les revenus doivent être déclarés en tant que :</p>
-    <ul>
-      <li><strong>Micro-BNC</strong> si activité occasionnelle</li>
-      <li><strong>Auto-entrepreneur</strong> si activité régulière</li>
-    </ul>
-    <p>Flou fournira un récapitulatif annuel des sommes versées à chaque créateur.</p>
+    <h2><span class="emoji">📧</span> Contact</h2>
+    <p>Pour toute question relative aux Brumes ou aux CGU :</p>
+    <p><strong>Email :</strong> support@flou-app.fr</p>
+    <p style="color: var(--text-muted); margin-top: 20px; font-size: 0.9rem;">
+      Dernière mise à jour : Janvier 2026<br>
+      © 2026 Flou - Tous droits réservés
+    </p>
   </div>
 
-  <div class="section">
-    <h2><span class="emoji">🚫</span> Article 7 - Restrictions</h2>
-    <ul>
-      <li>Les Brumes ne peuvent pas être revendues en dehors de la plateforme</li>
-      <li>Les Brumes n'ont aucune valeur en dehors de Flou</li>
-      <li>Un compte ne peut demander qu'une seule conversion par semaine</li>
-      <li>Les Brumes obtenues de manière frauduleuse seront confisquées</li>
-      <li>Flou se réserve le droit de modifier les taux de conversion avec un préavis de 30 jours</li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2><span class="emoji">📞</span> Article 8 - Contact et Réclamations</h2>
-    <p>Pour toute question relative aux Brumes :</p>
-    <ul>
-      <li>Email : brumes@flouapp.fr</li>
-      <li>Support in-app : Profil → Aide → Brumes</li>
-    </ul>
-    <p>Délai de réponse : 48h ouvrées maximum</p>
-  </div>
-
-  <div class="section">
-    <h2><span class="emoji">📅</span> Article 9 - Entrée en vigueur</h2>
-    <p>Ce règlement entre en vigueur le <strong>8 janvier 2026</strong>.</p>
-    <p>Dernière mise à jour : 8 janvier 2026</p>
-  </div>
-
-  <p style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 0.9rem;">
-    © 2026 Flou - Tous droits réservés
-  </p>
 </body>
 </html>
