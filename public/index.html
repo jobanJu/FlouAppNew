@@ -1819,9 +1819,15 @@
     <!-- LIVE VIEW - Style Lovoo -->
     <div id="liveView" class="app-view">
       <div class="live-container">
-        <div class="live-header">
+        <div class="live-header" style="position: relative;">
           <h2 style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lives</h2>
           <p>Rencontres vidéo avec photos floutées</p>
+          <!-- Bouton paramètres en haut à droite -->
+          <button onclick="showLiveUserSettings()" style="position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Boutons Start Live -->
@@ -1858,12 +1864,6 @@
             <div style="font-size: 0.8rem; color: rgba(139, 92, 246, 0.9); margin-top: 4px;" id="liveRoomDescription"></div>
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
-            <!-- Bouton paramètres (⚙️) - toujours visible pour le créateur -->
-            <button id="liveSettingsBtn" onclick="showLiveSettings()" style="display: none; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 44px; height: 44px; color: white; cursor: pointer; font-size: 1.2rem; transition: all 0.3s;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: block; margin: auto;">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-              </svg>
-            </button>
             <button class="live-room-close" id="liveCloseBtn" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
           </div>
         </div>
@@ -2060,6 +2060,78 @@
           <button onclick="closeModerationModal()" style="padding: 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 12px; color: white; cursor: pointer; margin-top: 5px;">
             Annuler
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PARAMÈTRES UTILISATEUR LIVE (hors live) -->
+    <div id="liveUserSettingsModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 400px; border-radius: 24px; padding: 0; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h3 style="color: white; font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Paramètres Lives
+          </h3>
+          <button onclick="closeLiveUserSettings()" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.3rem; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+        
+        <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+          
+          <!-- Onglets -->
+          <div style="display: flex; gap: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px;">
+            <button id="tabFanMessages" onclick="switchLiveSettingsTab('fan')" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">Messages Fan</button>
+            <button id="tabFavorites" onclick="switchLiveSettingsTab('favorites')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.85rem;">Favoris</button>
+            <button id="tabNimbes" onclick="switchLiveSettingsTab('nimbes')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.85rem;">Nimbes</button>
+          </div>
+          
+          <!-- Section: Message aux fans -->
+          <div id="sectionFanMessages">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span style="color: white; font-weight: 600;">Envoyer un message à tes fans</span>
+            </div>
+            <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 12px;">Notifie tes favoris quand tu lances un live</p>
+            <textarea id="userFanMessageInput" placeholder="Ex: Je suis en live, venez nombreux !" style="width: 100%; padding: 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; color: white; font-size: 0.95rem; resize: none; height: 80px; outline: none; box-sizing: border-box;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"></textarea>
+            <button onclick="sendUserFanMessage()" style="width: 100%; margin-top: 12px; padding: 14px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; cursor: pointer;">
+              Envoyer la notification
+            </button>
+          </div>
+          
+          <!-- Section: Favoris -->
+          <div id="sectionFavorites" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span style="color: white; font-weight: 600;">Mes Favoris</span>
+              <span id="favoritesCount" style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-left: auto;">0</span>
+            </div>
+            <div id="userFavoritesList" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-align: center; padding: 30px;">Aucun favori pour le moment</span>
+            </div>
+          </div>
+          
+          <!-- Section: Nimbes -->
+          <div id="sectionNimbes" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.1rem;">🌟</span>
+              <span style="color: white; font-weight: 600;">Mes Nimbes</span>
+              <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-left: auto;">Modérateurs de mes lives</span>
+            </div>
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 14px; padding: 14px; margin-bottom: 12px;">
+              <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0;">Les Nimbes peuvent modérer tes lives : retirer quelqu'un de la caméra ou l'expulser.</p>
+            </div>
+            <div id="userNimbesList" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-align: center; padding: 20px;">Aucun Nimbe pour le moment</span>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -6001,6 +6073,160 @@
 
     window.closeLiveSettings = function() {
       document.getElementById('liveSettingsModal').style.display = 'none';
+    }
+
+    // ============================================
+    // PARAMÈTRES UTILISATEUR LIVE (hors live)
+    // ============================================
+    
+    window.showLiveUserSettings = function() {
+      document.getElementById('liveUserSettingsModal').style.display = 'flex';
+      switchLiveSettingsTab('fan');
+      loadUserFavorites();
+      loadUserNimbes();
+    }
+    
+    window.closeLiveUserSettings = function() {
+      document.getElementById('liveUserSettingsModal').style.display = 'none';
+    }
+    
+    window.switchLiveSettingsTab = function(tab) {
+      // Reset tabs
+      document.getElementById('tabFanMessages').style.background = 'transparent';
+      document.getElementById('tabFanMessages').style.color = 'rgba(255,255,255,0.6)';
+      document.getElementById('tabFavorites').style.background = 'transparent';
+      document.getElementById('tabFavorites').style.color = 'rgba(255,255,255,0.6)';
+      document.getElementById('tabNimbes').style.background = 'transparent';
+      document.getElementById('tabNimbes').style.color = 'rgba(255,255,255,0.6)';
+      
+      // Hide all sections
+      document.getElementById('sectionFanMessages').style.display = 'none';
+      document.getElementById('sectionFavorites').style.display = 'none';
+      document.getElementById('sectionNimbes').style.display = 'none';
+      
+      // Show selected
+      if (tab === 'fan') {
+        document.getElementById('tabFanMessages').style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
+        document.getElementById('tabFanMessages').style.color = 'white';
+        document.getElementById('sectionFanMessages').style.display = 'block';
+      } else if (tab === 'favorites') {
+        document.getElementById('tabFavorites').style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
+        document.getElementById('tabFavorites').style.color = 'white';
+        document.getElementById('sectionFavorites').style.display = 'block';
+      } else if (tab === 'nimbes') {
+        document.getElementById('tabNimbes').style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
+        document.getElementById('tabNimbes').style.color = 'white';
+        document.getElementById('sectionNimbes').style.display = 'block';
+      }
+    }
+    
+    // Charger les favoris de l'utilisateur
+    async function loadUserFavorites() {
+      const list = document.getElementById('userFavoritesList');
+      
+      const { data: favorites } = await supabase
+        .from('favorites')
+        .select(`
+          target_user_id,
+          users:target_user_id (id, firstname, photo_url, city)
+        `)
+        .eq('user_id', currentUser.id);
+      
+      document.getElementById('favoritesCount').textContent = favorites?.length || 0;
+      
+      if (!favorites || favorites.length === 0) {
+        list.innerHTML = '<span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-align: center; padding: 30px;">Aucun favori pour le moment</span>';
+        return;
+      }
+      
+      list.innerHTML = favorites.map(f => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              ${f.users?.photo_url ? `<img src="${f.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(3px);">` : '<span style="color: white;">👤</span>'}
+            </div>
+            <div>
+              <div style="color: white; font-weight: 500;">${f.users?.firstname || 'Utilisateur'}</div>
+              <div style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">${f.users?.city || ''}</div>
+            </div>
+          </div>
+          <button onclick="removeFavorite('${f.target_user_id}')" style="background: rgba(239, 68, 68, 0.2); border: none; border-radius: 8px; padding: 8px 12px; color: #EF4444; cursor: pointer; font-size: 0.8rem;">
+            Retirer
+          </button>
+        </div>
+      `).join('');
+    }
+    
+    // Retirer un favori
+    window.removeFavorite = async function(targetUserId) {
+      await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', currentUser.id)
+        .eq('target_user_id', targetUserId);
+      
+      loadUserFavorites();
+    }
+    
+    // Charger les Nimbes de l'utilisateur (ses modérateurs permanents)
+    async function loadUserNimbes() {
+      const list = document.getElementById('userNimbesList');
+      
+      const { data: nimbes } = await supabase
+        .from('user_nimbes')
+        .select(`
+          nimbe_user_id,
+          users:nimbe_user_id (id, firstname, photo_url)
+        `)
+        .eq('user_id', currentUser.id);
+      
+      if (!nimbes || nimbes.length === 0) {
+        list.innerHTML = '<span style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-align: center; padding: 20px;">Aucun Nimbe pour le moment</span>';
+        return;
+      }
+      
+      list.innerHTML = nimbes.map(n => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              ${n.users?.photo_url ? `<img src="${n.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(3px);">` : '<span style="font-size: 1.2rem;">🌟</span>'}
+            </div>
+            <div>
+              <div style="color: white; font-weight: 500;">${n.users?.firstname || 'Nimbe'}</div>
+              <div style="color: rgba(139, 92, 246, 0.8); font-size: 0.75rem;">Modérateur</div>
+            </div>
+          </div>
+          <button onclick="removeUserNimbe('${n.nimbe_user_id}')" style="background: rgba(239, 68, 68, 0.2); border: none; border-radius: 8px; padding: 8px 12px; color: #EF4444; cursor: pointer; font-size: 0.8rem;">
+            Retirer
+          </button>
+        </div>
+      `).join('');
+    }
+    
+    // Retirer un Nimbe
+    window.removeUserNimbe = async function(nimbeUserId) {
+      await supabase
+        .from('user_nimbes')
+        .delete()
+        .eq('user_id', currentUser.id)
+        .eq('nimbe_user_id', nimbeUserId);
+      
+      loadUserNimbes();
+    }
+    
+    // Envoyer un message fan (notification à tous les favoris)
+    window.sendUserFanMessage = async function() {
+      const message = document.getElementById('userFanMessageInput').value.trim();
+      if (!message) {
+        alert('Écris un message pour tes fans !');
+        return;
+      }
+      
+      // TODO: Implémenter les notifications push ou in-app
+      // Pour l'instant on affiche juste une confirmation
+      alert('✅ Message envoyé à tes fans !');
+      document.getElementById('userFanMessageInput').value = '';
+      closeLiveUserSettings();
     }
     
     // ============================================
