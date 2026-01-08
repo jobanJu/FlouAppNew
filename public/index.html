@@ -4919,8 +4919,7 @@
         
         currentLiveHostId = live.host_id;
         
-        // Afficher le bouton paramètres pour le créateur
-        document.getElementById('liveSettingsBtn').style.display = 'flex';
+        // Bouton Fermer pour le créateur
         document.getElementById('liveCloseBtn').textContent = '✕ Fermer le live';
         document.getElementById('liveCloseBtn').style.background = '#DC2626';
         
@@ -5124,8 +5123,7 @@
         const isNimbe = existingRole?.role === 'nimbe';
         const isHost = currentUser.id === live.host_id;
         
-        // Afficher le bouton paramètres si Host ou Nimbe
-        document.getElementById('liveSettingsBtn').style.display = (isHost || isNimbe) ? 'flex' : 'none';
+        // Bouton Quitter pour spectateur
         document.getElementById('liveCloseBtn').textContent = 'Quitter';
         document.getElementById('liveCloseBtn').style.background = '#EF4444';
         
