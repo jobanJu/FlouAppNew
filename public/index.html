@@ -2139,18 +2139,52 @@
       if (!currentUser) {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) currentUser = session.user;
-        else return;
+        else {
+          console.error('No session found');
+          return;
+        }
       }
       
       try {
+        console.log('Loading profile for user:', currentUser.id);
+        
         const { data, error } = await supabase
           .from('users')
           .select('*')
           .eq('id', currentUser.id)
           .single();
         
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          // Si l'utilisateur n'existe pas, on initialise avec des valeurs par défaut
+          if (error.code === 'PGRST116') {
+            console.log('User not found in database, initializing empty form');
+            editProfileData = { interests: [] };
+            document.getElementById('editFirstname').value = '';
+            document.getElementById('editAge').value = '';
+            document.getElementById('editCity').value = '';
+            document.getElementById('editCatchphrase').value = '';
+            document.getElementById('editBio').value = '';
+            document.getElementById('editGender').value = '';
+            document.getElementById('editSeeking').value = '';
+            document.getElementById('editCatchphraseCount').textContent = '0';
+            document.getElementById('editBioCount').textContent = '0';
+            document.getElementById('editProfilePhoto').src = '/assets/images/default-avatar.png';
+            
+            // Render empty interests
+            const grid = document.getElementById('editInterestsGrid');
+            if (grid) {
+              grid.innerHTML = interests.map(interest => {
+                return `<span class="interest-tag" onclick="toggleEditInterest(this, '${interest}')" style="cursor: pointer; padding: 10px 16px; border-radius: 20px; font-size: 0.85rem; transition: all 0.2s; background: var(--bg-secondary); color: var(--text); border: 1.5px solid var(--border);">${interest}</span>`;
+              }).join('');
+            }
+            updateInterestCount();
+            return;
+          }
+          throw error;
+        }
         
+        console.log('Profile data loaded:', data);
         editProfileData = { ...data };
         
         // Fill all form fields
@@ -2188,8 +2222,7 @@
         updateInterestCount();
         
       } catch (error) { 
-        console.error('Load edit profile error:', error); 
-        alert('Erreur lors du chargement du profil');
+        console.error('Load edit profile error:', error);
       }
     }
 
