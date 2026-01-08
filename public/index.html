@@ -2849,19 +2849,25 @@
 
     window.createUserProfile = async function(user) {
       try {
+        console.log('📝 Creating profile for user:', user.id);
+        console.log('📋 Form data:', formData);
+        
         let photoUrl = null;
         if (formData.photoFile) {
           const fileName = `${user.id}_${Date.now()}.${formData.photoFile.name.split('.').pop()}`;
           const { data: fileData, error: uploadError } = await supabase.storage
             .from('user-photos')
-            .upload(fileName, formData.photoFile);
+            .upload(fileName, formData.photoFile, { upsert: true });
           if (!uploadError) {
             const { data: { publicUrl } } = supabase.storage.from('user-photos').getPublicUrl(fileName);
             photoUrl = publicUrl;
+            console.log('📸 Photo uploaded:', photoUrl);
+          } else {
+            console.error('❌ Photo upload error:', uploadError);
           }
         }
         
-        const { error: dbError } = await supabase.from('users').insert({
+        const profileData = {
           id: user.id,
           firstname: formData.firstName,
           age: formData.age,
@@ -2873,16 +2879,33 @@
           interests: formData.interests,
           catchphrase: formData.catchphrase,
           bio: formData.bio,
-          email: formData.email,
-          photo_url: photoUrl
-        });
+          email: formData.email || user.email,
+          photo_url: photoUrl,
+          updated_at: new Date().toISOString()
+        };
         
-        if (!dbError) {
-          document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-          document.getElementById('successPage').classList.add('active');
+        console.log('💾 Saving profile data:', profileData);
+        
+        // Use upsert to ensure profile is always saved (insert or update)
+        const { data: savedData, error: dbError } = await supabase
+          .from('users')
+          .upsert(profileData, { onConflict: 'id' })
+          .select()
+          .single();
+        
+        if (dbError) {
+          console.error('❌ Profile save error:', dbError);
+          alert('Erreur lors de la sauvegarde du profil: ' + dbError.message);
+          return;
         }
+        
+        console.log('✅ Profile saved successfully:', savedData);
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('successPage').classList.add('active');
+        
       } catch (error) {
-        console.error('Profile creation error:', error);
+        console.error('❌ Profile creation error:', error);
+        alert('Erreur: ' + error.message);
       }
     }
 
@@ -3109,23 +3132,35 @@
           }
         }
         
-        // Mettre à jour le profil
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({
-            firstname: firstname,
-            age: age,
-            city: city,
-            gender: googleFormData.gender,
-            seeking: googleFormData.seeking,
-            interests: googleSelectedInterests,
-            catchphrase: catchphrase,
-            photo_url: photoUrl,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', currentUser.id);
+        // Mettre à jour le profil avec upsert pour garantir la création
+        const profileData = {
+          id: currentUser.id,
+          email: currentUser.email,
+          firstname: firstname,
+          age: age,
+          city: city,
+          gender: googleFormData.gender,
+          seeking: googleFormData.seeking,
+          interests: googleSelectedInterests,
+          catchphrase: catchphrase,
+          photo_url: photoUrl,
+          updated_at: new Date().toISOString()
+        };
         
-        if (updateError) throw updateError;
+        console.log('💾 Saving Google profile:', profileData);
+        
+        const { data: savedData, error: updateError } = await supabase
+          .from('users')
+          .upsert(profileData, { onConflict: 'id' })
+          .select()
+          .single();
+        
+        if (updateError) {
+          console.error('❌ Profile save error:', updateError);
+          throw updateError;
+        }
+        
+        console.log('✅ Google profile saved:', savedData);
         
         // Succès - aller aux matches
         window.goToMatches();
