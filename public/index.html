@@ -765,30 +765,65 @@
     .profile-label { color: #78716C; font-size: 0.9rem; }
     .profile-value { font-weight: 600; color: #1C1917; }
 
-    /* LIVE - Premium Light Design */
-    .live-container { padding: 20px; max-width: 900px; margin: 0 auto; background: #FAFAF9; }
-    .live-header { text-align: center; margin-bottom: 30px; }
-    .live-header h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; color: #1C1917; }
-    .live-header p { color: #78716C; }
-    .live-create-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 16px; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-bottom: 30px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
-    .live-create-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
-    .live-types { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-    .live-type-card { background: #FFFFFF; border-radius: 20px; padding: 24px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-    .live-type-card:hover { border-color: #8B5CF6; transform: translateY(-4px); box-shadow: 0 8px 25px rgba(139,92,246,0.15); }
-    .live-type-card.selected { border-color: #8B5CF6; background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(236,72,153,0.08)); }
-    .live-type-icon { font-size: 2.5rem; margin-bottom: 10px; }
-    .live-type-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; color: #1C1917; }
-    .live-type-desc { font-size: 0.85rem; color: #78716C; }
-    .live-list { display: grid; gap: 15px; }
-    .live-item { background: #FFFFFF; border-radius: 20px; padding: 20px; cursor: pointer; transition: all 0.3s; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-    .live-item:hover { transform: translateX(5px); border-color: #8B5CF6; box-shadow: 0 8px 25px rgba(139,92,246,0.12); }
-    .live-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .live-item-title { font-size: 1.2rem; font-weight: 600; color: #1C1917; }
-    .live-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
-    .live-badge.active { background: linear-gradient(135deg, #10B981, #34D399); color: white; }
-    .live-badge.waiting { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: white; }
-    .live-item-host { font-size: 0.9rem; color: #78716C; margin-bottom: 5px; }
-    .live-item-stats { display: flex; gap: 15px; font-size: 0.85rem; color: #A8A29E; }
+    /* LIVE - Style Lovoo Grid avec photos floutées */
+    .live-container { padding: 16px; max-width: 900px; margin: 0 auto; background: var(--bg); }
+    .live-header { text-align: center; margin-bottom: 20px; }
+    .live-header h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 6px; }
+    .live-header p { color: var(--text-light); font-size: 0.9rem; }
+    
+    /* Boutons Start Live */
+    .live-start-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .live-start-btn { padding: 16px 12px; border-radius: 16px; border: none; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .live-start-btn.primary { background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); color: white; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35); }
+    .live-start-btn.secondary { background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: white; box-shadow: 0 8px 25px rgba(236, 72, 153, 0.35); }
+    .live-start-btn:hover { transform: translateY(-3px); }
+    .live-start-btn .icon { font-size: 2rem; }
+    .live-start-btn .label { font-weight: 700; font-size: 1rem; }
+    .live-start-btn .sublabel { font-size: 0.75rem; opacity: 0.9; }
+    
+    /* Section titre Lives en cours */
+    .live-section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .live-section-title::before { content: ''; width: 4px; height: 18px; background: linear-gradient(180deg, #8B5CF6, #EC4899); border-radius: 2px; }
+    
+    /* Grille de Lives style Lovoo */
+    .live-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (min-width: 600px) { .live-grid { grid-template-columns: repeat(3, 1fr); } }
+    
+    /* Carte Live individuelle */
+    .live-card { position: relative; aspect-ratio: 3/4; border-radius: 16px; overflow: hidden; cursor: pointer; background: #1C1917; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+    .live-card:hover { transform: scale(1.03); box-shadow: 0 8px 30px rgba(139,92,246,0.25); }
+    .live-card:active { transform: scale(0.98); }
+    
+    /* Photo floutée de fond */
+    .live-card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(20px); transform: scale(1.1); }
+    
+    /* Overlay gradient */
+    .live-card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%); }
+    
+    /* Badge LIVE pulsant */
+    .live-card-badge { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 5px; background: rgba(239, 68, 68, 0.95); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.5px; }
+    .live-card-badge::before { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse-live 1.5s infinite; }
+    @keyframes pulse-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+    
+    /* Badge En attente */
+    .live-card-badge.waiting { background: rgba(245, 158, 11, 0.95); }
+    .live-card-badge.waiting::before { animation: none; }
+    
+    /* Viewers count */
+    .live-card-viewers { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; color: white; }
+    .live-card-viewers svg { width: 12px; height: 12px; }
+    
+    /* Infos bas de carte */
+    .live-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; z-index: 2; }
+    .live-card-host { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .live-card-title { font-size: 0.8rem; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .live-card-type { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; background: rgba(139,92,246,0.3); backdrop-filter: blur(8px); padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; color: white; }
+    
+    /* Empty state */
+    .live-empty { text-align: center; padding: 60px 20px; color: var(--text-light); }
+    .live-empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.3; }
+    .live-empty-text { font-size: 1rem; margin-bottom: 8px; }
+    .live-empty-subtext { font-size: 0.85rem; opacity: 0.7; }
     .live-room { display: flex; flex-direction: column; height: calc(100vh - 70px); background: linear-gradient(180deg, #1C1917 0%, #0F0F0F 100%); }
     .live-room-header { padding: 15px 20px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
     .live-room-title { font-size: 1.2rem; font-weight: 600; color: white; }
@@ -1781,30 +1816,33 @@
       </div>
     </div>
 
-    <!-- LIVE VIEW -->
+    <!-- LIVE VIEW - Style Lovoo -->
     <div id="liveView" class="app-view">
       <div class="live-container">
         <div class="live-header">
-          <h2 style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Mode Live</h2>
-          <p style="color: #57534E;">Rencontre en vidéo floutée</p>
+          <h2 style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lives</h2>
+          <p>Rencontres vidéo avec photos floutées</p>
         </div>
 
-        <!-- Live Rooms Selection -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px;">
-          <div onclick="showLiveLobby('live')" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); padding: 24px 16px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-            <div style="font-size: 2.5rem; margin-bottom: 12px;">▸</div>
-            <div style="font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 6px;">Live</div>
-            <div style="font-size: 0.8rem; opacity: 0.9; color: white;">Jusqu'à 4 participants</div>
-          </div>
-          <div onclick="showLiveLobby('speedDating')" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); padding: 24px 16px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-            <div style="font-size: 2.5rem; margin-bottom: 12px;">♡</div>
-            <div style="font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 6px;">Speed Dating</div>
-            <div style="font-size: 0.8rem; opacity: 0.9; color: white;">Face-à-face 3 min</div>
-          </div>
+        <!-- Boutons Start Live -->
+        <div class="live-start-buttons">
+          <button class="live-start-btn primary" onclick="showLiveLobby('live')">
+            <span class="icon">📹</span>
+            <span class="label">Créer un Live</span>
+            <span class="sublabel">Jusqu'à 4 participants</span>
+          </button>
+          <button class="live-start-btn secondary" onclick="showLiveLobby('speedDating')">
+            <span class="icon">💕</span>
+            <span class="label">Speed Dating</span>
+            <span class="sublabel">Face-à-face 3 min</span>
+          </button>
         </div>
 
-        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #1C1917;">Lives en cours</h3>
-        <div id="livesList" class="live-list">
+        <!-- Titre section -->
+        <div class="live-section-title">Lives en cours</div>
+        
+        <!-- Grille de Lives -->
+        <div id="livesList" class="live-grid">
           <!-- Lives générés dynamiquement -->
         </div>
       </div>
@@ -4712,7 +4750,7 @@
       try {
         const { data: lives, error } = await supabase
           .from('lives')
-          .select('*, live_participants(count)')
+          .select('*, host:host_id(firstname, photo_url), live_participants(count)')
           .in('status', ['waiting', 'active'])
           .order('created_at', { ascending: false });
 
@@ -4720,23 +4758,51 @@
 
         const livesList = document.getElementById('livesList');
         if (!lives || lives.length === 0) {
-          livesList.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.7;">Aucun Live en cours</div>';
+          livesList.innerHTML = `
+            <div class="live-empty" style="grid-column: 1 / -1;">
+              <div class="live-empty-icon">📹</div>
+              <div class="live-empty-text">Aucun Live en cours</div>
+              <div class="live-empty-subtext">Sois le premier à créer un Live !</div>
+            </div>
+          `;
           return;
         }
 
         livesList.innerHTML = lives.map(live => {
           const participantCount = live.live_participants?.[0]?.count || 0;
+          const hostName = live.host?.firstname || 'Anonyme';
+          const hostPhoto = live.host?.photo_url || '/assets/images/default-avatar.png';
+          const isActive = live.status === 'active';
+          const typeIcon = live.type === 'groupe' ? '👥' : '💕';
+          const typeLabel = live.type === 'groupe' ? 'Groupe' : 'Date';
+          
           return `
-            <div class="live-item" onclick="joinExistingLive('${live.id}', '${live.type}')">
-              <div class="live-item-header">
-                <div class="live-item-title">${live.title}</div>
-                <div class="live-badge ${live.status}">${live.status === 'active' ? '🔴 En direct' : '⏳ En attente'}</div>
+            <div class="live-card" onclick="joinExistingLive('${live.id}', '${live.type}')">
+              <!-- Photo floutée de fond -->
+              <img class="live-card-bg" src="${hostPhoto}" alt="" onerror="this.src='/assets/images/default-avatar.png'">
+              
+              <!-- Overlay gradient -->
+              <div class="live-card-overlay"></div>
+              
+              <!-- Badge LIVE ou En attente -->
+              <div class="live-card-badge ${isActive ? '' : 'waiting'}">
+                ${isActive ? 'Live' : 'En attente'}
               </div>
-              <div class="live-item-host">Par Anonyme</div>
-              ${live.description ? `<div style="font-size:0.85rem; opacity:0.7; margin-bottom:8px;">${live.description}</div>` : ''}
-              <div class="live-item-stats">
-                <span>${live.type === 'groupe' ? '👥 Groupe' : '💕 Date'}</span>
-                <span>• ${participantCount} participants</span>
+              
+              <!-- Viewers -->
+              <div class="live-card-viewers">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                ${participantCount}
+              </div>
+              
+              <!-- Infos -->
+              <div class="live-card-info">
+                <div class="live-card-host">${hostName}</div>
+                <div class="live-card-title">${live.title || 'Live en cours...'}</div>
+                <div class="live-card-type">${typeIcon} ${typeLabel}</div>
               </div>
             </div>
           `;
@@ -4744,6 +4810,13 @@
 
       } catch (error) {
         console.error('Erreur chargement Lives:', error);
+        document.getElementById('livesList').innerHTML = `
+          <div class="live-empty" style="grid-column: 1 / -1;">
+            <div class="live-empty-icon">⚠️</div>
+            <div class="live-empty-text">Erreur de chargement</div>
+            <div class="live-empty-subtext">Réessaie dans quelques instants</div>
+          </div>
+        `;
       }
     }
 
