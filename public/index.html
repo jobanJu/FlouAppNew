@@ -955,69 +955,115 @@
 
     <!-- Vue Édition Profil - Premium Design -->
     <div id="editProfileView" class="app-view">
-      <div class="profile-container" style="background: var(--bg); min-height: 100vh;">
-        <div style="display: flex; align-items: center; margin-bottom: 30px; padding-top: 10px;">
-          <button onclick="switchView('profile')" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 1.3rem; cursor: pointer; padding: 10px 14px; border-radius: 12px; margin-right: 15px; box-shadow: var(--shadow);">←</button>
-          <h2 style="font-size: 1.4rem; font-weight: 700; margin: 0; color: var(--text);">Modifier mon profil</h2>
+      <div class="profile-container" style="background: var(--bg); min-height: 100vh; padding-bottom: 100px;">
+        
+        <!-- Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-top: 10px;">
+          <button onclick="switchView('profile')" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 1.2rem; cursor: pointer; padding: 12px 16px; border-radius: 14px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px;">
+            ← <span style="font-size: 0.9rem; font-weight: 500;">Retour</span>
+          </button>
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text);">Modifier profil</h2>
+          <div style="width: 90px;"></div>
         </div>
         
         <!-- Photo Section -->
-        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); text-align: center;">
-          <div style="font-weight: 600; margin-bottom: 16px; color: var(--text); font-size: 0.9rem;">Photo de profil</div>
-          <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 16px;">
-            <img id="editProfilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 28px; margin-bottom: 16px; box-shadow: var(--shadow); text-align: center;">
+          <div style="position: relative; width: 130px; height: 130px; margin: 0 auto 20px;">
+            <img id="editProfilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-light); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);">
+            <div onclick="document.getElementById('editPhotoInput').click()" style="position: absolute; bottom: 5px; right: 5px; background: linear-gradient(135deg, #8B5CF6, #EC4899); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px rgba(139, 92, 246, 0.5); border: 3px solid var(--bg-card);">
+              <span style="color: white; font-size: 1.1rem;">📷</span>
+            </div>
           </div>
           <input type="file" id="editPhotoInput" accept="image/*" style="display: none;" onchange="previewEditPhoto()">
-          <button onclick="document.getElementById('editPhotoInput').click()" style="background: var(--bg-secondary); border: 1.5px solid var(--border); color: var(--text); padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-            ↑ Changer la photo
-          </button>
+          <div style="font-size: 0.85rem; color: var(--text-lighter);">Touche la photo pour la changer</div>
         </div>
 
         <!-- Info Section -->
-        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Prénom</label>
-            <input type="text" id="editFirstname" placeholder="Prénom" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow);">
+          <div style="font-weight: 600; margin-bottom: 20px; color: var(--text); font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">◇</span> Informations
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+          
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Prénom</label>
+            <input type="text" id="editFirstname" placeholder="Ton prénom" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Âge</label>
-              <input type="number" id="editAge" placeholder="Âge" min="20" max="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Âge</label>
+              <input type="number" id="editAge" placeholder="25" min="18" max="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
-              <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Ville</label>
-              <input type="text" id="editCity" placeholder="Ville" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem;">
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Ville</label>
+              <input type="text" id="editCity" placeholder="Paris" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Je suis</label>
+              <select id="editGender" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; box-sizing: border-box; outline: none; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 5\"><path fill=\"%23999\" d=\"M2 0L0 2h4zm0 5L0 3h4z\"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px;">
+                <option value="">Choisir</option>
+                <option value="homme">Un homme</option>
+                <option value="femme">Une femme</option>
+                <option value="non-binaire">Non-binaire</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Je cherche</label>
+              <select id="editSeeking" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; box-sizing: border-box; outline: none; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 5\"><path fill=\"%23999\" d=\"M2 0L0 2h4zm0 5L0 3h4z\"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px;">
+                <option value="">Choisir</option>
+                <option value="homme">Un homme</option>
+                <option value="femme">Une femme</option>
+                <option value="tous">Tout le monde</option>
+              </select>
             </div>
           </div>
         </div>
 
         <!-- Bio Section -->
-        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Phrase d'accroche</label>
-            <textarea id="editCatchphrase" placeholder="Ex: J'aime les ananas et les couchers de soleil" rows="2" maxlength="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit;"></textarea>
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow);">
+          <div style="font-weight: 600; margin-bottom: 20px; color: var(--text); font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+            <span style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">♡</span> À propos de moi
+          </div>
+          
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Phrase d'accroche</label>
+            <textarea id="editCatchphrase" placeholder="Ex: J'adore les ananas sur la pizza 🍕" rows="2" maxlength="100" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='var(--border)'"></textarea>
             <div style="text-align: right; font-size: 0.75rem; color: var(--text-lighter); margin-top: 6px;"><span id="editCatchphraseCount">0</span>/100</div>
           </div>
+          
           <div>
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase;">Description</label>
-            <textarea id="editBio" placeholder="Décris-toi, tes passions, ce que tu cherches..." rows="5" maxlength="500" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit;"></textarea>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Description</label>
+            <textarea id="editBio" placeholder="Parle de toi, tes passions, ce que tu recherches..." rows="4" maxlength="500" style="width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 14px; background: var(--bg-secondary); color: var(--text); font-size: 1rem; resize: none; font-family: inherit; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#8B5CF6'" onblur="this.style.borderColor='var(--border)'"></textarea>
             <div style="text-align: right; font-size: 0.75rem; color: var(--text-lighter); margin-top: 6px;"><span id="editBioCount">0</span>/500</div>
           </div>
         </div>
 
         <!-- Interests Section -->
-        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);">
-          <div style="font-weight: 600; margin-bottom: 16px; color: var(--text); font-size: 0.9rem;">Intérêts <span style="font-weight: 400; color: var(--text-lighter);">(5 minimum)</span></div>
+        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow);">
+          <div style="font-weight: 600; margin-bottom: 16px; color: var(--text); font-size: 0.95rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <span style="background: linear-gradient(135deg, #8B5CF6, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">◯</span> Intérêts
+            </span>
+            <span style="font-weight: 400; font-size: 0.8rem; color: var(--text-lighter);">5 minimum</span>
+          </div>
           <div id="editInterestsGrid" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+          <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-lighter); text-align: center;">
+            Sélectionné: <span id="editInterestCount" style="font-weight: 600; color: var(--primary);">0</span>/10
+          </div>
         </div>
 
         <!-- Save Buttons -->
-        <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%; margin-bottom: 12px;">
-          ✓ Enregistrer les modifications
-        </button>
-        <button onclick="switchView('profile')" style="width: 100%; background: transparent; border: 1.5px solid var(--border); color: var(--text); padding: 14px; border-radius: 16px; font-weight: 600; cursor: pointer;">
-          Annuler
-        </button>
+        <div style="position: fixed; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(to top, var(--bg) 80%, transparent); z-index: 100;">
+          <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%; margin-bottom: 10px; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); font-size: 1rem; padding: 16px;">
+            ✓ Enregistrer les modifications
+          </button>
+          <button onclick="switchView('profile')" style="width: 100%; background: var(--bg-card); border: 1.5px solid var(--border); color: var(--text); padding: 14px; border-radius: 16px; font-weight: 600; cursor: pointer;">
+            Annuler
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2058,6 +2104,10 @@
         document.getElementById('editCatchphrase').value = data.catchphrase || '';
         document.getElementById('editBio').value = data.bio || '';
         
+        // Gender and seeking preferences
+        document.getElementById('editGender').value = data.gender || '';
+        document.getElementById('editSeeking').value = data.seeking || '';
+        
         // Update character counts
         document.getElementById('editCatchphraseCount').textContent = (data.catchphrase || '').length;
         document.getElementById('editBioCount').textContent = (data.bio || '').length;
@@ -2077,6 +2127,9 @@
           const isSelected = userInterests.includes(interest);
           return `<span class="interest-tag ${isSelected ? 'selected' : ''}" onclick="toggleEditInterest(this, '${interest}')" style="cursor: pointer; padding: 10px 16px; border-radius: 20px; font-size: 0.85rem; transition: all 0.2s; ${isSelected ? 'background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; border: none;' : 'background: var(--bg-secondary); color: var(--text); border: 1.5px solid var(--border);'}">${interest}</span>`;
         }).join('');
+        
+        // Update interest count
+        updateInterestCount();
         
       } catch (error) { 
         console.error('Load edit profile error:', error); 
@@ -2106,6 +2159,16 @@
         element.style.border = 'none';
         if (!editProfileData.interests) editProfileData.interests = [];
         editProfileData.interests.push(interest);
+      }
+      updateInterestCount();
+    }
+    
+    function updateInterestCount() {
+      const count = (editProfileData.interests || []).length;
+      const countEl = document.getElementById('editInterestCount');
+      if (countEl) {
+        countEl.textContent = count;
+        countEl.style.color = count >= 5 ? '#10B981' : '#EF4444';
       }
     }
 
@@ -2138,6 +2201,8 @@
       const city = document.getElementById('editCity').value.trim();
       const catchphrase = document.getElementById('editCatchphrase').value.trim();
       const bio = document.getElementById('editBio').value.trim();
+      const gender = document.getElementById('editGender').value;
+      const seeking = document.getElementById('editSeeking').value;
       
       // Validation
       if (!firstname || firstname.length < 2) {
@@ -2145,8 +2210,8 @@
         return;
       }
       
-      if (!age || age < 20 || age > 100) {
-        alert('L\'âge doit être entre 20 et 100 ans');
+      if (!age || age < 18 || age > 100) {
+        alert('L\'âge doit être entre 18 et 100 ans');
         return;
       }
       
@@ -2190,6 +2255,8 @@
           firstname: firstname,
           age: age,
           city: city || null,
+          gender: gender || null,
+          seeking: seeking || null,
           catchphrase: catchphrase || null,
           bio: bio || null,
           interests: editProfileData.interests,
@@ -2976,16 +3043,16 @@
       }
 
       try {
-        // Get user's name
+        // Get user's firstname
         const { data: userData } = await supabase
           .from('users')
           .select('firstname')
           .eq('id', currentUser.id)
           .single();
         
-        const userPseudo = userData?.firstname || 'Hôte';
+        const userName = userData?.firstname || 'Hôte';
         const roomName = generateRoomName();
-        const liveTitle = `Live de ${userPseudo}`;
+        const liveTitle = `Live de ${userName}`;
 
         // Create Live
         const { data: live, error: liveError } = await supabase
@@ -3011,7 +3078,7 @@
             live_id: live.id,
             user_id: currentUser.id,
             role: 'host',
-            pseudo: userPseudo
+            pseudo: userName
           });
 
         currentLiveId = live.id;
@@ -3076,21 +3143,36 @@
       }
     }
 
-    window.joinExistingLive = function(liveId, liveType) {
-      const pseudo = prompt('Entre ton pseudo pour ce Live:');
-      if (!pseudo) return;
+    window.joinExistingLive = async function(liveId, liveType) {
+      if (!currentUser) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          alert('Tu dois être connecté pour rejoindre un Live');
+          return;
+        }
+        currentUser = session.user;
+      }
+
+      // Récupérer le prénom de l'utilisateur
+      const { data: userData } = await supabase
+        .from('users')
+        .select('firstname')
+        .eq('id', currentUser.id)
+        .single();
+      
+      const userName = userData?.firstname || 'Utilisateur';
 
       currentLiveId = liveId;
       currentLiveType = liveType;
 
       if (liveType === 'groupe') {
-        joinLiveRoom(liveId, pseudo);
+        joinLiveRoom(liveId, userName);
       } else {
-        joinLiveDate(liveId, pseudo);
+        joinLiveDate(liveId, userName);
       }
     }
 
-    window.joinLiveRoom = async function(liveId, pseudo = null, asSpectator = false) {
+    window.joinLiveRoom = async function(liveId, userName = null, asSpectator = false) {
       try {
         // Compter les participants actuels en cam
         const { data: camParticipants } = await supabase
@@ -3108,8 +3190,8 @@
         currentCamCount = (camParticipants?.length || 0) + (onCamParticipants?.length || 0);
         const canJoinCam = currentCamCount < 4 && !asSpectator;
         
-        // Si pseudo fourni, ajouter comme participant/spectateur
-        if (pseudo) {
+        // Si userName fourni, ajouter comme participant/spectateur
+        if (userName) {
           const role = canJoinCam ? 'participant' : 'spectator';
 
           await supabase
@@ -3118,7 +3200,7 @@
               live_id: liveId,
               user_id: currentUser.id,
               role: role,
-              pseudo: pseudo,
+              pseudo: userName,
               on_cam: canJoinCam
             });
             
@@ -3200,16 +3282,16 @@
       }
     }
 
-    window.joinLiveDate = async function(liveId, pseudo = null) {
+    window.joinLiveDate = async function(liveId, userName = null) {
       try {
-        if (pseudo) {
+        if (userName) {
           await supabase
             .from('live_participants')
             .insert({
               live_id: liveId,
               user_id: currentUser.id,
               role: 'participant',
-              pseudo: pseudo
+              pseudo: userName
             });
         }
 
