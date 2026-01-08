@@ -1460,24 +1460,56 @@
     <div id="liveRoomView" class="app-view">
       <div class="live-room" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%);">
         <div class="live-room-header" style="background: rgba(28, 25, 23, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08);">
-          <div>
+          <div style="flex: 1;">
             <div class="live-room-title" id="liveRoomTitle" style="color: white;">Chargement...</div>
             <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);" id="liveRoomStats">0 participants • 0 spectateurs</div>
             <div style="font-size: 0.8rem; color: rgba(139, 92, 246, 0.9); margin-top: 4px;" id="liveRoomDescription"></div>
           </div>
-          <button class="live-room-close" id="liveCloseBtn" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
+          <div style="display: flex; gap: 8px;">
+            <!-- Bouton paramètres (visible uniquement pour le créateur) -->
+            <button id="liveSettingsBtn" onclick="showLiveSettings()" style="display: none; background: rgba(255,255,255,0.1); border: none; border-radius: 12px; padding: 10px 14px; color: white; cursor: pointer;">⚙️</button>
+            <button class="live-room-close" id="liveCloseBtn" onclick="leaveLive()" style="background: #EF4444; border-radius: 12px; padding: 10px 18px;">Quitter</button>
+          </div>
         </div>
 
-        <div class="live-video-area" id="liveVideoArea" style="background: linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.03) 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px;">
-          <!-- Vidéos des participants (floutées) - max 4 -->
-        </div>
-        
-        <!-- Bouton rejoindre en cam (pour spectateurs) -->
-        <div id="joinCamContainer" style="display: none; padding: 12px; background: rgba(28, 25, 23, 0.95); border-top: 1px solid rgba(255,255,255,0.08);">
-          <button id="joinCamBtn" onclick="requestJoinCam()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
-            <span style="font-size: 1.4rem; font-weight: 300;">+</span> Rejoindre en caméra
-          </button>
-          <p style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 8px;" id="camSlotsInfo">3 places disponibles</p>
+        <!-- Grille 4 écrans vidéo -->
+        <div class="live-video-area" id="liveVideoArea" style="background: linear-gradient(180deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.03) 100%); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; padding: 8px; height: 45vh;">
+          <!-- Slot 1 - Créateur -->
+          <div class="video-slot" data-slot="1" id="videoSlot1" style="position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.08);">
+            <div class="slot-empty" onclick="requestJoinSlot(1)" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+              <div style="width: 50px; height: 50px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px; color: rgba(255,255,255,0.4);">+</span>
+              </div>
+              <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 8px;">Rejoindre</span>
+            </div>
+          </div>
+          <!-- Slot 2 -->
+          <div class="video-slot" data-slot="2" id="videoSlot2" style="position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.08);">
+            <div class="slot-empty" onclick="requestJoinSlot(2)" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+              <div style="width: 50px; height: 50px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px; color: rgba(255,255,255,0.4);">+</span>
+              </div>
+              <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 8px;">Rejoindre</span>
+            </div>
+          </div>
+          <!-- Slot 3 -->
+          <div class="video-slot" data-slot="3" id="videoSlot3" style="position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.08);">
+            <div class="slot-empty" onclick="requestJoinSlot(3)" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+              <div style="width: 50px; height: 50px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px; color: rgba(255,255,255,0.4);">+</span>
+              </div>
+              <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 8px;">Rejoindre</span>
+            </div>
+          </div>
+          <!-- Slot 4 -->
+          <div class="video-slot" data-slot="4" id="videoSlot4" style="position: relative; background: rgba(255,255,255,0.03); border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.08);">
+            <div class="slot-empty" onclick="requestJoinSlot(4)" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+              <div style="width: 50px; height: 50px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 24px; color: rgba(255,255,255,0.4);">+</span>
+              </div>
+              <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 8px;">Rejoindre</span>
+            </div>
+          </div>
         </div>
 
         <div class="live-chat-area" style="background: rgba(28, 25, 23, 0.98); border-top: 1px solid rgba(255,255,255,0.08);">
@@ -1494,6 +1526,62 @@
           <button class="live-control-btn mic" id="micBtn" onclick="toggleMic()" style="background: rgba(255,255,255,0.1); color: white; border-radius: 14px;">● Micro</button>
           <button class="live-control-btn" id="camBtn" onclick="toggleCam()" style="background: rgba(255,255,255,0.1); color: white; border-radius: 14px;">◉ Caméra</button>
           <button class="live-control-btn favorite" onclick="addToFavorites()" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED); border-radius: 14px;">★ Favoris</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PARAMÈTRES LIVE (pour le créateur) -->
+    <div id="liveSettingsModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 400px; border-radius: 24px; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="color: white; font-size: 1.3rem; margin: 0;">⚙️ Paramètres du Live</h3>
+          <button onclick="closeLiveSettings()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+        </div>
+        
+        <!-- Message aux fans -->
+        <div style="margin-bottom: 20px;">
+          <label style="color: rgba(255,255,255,0.7); font-size: 0.9rem; display: block; margin-bottom: 8px;">📢 Message aux fans</label>
+          <textarea id="fanMessageInput" placeholder="Ex: Je suis en live, je fais des gâteaux, venez nombreux !" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: white; font-size: 0.95rem; resize: none; height: 80px;"></textarea>
+          <button onclick="sendFanMessage()" style="width: 100%; margin-top: 10px; padding: 12px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer;">
+            📨 Envoyer aux fans
+          </button>
+        </div>
+        
+        <!-- Liste des participants à modérer -->
+        <div>
+          <label style="color: rgba(255,255,255,0.7); font-size: 0.9rem; display: block; margin-bottom: 12px;">👥 Participants en caméra</label>
+          <div id="moderationList" style="max-height: 200px; overflow-y: auto;">
+            <!-- Liste générée dynamiquement -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL MODÉRATION UTILISATEUR -->
+    <div id="moderationModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 340px; border-radius: 24px; padding: 24px; text-align: center;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 1.8rem;" id="modUserAvatar">👤</span>
+        </div>
+        <h3 style="color: white; margin-bottom: 5px;" id="modUserName">Utilisateur</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 20px;">Que veux-tu faire ?</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button onclick="kickFromCam()" style="padding: 14px; background: #F59E0B; border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer;">
+            📷 Retirer de la caméra
+            <span style="display: block; font-size: 0.75rem; opacity: 0.8; font-weight: 400;">Devient spectateur</span>
+          </button>
+          <button onclick="kickFromLive()" style="padding: 14px; background: #EF4444; border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer;">
+            🚪 Expulser du live
+            <span style="display: block; font-size: 0.75rem; opacity: 0.8; font-weight: 400;">Doit attendre un nouveau live</span>
+          </button>
+          <button onclick="blockUser()" style="padding: 14px; background: #7C2D12; border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer;">
+            🚫 Bloquer
+            <span style="display: block; font-size: 0.75rem; opacity: 0.8; font-weight: 400;">Bloqué définitivement</span>
+          </button>
+          <button onclick="closeModerationModal()" style="padding: 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 12px; color: white; cursor: pointer; margin-top: 5px;">
+            Annuler
+          </button>
         </div>
       </div>
     </div>
@@ -3773,6 +3861,7 @@
           .eq('id', currentUser.id)
           .single();
         
+        currentUserProfile = userData;
         const userName = userData?.firstname || 'Hôte';
         const roomName = generateRoomName();
         const liveTitle = `Live de ${userName}`;
@@ -3794,25 +3883,88 @@
 
         if (liveError) throw liveError;
 
-        // Add host as participant
+        // Add host as participant with slot 1
         await supabase
           .from('live_participants')
           .insert({
             live_id: live.id,
             user_id: currentUser.id,
             role: 'host',
-            pseudo: userName
+            pseudo: userName,
+            on_cam: true,
+            slot_number: 1
           });
 
         currentLiveId = live.id;
         currentLiveType = 'groupe';
         currentRoomName = roomName;
+        currentLiveHostId = currentUser.id;
+        
+        // Réinitialiser les slots
+        videoSlots = { 1: currentUser.id, 2: null, 3: null, 4: null };
+        currentUserSlot = 1;
 
-        await joinLiveRoom(live.id);
+        // Notifier les fans
+        await notifyFansOfLive(live.id, liveTitle);
+
+        await joinLiveRoomAsHost(live.id);
         
       } catch (error) {
         console.error('Erreur création Live:', error);
         alert('Erreur: ' + (error.message || 'Erreur inconnue'));
+      }
+    }
+
+    // Rejoindre le live en tant qu'hôte (slot 1)
+    window.joinLiveRoomAsHost = async function(liveId) {
+      try {
+        const { data: live } = await supabase
+          .from('lives')
+          .select('*')
+          .eq('id', liveId)
+          .single();
+        
+        currentLiveHostId = live.host_id;
+        
+        // Afficher le bouton paramètres pour le créateur
+        document.getElementById('liveSettingsBtn').style.display = 'block';
+        document.getElementById('liveCloseBtn').textContent = '✕ Fermer le live';
+        document.getElementById('liveCloseBtn').style.background = '#DC2626';
+        
+        document.getElementById('liveRoomTitle').textContent = live.title;
+        document.getElementById('liveRoomDescription').textContent = live.description || '';
+        currentRoomName = live.room_url;
+        
+        // Réinitialiser tous les slots à vide
+        for (let i = 1; i <= 4; i++) {
+          resetSlotToEmpty(i);
+        }
+        
+        // Rejoindre Agora et s'afficher dans le slot 1
+        const { data: userData } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+        
+        await joinAgoraRoomToSlot(currentRoomName, userData?.firstname || 'Hôte', 1);
+        
+        // Mettre à jour le statut
+        await supabase
+          .from('lives')
+          .update({ status: 'active', started_at: new Date().toISOString() })
+          .eq('id', liveId);
+        
+        // Charger les messages
+        await loadLiveMessages(liveId);
+        
+        // S'abonner aux changements en temps réel
+        subscribeLiveUpdates(liveId);
+        
+        switchView('liveRoom');
+        
+      } catch (error) {
+        console.error('Erreur join host:', error);
       }
     }
 
@@ -3876,6 +4028,24 @@
         currentUser = session.user;
       }
 
+      // Vérifier si l'utilisateur est expulsé ou bloqué
+      const { data: existingParticipant } = await supabase
+        .from('live_participants')
+        .select('kicked, blocked')
+        .eq('live_id', liveId)
+        .eq('user_id', currentUser.id)
+        .single();
+      
+      if (existingParticipant?.blocked) {
+        alert('Tu as été bloqué par le créateur de ce live');
+        return;
+      }
+      
+      if (existingParticipant?.kicked) {
+        alert('Tu as été expulsé de ce live. Tu pourras rejoindre le prochain.');
+        return;
+      }
+
       // Récupérer le prénom de l'utilisateur
       const { data: userData } = await supabase
         .from('users')
@@ -3883,18 +4053,155 @@
         .eq('id', currentUser.id)
         .single();
       
+      currentUserProfile = userData;
       const userName = userData?.firstname || 'Utilisateur';
 
       currentLiveId = liveId;
       currentLiveType = liveType;
 
       if (liveType === 'groupe') {
-        joinLiveRoom(liveId, userName);
+        await joinLiveRoomAsSpectator(liveId, userName);
       } else {
         joinLiveDate(liveId, userName);
       }
     }
 
+    // Rejoindre un live en tant que spectateur
+    window.joinLiveRoomAsSpectator = async function(liveId, userName) {
+      try {
+        const { data: live, error } = await supabase
+          .from('lives')
+          .select('*')
+          .eq('id', liveId)
+          .single();
+        
+        if (error) throw error;
+        
+        currentLiveHostId = live.host_id;
+        currentRoomName = live.room_url;
+        
+        // Cacher le bouton paramètres (pas le créateur)
+        document.getElementById('liveSettingsBtn').style.display = 'none';
+        document.getElementById('liveCloseBtn').textContent = 'Quitter';
+        document.getElementById('liveCloseBtn').style.background = '#EF4444';
+        
+        document.getElementById('liveRoomTitle').textContent = live.title;
+        document.getElementById('liveRoomDescription').textContent = live.description || '';
+        
+        // Ajouter comme spectateur
+        await supabase
+          .from('live_participants')
+          .upsert({
+            live_id: liveId,
+            user_id: currentUser.id,
+            role: 'spectator',
+            pseudo: userName,
+            on_cam: false,
+            slot_number: null
+          });
+        
+        // Réinitialiser les slots locaux
+        videoSlots = { 1: null, 2: null, 3: null, 4: null };
+        currentUserSlot = null;
+        
+        // Charger les participants actuels avec leurs slots
+        const { data: participants } = await supabase
+          .from('live_participants')
+          .select('user_id, slot_number, on_cam')
+          .eq('live_id', liveId)
+          .eq('on_cam', true)
+          .not('slot_number', 'is', null);
+        
+        // Mettre à jour les slots avec les participants existants
+        if (participants) {
+          participants.forEach(p => {
+            if (p.slot_number) {
+              videoSlots[p.slot_number] = p.user_id;
+            }
+          });
+        }
+        
+        // Réinitialiser tous les slots visuellement
+        for (let i = 1; i <= 4; i++) {
+          resetSlotToEmpty(i);
+        }
+        
+        // Rejoindre Agora comme spectateur
+        await joinAgoraAsSpectatorWithSlots(currentRoomName);
+        
+        // Charger les messages
+        await loadLiveMessages(liveId);
+        
+        // S'abonner aux changements
+        subscribeLiveUpdates(liveId);
+        
+        switchView('liveRoom');
+        
+      } catch (error) {
+        console.error('Erreur join spectateur:', error);
+        alert('Erreur: ' + error.message);
+      }
+    }
+
+    // Rejoindre Agora comme spectateur avec gestion des slots
+    window.joinAgoraAsSpectatorWithSlots = async function(channelName) {
+      try {
+        if (!agoraClient) {
+          agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+        }
+        
+        agoraClient.on('user-published', async (user, mediaType) => {
+          await agoraClient.subscribe(user, mediaType);
+          console.log('📹 User published:', user.uid, mediaType);
+          
+          if (mediaType === 'video') {
+            remoteUsers[user.uid] = user;
+            // Trouver un slot libre pour cet utilisateur
+            const freeSlot = findFreeSlot();
+            if (freeSlot) {
+              videoSlots[freeSlot] = user.uid;
+              displayVideoInSlot(user, freeSlot, false);
+            }
+          }
+          if (mediaType === 'audio') {
+            user.audioTrack.play();
+          }
+        });
+        
+        agoraClient.on('user-unpublished', (user, mediaType) => {
+          if (mediaType === 'video') {
+            showLoaderInSlot(user.uid);
+          }
+        });
+        
+        agoraClient.on('user-left', (user) => {
+          console.log('👋 User left:', user.uid);
+          removeUserFromSlot(user.uid);
+          delete remoteUsers[user.uid];
+        });
+        
+        const tokenResponse = await fetch(`/api/agora-token?channel=${encodeURIComponent(channelName)}&uid=0&role=subscriber`);
+        const tokenData = await tokenResponse.json();
+        
+        const uid = await agoraClient.join(AGORA_APP_ID, channelName, tokenData.token, null);
+        console.log('✅ Connecté comme spectateur, UID:', uid);
+        
+        return uid;
+      } catch (error) {
+        console.error('Erreur Agora spectateur:', error);
+        throw error;
+      }
+    }
+
+    // Trouver un slot libre
+    function findFreeSlot() {
+      for (let i = 1; i <= 4; i++) {
+        if (!videoSlots[i]) return i;
+      }
+      return null;
+    }
+
+    // Ancienne fonction gardée pour compatibilité
     window.joinLiveRoom = async function(liveId, userName = null, asSpectator = false) {
       try {
         // Compter les participants actuels en cam
@@ -4462,6 +4769,480 @@
         console.error('Erreur quitter Live:', error);
       }
     }
+
+    // ============================================
+    // SYSTÈME DE SLOTS VIDÉO (4 écrans)
+    // ============================================
+    let videoSlots = { 1: null, 2: null, 3: null, 4: null };
+    let currentUserSlot = null;
+    let moderatingUserId = null;
+
+    // Rejoindre un slot vidéo
+    window.requestJoinSlot = async function(slotNumber) {
+      if (!currentLiveId || !currentUser) return;
+      
+      // Vérifier si le slot est libre
+      if (videoSlots[slotNumber]) {
+        alert('Cette place est déjà prise');
+        return;
+      }
+      
+      // Vérifier si l'utilisateur est déjà sur un slot
+      if (currentUserSlot) {
+        alert('Tu es déjà en caméra');
+        return;
+      }
+      
+      // Vérifier si l'utilisateur n'est pas expulsé
+      const { data: participant } = await supabase
+        .from('live_participants')
+        .select('kicked, blocked')
+        .eq('live_id', currentLiveId)
+        .eq('user_id', currentUser.id)
+        .single();
+      
+      if (participant?.kicked) {
+        alert('Tu as été expulsé de ce live');
+        return;
+      }
+      
+      if (participant?.blocked) {
+        alert('Tu as été bloqué par le créateur');
+        return;
+      }
+      
+      try {
+        // Mettre à jour le participant
+        await supabase
+          .from('live_participants')
+          .upsert({
+            live_id: currentLiveId,
+            user_id: currentUser.id,
+            on_cam: true,
+            slot_number: slotNumber,
+            role: 'participant'
+          });
+        
+        // Activer la caméra et rejoindre Agora si pas encore fait
+        if (!localVideoTrack) {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('firstname')
+            .eq('id', currentUser.id)
+            .single();
+          await joinAgoraRoomToSlot(currentRoomName, userData?.firstname || 'Utilisateur', slotNumber);
+        }
+        
+        currentUserSlot = slotNumber;
+        videoSlots[slotNumber] = currentUser.id;
+        updateSlotUI(slotNumber, currentUser.id, true);
+        
+      } catch (error) {
+        console.error('Erreur rejoindre slot:', error);
+        alert('Erreur lors de la connexion');
+      }
+    }
+
+    // Rejoindre Agora et placer dans un slot spécifique
+    window.joinAgoraRoomToSlot = async function(channelName, userName, slotNumber) {
+      try {
+        if (!agoraClient) {
+          agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+          
+          agoraClient.on('user-published', async (user, mediaType) => {
+            await agoraClient.subscribe(user, mediaType);
+            if (mediaType === 'video') {
+              remoteUsers[user.uid] = user;
+              // Trouver le slot de cet utilisateur
+              const slot = findUserSlot(user.uid);
+              if (slot) {
+                displayVideoInSlot(user, slot, false);
+              }
+            }
+            if (mediaType === 'audio') {
+              user.audioTrack.play();
+            }
+          });
+          
+          agoraClient.on('user-unpublished', (user, mediaType) => {
+            if (mediaType === 'video') {
+              showLoaderInSlot(user.uid);
+            }
+          });
+          
+          agoraClient.on('user-left', (user) => {
+            removeUserFromSlot(user.uid);
+            delete remoteUsers[user.uid];
+          });
+        }
+        
+        const tokenResponse = await fetch(`/api/agora-token?channel=${encodeURIComponent(channelName)}&uid=0&role=publisher`);
+        const tokenData = await tokenResponse.json();
+        
+        const uid = await agoraClient.join(AGORA_APP_ID, channelName, tokenData.token, null);
+        [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+        
+        // Afficher ma vidéo dans le slot
+        displayVideoInSlot({ uid: uid, videoTrack: localVideoTrack }, slotNumber, true);
+        
+        await agoraClient.publish([localAudioTrack, localVideoTrack]);
+        
+        return uid;
+      } catch (error) {
+        console.error('Erreur Agora slot:', error);
+        throw error;
+      }
+    }
+
+    // Afficher une vidéo dans un slot
+    function displayVideoInSlot(user, slotNumber, isLocal) {
+      const slot = document.getElementById(`videoSlot${slotNumber}`);
+      if (!slot) return;
+      
+      slot.innerHTML = '';
+      slot.setAttribute('data-uid', user.uid);
+      
+      const videoContainer = document.createElement('div');
+      videoContainer.style.cssText = 'width: 100%; height: 100%; position: relative;';
+      
+      const videoElement = document.createElement('div');
+      videoElement.style.cssText = 'width: 100%; height: 100%; filter: blur(20px);';
+      
+      if (isLocal && localVideoTrack) {
+        localVideoTrack.play(videoElement);
+      } else if (user.videoTrack) {
+        user.videoTrack.play(videoElement);
+      }
+      
+      videoContainer.appendChild(videoElement);
+      
+      // Badge avec nom
+      const badge = document.createElement('div');
+      badge.style.cssText = 'position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 8px; color: white; font-size: 0.75rem;';
+      badge.textContent = isLocal ? 'Toi' : 'Participant';
+      videoContainer.appendChild(badge);
+      
+      // Bouton modération (visible uniquement pour le créateur et pas sur soi-même)
+      if (currentLiveHostId === currentUser.id && !isLocal) {
+        const modBtn = document.createElement('button');
+        modBtn.style.cssText = 'position: absolute; top: 8px; right: 8px; background: rgba(239, 68, 68, 0.9); border: none; border-radius: 8px; padding: 6px 10px; color: white; font-size: 0.7rem; cursor: pointer;';
+        modBtn.textContent = '⚙️';
+        modBtn.onclick = (e) => {
+          e.stopPropagation();
+          showModerationModal(user.uid, slotNumber);
+        };
+        videoContainer.appendChild(modBtn);
+      }
+      
+      slot.appendChild(videoContainer);
+    }
+
+    // Afficher le loader dans un slot quand caméra coupée
+    function showLoaderInSlot(uid) {
+      const slot = document.querySelector(`[data-uid="${uid}"]`);
+      if (!slot) return;
+      
+      let loader = slot.querySelector('.video-loader');
+      if (!loader) {
+        loader = document.createElement('div');
+        loader.className = 'video-loader';
+        loader.innerHTML = `
+          <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 10; border-radius: 14px;">
+            <source src="/assets/videos/logochargement.mp4" type="video/mp4">
+          </video>
+        `;
+        slot.appendChild(loader);
+      }
+    }
+
+    // Retirer un utilisateur d'un slot
+    function removeUserFromSlot(uid) {
+      const slot = document.querySelector(`[data-uid="${uid}"]`);
+      if (slot) {
+        const slotNumber = slot.getAttribute('data-slot');
+        videoSlots[slotNumber] = null;
+        resetSlotToEmpty(slotNumber);
+      }
+    }
+
+    // Réinitialiser un slot à l'état vide
+    function resetSlotToEmpty(slotNumber) {
+      const slot = document.getElementById(`videoSlot${slotNumber}`);
+      if (!slot) return;
+      
+      slot.removeAttribute('data-uid');
+      slot.innerHTML = `
+        <div class="slot-empty" onclick="requestJoinSlot(${slotNumber})" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+          <div style="width: 50px; height: 50px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 24px; color: rgba(255,255,255,0.4);">+</span>
+          </div>
+          <span style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 8px;">Rejoindre</span>
+        </div>
+      `;
+    }
+
+    function findUserSlot(uid) {
+      for (let i = 1; i <= 4; i++) {
+        const slot = document.getElementById(`videoSlot${i}`);
+        if (slot && slot.getAttribute('data-uid') == uid) {
+          return i;
+        }
+      }
+      return null;
+    }
+
+    function updateSlotUI(slotNumber, userId, hasVideo) {
+      // La vidéo est déjà affichée par displayVideoInSlot
+    }
+
+    // ============================================
+    // SYSTÈME DE MODÉRATION
+    // ============================================
+
+    // Afficher le modal de paramètres live (créateur)
+    window.showLiveSettings = function() {
+      document.getElementById('liveSettingsModal').style.display = 'flex';
+      loadModerationList();
+    }
+
+    window.closeLiveSettings = function() {
+      document.getElementById('liveSettingsModal').style.display = 'none';
+    }
+
+    // Charger la liste des participants pour modération
+    async function loadModerationList() {
+      const list = document.getElementById('moderationList');
+      
+      const { data: participants } = await supabase
+        .from('live_participants')
+        .select(`
+          user_id,
+          slot_number,
+          on_cam,
+          users:user_id (firstname, photo_url)
+        `)
+        .eq('live_id', currentLiveId)
+        .eq('on_cam', true)
+        .neq('user_id', currentUser.id)
+        .is('left_at', null);
+      
+      if (!participants || participants.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">Aucun participant en caméra</p>';
+        return;
+      }
+      
+      list.innerHTML = participants.map(p => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #8B5CF6, #EC4899); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              ${p.users?.photo_url ? `<img src="${p.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover;">` : '<span style="color: white;">👤</span>'}
+            </div>
+            <span style="color: white;">${p.users?.firstname || 'Utilisateur'}</span>
+          </div>
+          <button onclick="showModerationModalForUser('${p.user_id}', '${p.users?.firstname || 'Utilisateur'}')" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #EF4444; border-radius: 8px; padding: 6px 12px; color: #EF4444; cursor: pointer; font-size: 0.8rem;">
+            Modérer
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Afficher le modal de modération pour un utilisateur
+    window.showModerationModal = function(uid, slotNumber) {
+      // Trouver l'userId depuis l'uid Agora
+      moderatingUserId = Object.keys(remoteUsers).find(key => remoteUsers[key].uid === uid) || uid;
+      document.getElementById('modUserName').textContent = 'Participant';
+      document.getElementById('moderationModal').style.display = 'flex';
+    }
+
+    window.showModerationModalForUser = function(userId, userName) {
+      moderatingUserId = userId;
+      document.getElementById('modUserName').textContent = userName;
+      document.getElementById('moderationModal').style.display = 'flex';
+    }
+
+    window.closeModerationModal = function() {
+      document.getElementById('moderationModal').style.display = 'none';
+      moderatingUserId = null;
+    }
+
+    // Retirer de la caméra (devient spectateur)
+    window.kickFromCam = async function() {
+      if (!moderatingUserId || !currentLiveId) return;
+      
+      try {
+        await supabase
+          .from('live_participants')
+          .update({ on_cam: false, slot_number: null })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', moderatingUserId);
+        
+        // Envoyer un message système
+        await supabase
+          .from('live_messages')
+          .insert({
+            live_id: currentLiveId,
+            user_id: currentUser.id,
+            message: `Un participant a été retiré de la caméra`,
+            is_system: true
+          });
+        
+        closeModerationModal();
+        closeLiveSettings();
+        alert('Utilisateur retiré de la caméra');
+        
+      } catch (error) {
+        console.error('Erreur kick cam:', error);
+      }
+    }
+
+    // Expulser du live
+    window.kickFromLive = async function() {
+      if (!moderatingUserId || !currentLiveId) return;
+      
+      try {
+        await supabase
+          .from('live_participants')
+          .update({ 
+            kicked: true, 
+            on_cam: false, 
+            slot_number: null,
+            left_at: new Date().toISOString()
+          })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', moderatingUserId);
+        
+        closeModerationModal();
+        closeLiveSettings();
+        alert('Utilisateur expulsé du live');
+        
+      } catch (error) {
+        console.error('Erreur kick live:', error);
+      }
+    }
+
+    // Bloquer complètement
+    window.blockUser = async function() {
+      if (!moderatingUserId || !currentLiveId) return;
+      
+      if (!confirm('Bloquer cet utilisateur définitivement ?')) return;
+      
+      try {
+        // Bloquer dans les participants
+        await supabase
+          .from('live_participants')
+          .update({ 
+            blocked: true,
+            kicked: true, 
+            on_cam: false, 
+            left_at: new Date().toISOString()
+          })
+          .eq('live_id', currentLiveId)
+          .eq('user_id', moderatingUserId);
+        
+        // Ajouter à la table des bloqués (si elle existe)
+        await supabase
+          .from('blocked_users')
+          .insert({
+            blocker_id: currentUser.id,
+            blocked_id: moderatingUserId
+          });
+        
+        closeModerationModal();
+        closeLiveSettings();
+        alert('Utilisateur bloqué');
+        
+      } catch (error) {
+        console.error('Erreur blocage:', error);
+      }
+    }
+
+    // ============================================
+    // SYSTÈME DE NOTIFICATIONS FAVORIS
+    // ============================================
+
+    // Envoyer un message aux fans
+    window.sendFanMessage = async function() {
+      const message = document.getElementById('fanMessageInput').value.trim();
+      if (!message) {
+        alert('Écris un message pour tes fans');
+        return;
+      }
+      
+      try {
+        // Récupérer tous les utilisateurs qui m'ont en favoris
+        const { data: fans } = await supabase
+          .from('live_favorites')
+          .select('user_id')
+          .eq('favorite_user_id', currentUser.id);
+        
+        if (!fans || fans.length === 0) {
+          alert('Tu n\'as pas encore de fans !');
+          return;
+        }
+        
+        // Créer une notification pour chaque fan
+        const notifications = fans.map(fan => ({
+          user_id: fan.user_id,
+          type: 'fan_message',
+          title: `Message de ${currentUserProfile?.firstname || 'ton favori'}`,
+          message: message,
+          from_user_id: currentUser.id,
+          live_id: currentLiveId,
+          read: false
+        }));
+        
+        await supabase
+          .from('notifications')
+          .insert(notifications);
+        
+        document.getElementById('fanMessageInput').value = '';
+        alert(`Message envoyé à ${fans.length} fan${fans.length > 1 ? 's' : ''} !`);
+        
+      } catch (error) {
+        console.error('Erreur envoi message fans:', error);
+        alert('Erreur lors de l\'envoi');
+      }
+    }
+
+    // Notifier les fans qu'un live démarre
+    async function notifyFansOfLive(liveId, liveTitle) {
+      try {
+        const { data: fans } = await supabase
+          .from('live_favorites')
+          .select('user_id')
+          .eq('favorite_user_id', currentUser.id);
+        
+        if (!fans || fans.length === 0) return;
+        
+        const { data: myProfile } = await supabase
+          .from('users')
+          .select('firstname')
+          .eq('id', currentUser.id)
+          .single();
+        
+        const notifications = fans.map(fan => ({
+          user_id: fan.user_id,
+          type: 'favorite_live',
+          title: `${myProfile?.firstname || 'Ton favori'} est en live !`,
+          message: `Rejoins ${myProfile?.firstname || 'ton favori'} maintenant 🎬`,
+          from_user_id: currentUser.id,
+          live_id: liveId,
+          read: false
+        }));
+        
+        await supabase
+          .from('notifications')
+          .insert(notifications);
+        
+        console.log(`📢 ${fans.length} fans notifiés du live`);
+        
+      } catch (error) {
+        console.error('Erreur notification fans:', error);
+      }
+    }
+
+    // Variable pour le profil utilisateur actuel
+    let currentUserProfile = null;
 
     window.startVersus = function(liveId) {
       currentVersusIndex = 0;
