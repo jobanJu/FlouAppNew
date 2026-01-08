@@ -25,7 +25,7 @@ function securityHeaders(req, res, next) {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: blob: https: http:; " +
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.agora.io wss://*.agora.io https://nominatim.openstreetmap.org https://challenges.cloudflare.com; " +
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.agora.io wss://*.agora.io https://*.sd-rtn.com wss://*.sd-rtn.com https://cdn.jsdelivr.net https://nominatim.openstreetmap.org https://challenges.cloudflare.com; " +
       "media-src 'self' blob:; " +
       "frame-src https://challenges.cloudflare.com;"
     );
