@@ -653,7 +653,26 @@
         <button class="btn btn-primary" onclick="goToSignup()">S'inscrire</button>
         <button class="btn btn-secondary" onclick="login()">Connexion</button>
       </div>
-      <div style="margin-top: 40px; font-size: 0.85rem; opacity: 0.7; text-align: center;">
+      
+      <!-- Séparateur -->
+      <div style="display: flex; align-items: center; margin: 30px 0 20px 0; width: 100%;">
+        <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.3);"></div>
+        <span style="padding: 0 15px; font-size: 0.85rem; opacity: 0.7;">ou</span>
+        <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.3);"></div>
+      </div>
+      
+      <!-- Bouton Google -->
+      <button onclick="signInWithGoogle()" class="btn" style="background: white; color: #333; display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 500;">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continuer avec Google
+      </button>
+      
+      <div style="margin-top: 30px; font-size: 0.85rem; opacity: 0.7; text-align: center;">
         <a href="/cgu.html" style="color: white; margin: 0 10px; text-decoration: underline;">CGU</a>
         <a href="/confidentialite.html" style="color: white; margin: 0 10px; text-decoration: underline;">Confidentialité</a>
         <a href="/reglement.html" style="color: white; margin: 0 10px; text-decoration: underline;">Règlement</a>
@@ -813,12 +832,96 @@
         <div style="font-size: 2rem; margin-bottom: 20px;">○</div>
         <h2 style="font-size: 1.8rem; margin-bottom: 10px;">Connexion</h2>
       </div>
+      
+      <!-- Bouton Google -->
+      <button onclick="signInWithGoogle()" style="width: 100%; padding: 14px 20px; background: white; color: #333; border: none; border-radius: 12px; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continuer avec Google
+      </button>
+      
+      <!-- Séparateur -->
+      <div style="display: flex; align-items: center; margin: 20px 0;">
+        <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.3);"></div>
+        <span style="padding: 0 15px; font-size: 0.85rem; opacity: 0.7;">ou</span>
+        <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.3);"></div>
+      </div>
+      
       <input type="email" class="form-input" id="loginEmail" placeholder="ton@email.com">
       <input type="password" class="form-input" id="loginPassword" placeholder="Mot de passe" style="margin-top: -10px;">
       <div id="loginError" class="error-message"></div>
       <div class="form-actions" style="margin-top: 30px;">
         <button class="btn-small btn-back" onclick="goToLanding()">Retour</button>
         <button class="btn-small btn-next" onclick="doLogin()">Se connecter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE SIGNUP COMPLETION PAGE -->
+  <div id="googleSignupPage" class="page">
+    <div class="signup-form">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 2rem; margin-bottom: 15px;">🎉</div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Complète ton profil</h2>
+        <p style="opacity: 0.7; font-size: 0.9rem;">Plus que quelques infos pour commencer !</p>
+      </div>
+      
+      <!-- Photo -->
+      <div style="text-align:center; margin-bottom:25px;">
+        <div id="googlePhotoContainer" style="width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto 15px auto; display:flex; justify-content:center; align-items:center; overflow:hidden; border: 2px solid rgba(255,255,255,0.3);">
+          <span id="googlePhotoPlaceholder" style="font-size:1.5rem; opacity:0.5;">📷</span>
+          <img id="googlePhotoPreview" src="" alt="Photo" style="width:100%; height:100%; object-fit:cover; display:none;">
+        </div>
+        <input type="file" id="googlePhotoInput" accept="image/*" style="display:none" onchange="handleGooglePhotoSelect(this)">
+        <button class="btn-secondary" onclick="document.getElementById('googlePhotoInput').click()" style="font-size: 0.85rem; padding: 8px 16px;">Changer la photo</button>
+      </div>
+      
+      <!-- Prénom -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Prénom</label>
+      <input type="text" class="form-input" id="googleFirstName" placeholder="Ton prénom" maxlength="50">
+      
+      <!-- Age -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Âge</label>
+      <input type="number" class="form-input" id="googleAge" placeholder="Ton âge (20+)" min="20" max="100">
+      
+      <!-- Ville -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Ville</label>
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input type="text" class="form-input" id="googleCity" placeholder="Ta ville" style="margin-bottom:0; flex:1;">
+        <button class="btn-secondary" onclick="geolocateGoogleUser()" style="padding:12px; font-size:1rem;">📍</button>
+      </div>
+      
+      <!-- Genre -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px; display: block;">Tu es</label>
+      <div class="choices" style="margin-bottom: 20px;">
+        <button class="choice-btn" onclick="selectGoogleChoice(this, 'gender', 'homme')">♂ Homme</button>
+        <button class="choice-btn" onclick="selectGoogleChoice(this, 'gender', 'femme')">♀ Femme</button>
+      </div>
+      
+      <!-- Recherche -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px; display: block;">Tu cherches</label>
+      <div class="choices" style="margin-bottom: 20px;">
+        <button class="choice-btn" onclick="selectGoogleChoice(this, 'seeking', 'homme')">♂ Homme</button>
+        <button class="choice-btn" onclick="selectGoogleChoice(this, 'seeking', 'femme')">♀ Femme</button>
+        <button class="choice-btn" onclick="selectGoogleChoice(this, 'seeking', 'tous')">👥 Tous</button>
+      </div>
+      
+      <!-- Intérêts -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px; display: block;">Tes intérêts (min 5)</label>
+      <div class="interests-grid" id="googleInterestsGrid" style="margin-bottom: 20px;"></div>
+      
+      <!-- Phrase d'accroche -->
+      <label style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 5px; display: block;">Phrase d'accroche</label>
+      <textarea class="form-input" id="googleCatchphrase" placeholder="Une phrase qui te représente..." rows="2" maxlength="100" style="resize:none;"></textarea>
+      
+      <div id="googleError" class="error-message"></div>
+      
+      <div class="form-actions" style="margin-top: 25px;">
+        <button class="btn-small btn-next" onclick="submitGoogleProfile()" style="width: 100%;">Commencer l'aventure 🚀</button>
       </div>
     </div>
   </div>
@@ -1622,20 +1725,34 @@
       }
     });
 
-    // Listen for auth state changes (email confirmation)
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+    // Listen for auth state changes (email confirmation + Google OAuth)
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth event:', event, session?.user?.email);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
         currentUser = session.user;
-        // Check if user profile exists
-        supabase.from('users').select('id').eq('id', session.user.id).single()
-          .then(({ data, error }) => {
-            if (error || !data) {
-              // Create profile if doesn't exist
-              window.createUserProfile(session.user);
-            } else {
-              window.goToMatches();
-            }
-          });
+        
+        // Vérifier si c'est une connexion Google (provider = google)
+        const isGoogleUser = session.user.app_metadata?.provider === 'google' || 
+                            session.user.identities?.some(i => i.provider === 'google');
+        
+        if (isGoogleUser) {
+          // Gérer le callback Google
+          await window.handleGoogleCallback();
+        } else if (session.user.email_confirmed_at) {
+          // Connexion email classique
+          const { data, error } = await supabase
+            .from('users')
+            .select('id, firstname')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (error || !data) {
+            window.createUserProfile(session.user);
+          } else if (data.firstname) {
+            window.goToMatches();
+          }
+        }
       }
     });
 
@@ -1803,6 +1920,216 @@
         currentUser = data.user;
         window.goToMatches();
       } catch (err) { if (error) error.textContent = err.message; }
+    }
+
+    // AUTHENTIFICATION GOOGLE
+    window.signInWithGoogle = async function() {
+      try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin,
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent',
+            }
+          }
+        });
+        if (error) throw error;
+        // La redirection vers Google se fait automatiquement
+      } catch (err) {
+        console.error('Erreur Google Auth:', err);
+        alert('Erreur de connexion Google: ' + err.message);
+      }
+    }
+
+    // Gérer le callback après connexion Google
+    window.handleGoogleCallback = async function() {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (session && session.user) {
+        currentUser = session.user;
+        
+        // Vérifier si le profil existe déjà
+        const { data: existingProfile, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+        
+        if (existingProfile && existingProfile.firstname) {
+          // Profil complet existe, aller aux matches
+          window.goToMatches();
+        } else {
+          // Nouveau user Google, créer profil minimal et aller à l'inscription
+          const userMetadata = currentUser.user_metadata || {};
+          
+          if (!existingProfile) {
+            // Créer une entrée minimale
+            await supabase.from('users').upsert({
+              id: currentUser.id,
+              email: currentUser.email,
+              firstname: userMetadata.full_name?.split(' ')[0] || userMetadata.name?.split(' ')[0] || '',
+              photo_url: userMetadata.avatar_url || userMetadata.picture || null,
+              created_at: new Date().toISOString()
+            });
+          }
+          
+          // Rediriger vers la complétion du profil
+          window.goToGoogleSignupCompletion();
+        }
+      }
+    }
+
+    // Page de complétion pour les users Google
+    window.goToGoogleSignupCompletion = function() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('googleSignupPage').classList.add('active');
+      
+      // Pré-remplir avec les données Google si disponibles
+      const userMetadata = currentUser?.user_metadata || {};
+      const firstNameInput = document.getElementById('googleFirstName');
+      if (firstNameInput && userMetadata.full_name) {
+        firstNameInput.value = userMetadata.full_name.split(' ')[0];
+      }
+      
+      // Afficher la photo Google si disponible
+      const photoPreview = document.getElementById('googlePhotoPreview');
+      const photoPlaceholder = document.getElementById('googlePhotoPlaceholder');
+      if (photoPreview && (userMetadata.avatar_url || userMetadata.picture)) {
+        photoPreview.src = userMetadata.avatar_url || userMetadata.picture;
+        photoPreview.style.display = 'block';
+        if (photoPlaceholder) photoPlaceholder.style.display = 'none';
+      }
+      
+      window.renderGoogleInterests();
+    }
+
+    // Variables pour le profil Google
+    let googleSelectedInterests = [];
+    let googleFormData = { gender: '', seeking: '' };
+
+    window.renderGoogleInterests = function() {
+      const grid = document.getElementById('googleInterestsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const allInterests = ['Voyages', 'Cinéma', 'Musique', 'Sport', 'Cuisine', 'Lecture', 'Gaming', 'Art', 'Nature', 'Animaux', 'Photo', 'Danse', 'Tech', 'Mode', 'Yoga', 'Série', 'Café', 'Vin', 'Randonnée', 'Festival'];
+      allInterests.forEach(interest => {
+        const btn = document.createElement('button');
+        btn.className = 'interest-tag';
+        btn.textContent = interest;
+        btn.onclick = () => {
+          if (btn.classList.contains('selected')) {
+            btn.classList.remove('selected');
+            googleSelectedInterests = googleSelectedInterests.filter(i => i !== interest);
+          } else if (googleSelectedInterests.length < 10) {
+            btn.classList.add('selected');
+            googleSelectedInterests.push(interest);
+          }
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    window.selectGoogleChoice = function(btn, field, value) {
+      const container = btn.parentElement;
+      container.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      googleFormData[field] = value;
+    }
+
+    window.handleGooglePhotoSelect = function(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('googlePhotoPreview');
+          const placeholder = document.getElementById('googlePhotoPlaceholder');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    window.geolocateGoogleUser = function() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          try {
+            const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
+            const data = await resp.json();
+            const city = data.address?.city || data.address?.town || data.address?.village || '';
+            document.getElementById('googleCity').value = city;
+          } catch (e) {
+            console.error(e);
+          }
+        });
+      }
+    }
+
+    window.submitGoogleProfile = async function() {
+      const errorEl = document.getElementById('googleError');
+      errorEl.textContent = '';
+      
+      const firstname = document.getElementById('googleFirstName').value.trim();
+      const age = parseInt(document.getElementById('googleAge').value);
+      const city = document.getElementById('googleCity').value.trim();
+      const catchphrase = document.getElementById('googleCatchphrase').value.trim();
+      
+      // Validations
+      if (!firstname) { errorEl.textContent = 'Prénom requis'; return; }
+      if (!age || age < 20) { errorEl.textContent = 'Âge requis (20 ans minimum)'; return; }
+      if (!city) { errorEl.textContent = 'Ville requise'; return; }
+      if (!googleFormData.gender) { errorEl.textContent = 'Sélectionne ton genre'; return; }
+      if (!googleFormData.seeking) { errorEl.textContent = 'Sélectionne ce que tu cherches'; return; }
+      if (googleSelectedInterests.length < 5) { errorEl.textContent = 'Sélectionne au moins 5 intérêts'; return; }
+      
+      try {
+        // Upload photo si nouvelle
+        let photoUrl = document.getElementById('googlePhotoPreview').src;
+        const photoInput = document.getElementById('googlePhotoInput');
+        
+        if (photoInput.files[0]) {
+          const file = photoInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${currentUser.id}_${Date.now()}.${fileExt}`;
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('photos')
+            .upload(fileName, file, { upsert: true });
+          
+          if (!uploadError) {
+            const { data: urlData } = supabase.storage.from('photos').getPublicUrl(fileName);
+            photoUrl = urlData.publicUrl;
+          }
+        }
+        
+        // Mettre à jour le profil
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({
+            firstname: firstname,
+            age: age,
+            city: city,
+            gender: googleFormData.gender,
+            seeking: googleFormData.seeking,
+            interests: googleSelectedInterests,
+            catchphrase: catchphrase,
+            photo_url: photoUrl,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', currentUser.id);
+        
+        if (updateError) throw updateError;
+        
+        // Succès - aller aux matches
+        window.goToMatches();
+        
+      } catch (err) {
+        console.error('Erreur:', err);
+        errorEl.textContent = 'Erreur: ' + err.message;
+      }
     }
 
     window.goToSignup = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('signupPage').classList.add('active'); currentStep = 1; window.showStep(1); window.renderInterests(); }
