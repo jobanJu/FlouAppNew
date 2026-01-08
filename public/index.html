@@ -1853,35 +1853,24 @@
     }
 
     window.isCompatible = function(myProfile, otherProfile) {
-      const myGender = myProfile.gender;
-      const mySexuality = myProfile.sexuality;
+      const myGender = myProfile.gender; // 'homme', 'femme', 'non-binaire'
+      const mySeeking = myProfile.seeking; // 'homme', 'femme', 'tous'
       const otherGender = otherProfile.gender;
-      const otherSexuality = otherProfile.sexuality;
+      const otherSeeking = otherProfile.seeking;
 
-      // Bisexuel(le) peut voir tout le monde compatible avec son genre
-      if (mySexuality === 'Bisexuel') {
-        if (otherSexuality === 'Hétérosexuel') return myGender !== otherGender;
-        if (otherSexuality === 'Gay' || otherSexuality === 'Lesbienne') return myGender === otherGender;
-        if (otherSexuality === 'Bisexuel') return true;
+      // Si un des profils n'a pas de préférence définie, on l'affiche quand même
+      if (!myGender || !mySeeking || !otherGender || !otherSeeking) {
+        return true;
       }
 
-      // Hétérosexuel(le)
-      if (mySexuality === 'Hétérosexuel') {
-        if (myGender !== otherGender) {
-          return otherSexuality === 'Hétérosexuel' || otherSexuality === 'Bisexuel';
-        }
-        return false;
-      }
+      // Vérifier si JE cherche le genre de l'autre personne
+      const iSeekThem = (mySeeking === 'tous') || (mySeeking === otherGender);
+      
+      // Vérifier si l'AUTRE personne cherche mon genre
+      const theySeekMe = (otherSeeking === 'tous') || (otherSeeking === myGender);
 
-      // Gay / Lesbienne
-      if (mySexuality === 'Gay' || mySexuality === 'Lesbienne') {
-        if (myGender === otherGender) {
-          return otherSexuality === 'Gay' || otherSexuality === 'Lesbienne' || otherSexuality === 'Bisexuel';
-        }
-        return false;
-      }
-
-      return false;
+      // Compatible seulement si les deux se cherchent mutuellement
+      return iSeekThem && theySeekMe;
     }
 
     window.loadMatches = async function() {
@@ -1899,7 +1888,13 @@
           .select('*')
           .eq('id', currentUser.id)
           .single();
-        if (profileError) throw profileError;
+        
+        if (profileError) {
+          console.error('Erreur profil:', profileError);
+          throw profileError;
+        }
+        
+        console.log('Mon profil:', myProfile);
 
         // Récupère tous les profils sauf le mien
         const { data: allProfiles, error } = await supabase
@@ -1907,13 +1902,29 @@
           .select('*')
           .neq('id', currentUser.id)
           .limit(100);
-        if (error) throw error;
+        
+        if (error) {
+          console.error('Erreur chargement profils:', error);
+          throw error;
+        }
+        
+        console.log('Profils trouvés:', allProfiles?.length || 0);
 
         // Filtre selon la compatibilité
-        potentialMatches = (allProfiles || []).filter(profile => window.isCompatible(myProfile, profile));
+        potentialMatches = (allProfiles || []).filter(profile => {
+          const compatible = window.isCompatible(myProfile, profile);
+          console.log(`${profile.firstname}: compatible=${compatible} (gender=${profile.gender}, seeking=${profile.seeking})`);
+          return compatible;
+        });
+        
+        console.log('Profils compatibles:', potentialMatches.length);
+        
         currentMatchIndex = 0;
         window.renderCurrentMatch();
-      } catch (error) { console.error(error); stack.innerHTML = '<div class="no-more-profiles"><p>Erreur</p></div>'; }
+      } catch (error) { 
+        console.error('loadMatches error:', error); 
+        stack.innerHTML = '<div class="no-more-profiles"><p>Erreur de chargement</p></div>'; 
+      }
     }
 
     window.renderCurrentMatch = function() {
