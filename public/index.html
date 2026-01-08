@@ -1886,7 +1886,10 @@
     window.signInWithGoogle = async function() {
       console.log('🔑 Démarrage connexion Google...');
       try {
-        const redirectUrl = window.location.origin;
+        // Toujours utiliser l'URL de production pour le callback
+        const redirectUrl = window.location.hostname === 'localhost' 
+          ? 'https://flouappnew-production.up.railway.app'
+          : window.location.origin;
         console.log('🔗 Redirect URL:', redirectUrl);
         
         const { data, error } = await supabase.auth.signInWithOAuth({
