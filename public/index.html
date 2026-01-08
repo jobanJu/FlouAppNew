@@ -854,9 +854,54 @@
       <input type="email" class="form-input" id="loginEmail" placeholder="ton@email.com">
       <input type="password" class="form-input" id="loginPassword" placeholder="Mot de passe" style="margin-top: -10px;">
       <div id="loginError" class="error-message"></div>
-      <div class="form-actions" style="margin-top: 30px;">
+      
+      <!-- Mot de passe oublié -->
+      <div style="text-align: center; margin-top: 15px;">
+        <a href="#" onclick="showForgotPassword(); return false;" style="color: rgba(255,255,255,0.7); font-size: 0.9rem; text-decoration: underline;">Mot de passe oublié ?</a>
+      </div>
+      
+      <div class="form-actions" style="margin-top: 25px;">
         <button class="btn-small btn-back" onclick="goToLanding()">Retour</button>
         <button class="btn-small btn-next" onclick="doLogin()">Se connecter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD PAGE -->
+  <div id="forgotPasswordPage" class="page">
+    <div class="signup-form" style="max-width: 400px;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🔐</div>
+        <h2 style="font-size: 1.6rem; margin-bottom: 10px;">Mot de passe oublié</h2>
+        <p style="opacity: 0.7; font-size: 0.9rem;">Entre ton email pour recevoir un lien de réinitialisation</p>
+      </div>
+      
+      <input type="email" class="form-input" id="forgotEmail" placeholder="ton@email.com">
+      <div id="forgotError" class="error-message"></div>
+      <div id="forgotSuccess" style="color: #4ade80; font-size: 0.9rem; text-align: center; margin-top: 10px; display: none;"></div>
+      
+      <div class="form-actions" style="margin-top: 30px;">
+        <button class="btn-small btn-back" onclick="goToLogin()">Retour</button>
+        <button class="btn-small btn-next" id="forgotBtn" onclick="sendPasswordReset()">Envoyer le lien</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESET PASSWORD PAGE -->
+  <div id="resetPasswordPage" class="page">
+    <div class="signup-form" style="max-width: 400px;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div style="font-size: 2.5rem; margin-bottom: 20px;">🔑</div>
+        <h2 style="font-size: 1.6rem; margin-bottom: 10px;">Nouveau mot de passe</h2>
+        <p style="opacity: 0.7; font-size: 0.9rem;">Choisis un nouveau mot de passe sécurisé</p>
+      </div>
+      
+      <input type="password" class="form-input" id="newPassword" placeholder="Nouveau mot de passe" minlength="6">
+      <input type="password" class="form-input" id="confirmNewPassword" placeholder="Confirme le mot de passe" style="margin-top: -10px;">
+      <div id="resetError" class="error-message"></div>
+      
+      <div class="form-actions" style="margin-top: 30px;">
+        <button class="btn-small btn-next" style="width: 100%;" onclick="updatePassword()">Mettre à jour</button>
       </div>
     </div>
   </div>
@@ -1713,13 +1758,18 @@
     let potentialMatches = [];
     let currentMatchIndex = 0;
 
+    // Vérifier si on revient d'un reset password (AVANT la vérification de session)
+    window.checkPasswordResetFlow();
+
     // Check auth state on load
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user?.email_confirmed_at) {
         currentUser = session.user;
         const landing = document.getElementById('landingPage');
         const login = document.getElementById('loginPage');
-        if (landing.classList.contains('active') || login.classList.contains('active')) {
+        const resetPage = document.getElementById('resetPasswordPage');
+        // Ne pas rediriger si on est sur la page de reset password
+        if ((landing.classList.contains('active') || login.classList.contains('active')) && !resetPage.classList.contains('active')) {
           window.goToMatches();
         }
       }
@@ -1728,6 +1778,13 @@
     // Listen for auth state changes (email confirmation + Google OAuth)
     supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth event:', event, session?.user?.email);
+      
+      // Gérer le reset password
+      if (event === 'PASSWORD_RECOVERY') {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('resetPasswordPage').classList.add('active');
+        return;
+      }
       
       if (event === 'SIGNED_IN' && session?.user) {
         currentUser = session.user;
@@ -1740,6 +1797,10 @@
           // Gérer le callback Google
           await window.handleGoogleCallback();
         } else if (session.user.email_confirmed_at) {
+          // Ne pas rediriger si on est sur la page de reset
+          const resetPage = document.getElementById('resetPasswordPage');
+          if (resetPage.classList.contains('active')) return;
+          
           // Connexion email classique
           const { data, error } = await supabase
             .from('users')
@@ -2129,6 +2190,107 @@
       } catch (err) {
         console.error('Erreur:', err);
         errorEl.textContent = 'Erreur: ' + err.message;
+      }
+    }
+
+    // FONCTIONS MOT DE PASSE OUBLIÉ
+    window.showForgotPassword = function() {
+      document.getElementById('loginPage').classList.remove('active');
+      document.getElementById('forgotPasswordPage').classList.add('active');
+      document.getElementById('forgotEmail').value = document.getElementById('loginEmail').value || '';
+      document.getElementById('forgotError').textContent = '';
+      document.getElementById('forgotSuccess').style.display = 'none';
+    }
+
+    window.goToLogin = function() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('loginPage').classList.add('active');
+    }
+
+    window.sendPasswordReset = async function() {
+      const email = document.getElementById('forgotEmail').value.trim();
+      const errorEl = document.getElementById('forgotError');
+      const successEl = document.getElementById('forgotSuccess');
+      const btn = document.getElementById('forgotBtn');
+      
+      errorEl.textContent = '';
+      successEl.style.display = 'none';
+      
+      if (!email) {
+        errorEl.textContent = 'Entre ton adresse email';
+        return;
+      }
+      
+      // Validation email basique
+      if (!email.includes('@')) {
+        errorEl.textContent = 'Adresse email invalide';
+        return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = 'Envoi...';
+      
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + '?reset=true'
+        });
+        
+        if (error) throw error;
+        
+        successEl.textContent = '✅ Email envoyé ! Vérifie ta boîte mail (et les spams)';
+        successEl.style.display = 'block';
+        btn.textContent = 'Email envoyé';
+        
+      } catch (err) {
+        console.error('Reset error:', err);
+        errorEl.textContent = err.message;
+        btn.disabled = false;
+        btn.textContent = 'Envoyer le lien';
+      }
+    }
+
+    window.updatePassword = async function() {
+      const newPwd = document.getElementById('newPassword').value;
+      const confirmPwd = document.getElementById('confirmNewPassword').value;
+      const errorEl = document.getElementById('resetError');
+      
+      errorEl.textContent = '';
+      
+      if (!newPwd || newPwd.length < 6) {
+        errorEl.textContent = 'Le mot de passe doit faire au moins 6 caractères';
+        return;
+      }
+      
+      if (newPwd !== confirmPwd) {
+        errorEl.textContent = 'Les mots de passe ne correspondent pas';
+        return;
+      }
+      
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPwd });
+        
+        if (error) throw error;
+        
+        alert('✅ Mot de passe mis à jour !');
+        window.goToMatches();
+        
+      } catch (err) {
+        console.error('Update password error:', err);
+        errorEl.textContent = err.message;
+      }
+    }
+
+    // Vérifier si on revient d'un reset password
+    window.checkPasswordResetFlow = function() {
+      const url = new URL(window.location.href);
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      
+      // Supabase met les tokens dans le hash après redirection
+      if (hashParams.get('type') === 'recovery' || url.searchParams.get('reset') === 'true') {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('resetPasswordPage').classList.add('active');
+        // Nettoyer l'URL
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
 
