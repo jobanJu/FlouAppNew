@@ -1908,6 +1908,32 @@
           </div>
         </div>
 
+        <!-- Barre des spectateurs -->
+        <div id="spectatorsBar" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span style="color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 600;" id="spectatorsCount">0 spectateurs</span>
+            </div>
+            <button onclick="toggleSpectatorsExpand()" id="spectatorsExpandBtn" style="background: rgba(255,255,255,0.1); border: none; padding: 4px 10px; border-radius: 12px; color: rgba(255,255,255,0.7); font-size: 0.75rem; cursor: pointer;">
+              Voir tous
+            </button>
+          </div>
+          <!-- Avatars des spectateurs (scroll horizontal) -->
+          <div id="spectatorsAvatars" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;">
+            <!-- Avatars générés dynamiquement -->
+          </div>
+        </div>
+        
+        <!-- Liste complète des spectateurs (expandable) -->
+        <div id="spectatorsFullList" style="display: none; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); max-height: 200px; overflow-y: auto; padding: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;" id="spectatorsGrid">
+            <!-- Liste générée dynamiquement -->
+          </div>
+        </div>
+
         <div class="live-chat-area" style="background: rgba(28, 25, 23, 0.98); border-top: 1px solid rgba(255,255,255,0.08);">
           <div class="live-chat-messages" id="liveChatMessages">
             <!-- Messages du chat -->
@@ -4788,6 +4814,9 @@
         // S'abonner aux changements en temps réel
         subscribeLiveUpdates(liveId);
         
+        // Démarrer le refresh des spectateurs
+        startSpectatorsRefresh();
+        
         switchView('liveRoom');
         
       } catch (error) {
@@ -5007,6 +5036,9 @@
         
         // S'abonner aux changements
         subscribeLiveUpdates(liveId);
+        
+        // Démarrer le refresh des spectateurs
+        startSpectatorsRefresh();
         
         switchView('liveRoom');
         
@@ -5609,6 +5641,9 @@
       }
 
       try {
+        // Arrêter le refresh des spectateurs
+        stopSpectatorsRefresh();
+        
         // Quitter la room Agora
         await leaveAgoraRoom();
         
@@ -6013,6 +6048,113 @@
         
       } catch (error) {
         console.error('Erreur retrait Nimbe:', error);
+      }
+    }
+
+    // ============================================
+    // SYSTÈME D'AFFICHAGE DES SPECTATEURS
+    // ============================================
+    
+    let spectatorsExpanded = false;
+    let spectatorsRefreshInterval = null;
+    
+    // Charger et afficher les spectateurs
+    window.loadSpectators = async function() {
+      if (!currentLiveId) return;
+      
+      try {
+        const { data: spectators } = await supabase
+          .from('live_participants')
+          .select(`
+            user_id,
+            role,
+            users:user_id (firstname, photo_url)
+          `)
+          .eq('live_id', currentLiveId)
+          .in('role', ['spectator', 'nimbe'])
+          .is('left_at', null);
+        
+        const count = spectators?.length || 0;
+        document.getElementById('spectatorsCount').textContent = `${count} spectateur${count > 1 ? 's' : ''}`;
+        
+        // Mettre à jour le header aussi
+        const onCamCount = Object.values(videoSlots).filter(v => v !== null).length;
+        document.getElementById('liveRoomStats').textContent = `${onCamCount} en cam • ${count} spectateurs`;
+        
+        if (!spectators || spectators.length === 0) {
+          document.getElementById('spectatorsAvatars').innerHTML = '<span style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">Aucun spectateur</span>';
+          document.getElementById('spectatorsGrid').innerHTML = '';
+          return;
+        }
+        
+        // Avatars en ligne (max 15 visibles)
+        const avatarsHtml = spectators.slice(0, 15).map(s => {
+          const isNimbe = s.role === 'nimbe';
+          return `
+            <div style="position: relative; flex-shrink: 0;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; border: 2px solid ${isNimbe ? '#8B5CF6' : 'rgba(255,255,255,0.2)'}; background: linear-gradient(135deg, #8B5CF6, #EC4899);">
+                ${s.users?.photo_url 
+                  ? `<img src="${s.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(4px);" onerror="this.style.display='none'">`
+                  : ''}
+              </div>
+              ${isNimbe ? '<div style="position: absolute; bottom: -2px; right: -2px; font-size: 0.6rem;">🌟</div>' : ''}
+            </div>
+          `;
+        }).join('');
+        
+        const remaining = spectators.length - 15;
+        document.getElementById('spectatorsAvatars').innerHTML = avatarsHtml + 
+          (remaining > 0 ? `<div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); font-size: 0.75rem; flex-shrink: 0;">+${remaining}</div>` : '');
+        
+        // Grille complète
+        document.getElementById('spectatorsGrid').innerHTML = spectators.map(s => {
+          const isNimbe = s.role === 'nimbe';
+          return `
+            <div style="text-align: center;">
+              <div style="position: relative; display: inline-block;">
+                <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; margin: 0 auto 4px; border: 2px solid ${isNimbe ? '#8B5CF6' : 'rgba(255,255,255,0.2)'}; background: linear-gradient(135deg, #8B5CF6, #EC4899);">
+                  ${s.users?.photo_url 
+                    ? `<img src="${s.users.photo_url}" style="width: 100%; height: 100%; object-fit: cover; filter: blur(4px);">`
+                    : ''}
+                </div>
+                ${isNimbe ? '<div style="position: absolute; bottom: 2px; right: -2px; font-size: 0.7rem;">🌟</div>' : ''}
+              </div>
+              <div style="font-size: 0.7rem; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60px; margin: 0 auto;">${s.users?.firstname || 'Anonyme'}</div>
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        console.error('Erreur chargement spectateurs:', error);
+      }
+    }
+    
+    // Toggle expansion de la liste
+    window.toggleSpectatorsExpand = function() {
+      spectatorsExpanded = !spectatorsExpanded;
+      const fullList = document.getElementById('spectatorsFullList');
+      const btn = document.getElementById('spectatorsExpandBtn');
+      
+      if (spectatorsExpanded) {
+        fullList.style.display = 'block';
+        btn.textContent = 'Réduire';
+      } else {
+        fullList.style.display = 'none';
+        btn.textContent = 'Voir tous';
+      }
+    }
+    
+    // Démarrer le refresh automatique des spectateurs
+    function startSpectatorsRefresh() {
+      loadSpectators();
+      spectatorsRefreshInterval = setInterval(loadSpectators, 5000); // Refresh toutes les 5 sec
+    }
+    
+    // Arrêter le refresh
+    function stopSpectatorsRefresh() {
+      if (spectatorsRefreshInterval) {
+        clearInterval(spectatorsRefreshInterval);
+        spectatorsRefreshInterval = null;
       }
     }
 
