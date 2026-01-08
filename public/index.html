@@ -3381,20 +3381,20 @@
           .eq('id', currentUser.id)
           .single();
 
-        const userName = userData?.firstname || 'Utilisateur';
-        console.log('✅ Nom récupéré:', userName);
+        const displayName = userName || userData?.firstname || 'Utilisateur';
+        console.log('✅ Nom récupéré:', displayName);
 
         // Vider le container vidéo
         document.getElementById('liveVideoArea').innerHTML = '';
 
         // Si on est en cam, rejoindre Agora avec vidéo
         if (isOnCam) {
-          console.log('🎥 Connexion à Agora avec caméra:', { room: currentRoomName, user: userName });
-          await joinAgoraRoom(currentRoomName, userName, 'liveVideoArea');
+          console.log('🎥 Connexion à Agora avec caméra:', { room: currentRoomName, user: displayName });
+          await joinAgoraRoom(currentRoomName, displayName, 'liveVideoArea');
           document.getElementById('joinCamContainer').style.display = 'none';
         } else {
           // Spectateur: rejoindre Agora sans publier de vidéo
-          console.log('👁️ Connexion à Agora comme spectateur:', { room: currentRoomName, user: userName });
+          console.log('👁️ Connexion à Agora comme spectateur:', { room: currentRoomName, user: displayName });
           await joinAgoraAsSpectator(currentRoomName, 'liveVideoArea');
           // Afficher le bouton pour rejoindre en cam
           updateJoinCamButton();
