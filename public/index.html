@@ -1410,120 +1410,178 @@
       </div>
     </div>
 
-    <!-- Vue Profil - Design Épuré -->
+    <!-- Vue Profil - Design Premium Réorganisé -->
     <div id="profileView" class="app-view">
       <div class="profile-container" style="background: var(--bg); min-height: 100vh; padding-bottom: 100px;">
         
-        <!-- Header avec photo -->
-        <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 50px 20px 70px; margin: -20px -20px 0; border-radius: 0 0 30px 30px;">
-          <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 16px;">
-            <img id="profilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 8px 30px rgba(0,0,0,0.25);">
-          </div>
-          <div id="profileName" style="font-size: 1.6rem; font-weight: 700; color: white; text-align: center;">-</div>
-          <div style="text-align: center; color: rgba(255,255,255,0.9); font-size: 0.95rem; margin-top: 4px;">
-            <span id="profileAgeHeader">-</span> ans · <span id="profileCityHeader">-</span>
+        <!-- Header avec photo et nom -->
+        <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); padding: 40px 20px 60px; margin: -20px -20px 0; border-radius: 0 0 30px 30px; position: relative;">
+          <!-- Bouton paramètres -->
+          <button onclick="switchView('editProfile')" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09c-.66 0-1.25.39-1.51 1z"/></svg>
+          </button>
+          
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="position: relative; width: 90px; height: 90px; flex-shrink: 0;">
+              <img id="profilePhoto" src="/assets/images/default-avatar.png" alt="Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            </div>
+            <div style="flex: 1;">
+              <div id="profileName" style="font-size: 1.5rem; font-weight: 700; color: white;">-</div>
+              <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-top: 2px;">
+                <span id="profileAgeHeader">-</span> ans · <span id="profileCityHeader">-</span>
+              </div>
+              <!-- Badge abonnement -->
+              <div id="userSubscription" style="display: inline-block; margin-top: 8px; padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: white;">⚪ CLASSIQUE</div>
+            </div>
           </div>
         </div>
 
-        <div style="margin-top: -40px; padding: 0 16px;">
+        <div style="margin-top: -30px; padding: 0 16px;">
           
-          <!-- Badges de securite et verification -->
-          <div id="securityBadges" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px;">
+          <!-- Carte Brumes & Boutique -->
+          <div onclick="switchView('shop')" style="background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%); padding: 16px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); margin-bottom: 16px;">
+            <div>
+              <div style="font-size: 0.8rem; color: rgba(0,0,0,0.6); font-weight: 500;">Mon solde</div>
+              <div style="font-size: 1.6rem; font-weight: 700; color: #1C1917;"><span id="userBrumes">0</span> 💎</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.15); padding: 10px 16px; border-radius: 12px; color: #1C1917; font-weight: 600; font-size: 0.9rem;">
+              Boutique →
+            </div>
+          </div>
+
+          <!-- Section Mon Profil -->
+          <div style="background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 1rem; font-weight: 700; color: var(--text); margin: 0;">Mon profil</h3>
+              <button onclick="switchView('editProfile')" style="background: none; border: none; color: var(--primary); font-size: 0.85rem; cursor: pointer; font-weight: 600;">Modifier</button>
+            </div>
+            
+            <!-- Grille infos rapides -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+              <div style="text-align: center; padding: 10px 4px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 1.1rem; font-weight: 700; color: var(--text);" id="profileAge">-</div>
+                <div style="font-size: 0.65rem; color: var(--text-lighter); text-transform: uppercase;">ans</div>
+              </div>
+              <div style="text-align: center; padding: 10px 4px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--text);" id="profileGender">-</div>
+                <div style="font-size: 0.65rem; color: var(--text-lighter); text-transform: uppercase;">je suis</div>
+              </div>
+              <div style="text-align: center; padding: 10px 4px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
+                <div style="font-size: 0.65rem; color: var(--text-lighter); text-transform: uppercase;">cherche</div>
+              </div>
+              <div style="text-align: center; padding: 10px 4px; background: var(--bg-secondary); border-radius: 12px;">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text);" id="profileCity">-</div>
+                <div style="font-size: 0.65rem; color: var(--text-lighter); text-transform: uppercase;">ville</div>
+              </div>
+            </div>
+
+            <!-- Bio -->
+            <div id="profileBioSection" style="display: none;">
+              <div id="profileCatchphraseContainer" style="margin-bottom: 12px; display: none;">
+                <div style="font-size: 0.95rem; font-style: italic; color: var(--text); padding: 12px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); border-radius: 12px; border-left: 3px solid var(--primary);">
+                  "<span id="profileCatchphrase"></span>"
+                </div>
+              </div>
+              <div id="profileBioContainer" style="display: none;">
+                <div id="profileBio" style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;"></div>
+              </div>
+            </div>
+
+            <!-- Centres d'intérêt -->
+            <div style="margin-top: 12px;">
+              <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 8px;">Centres d'intérêt</div>
+              <div id="profileInterests" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            </div>
+          </div>
+
+          <!-- Badges de vérification -->
+          <div id="securityBadges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
             <div id="badgeEmailVerified" class="trust-badge verified" style="display: none;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              Email verifie
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Email vérifié
             </div>
             <div id="badgePhotoVerified" class="trust-badge pending" style="display: none;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               Photo en attente
             </div>
             <div id="badgeProfileComplete" class="trust-badge" style="display: none;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Profil complet
             </div>
           </div>
 
-          <!-- Abonnement & Brumes -->
-          <div style="background: var(--bg-card); padding: 18px; border-radius: 16px; text-align: center; box-shadow: var(--shadow-lg); margin-bottom: 16px;">
-            <div id="userSubscription" style="font-size: 0.95rem; font-weight: 600; color: #8B5CF6; margin-bottom: 6px;">CLASSIQUE</div>
-            <div style="font-size: 1.4rem; font-weight: 700; color: #F59E0B; display: flex; align-items: center; justify-content: center; gap: 6px;">
-              <span id="userBrumes">0</span>
-              <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-light);">Brumes</span>
+          <!-- Section Paramètres rapides -->
+          <div style="background: var(--bg-card); border-radius: 20px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; padding: 16px 20px 8px;">Paramètres</div>
+            
+            <!-- Mode Jour/Nuit -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="themeIcon" style="font-size: 1.2rem;">☀️</span>
+                <span style="color: var(--text); font-weight: 500;" id="themeLabel">Mode Jour</span>
+              </div>
+              <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()" style="width: 50px; height: 28px;"></div>
+            </div>
+            
+            <!-- Mes Favoris -->
+            <div onclick="showFavoritesModal()" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.2rem;">⭐</span>
+                <span style="color: var(--text); font-weight: 500;">Mes Favoris</span>
+              </div>
+              <span style="color: var(--text-lighter);">→</span>
+            </div>
+            
+            <!-- Paramètres Lives -->
+            <div onclick="showLiveUserSettings()" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.2rem;">📹</span>
+                <span style="color: var(--text); font-weight: 500;">Paramètres Lives & Gains</span>
+              </div>
+              <span style="color: var(--text-lighter);">→</span>
+            </div>
+            
+            <!-- Installer l'app -->
+            <div id="installBtn" onclick="installPWA()" style="display: none; justify-content: space-between; align-items: center; padding: 14px 20px; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.2rem;">📱</span>
+                <span style="color: var(--text); font-weight: 500;">Installer l'application</span>
+              </div>
+              <span style="color: var(--primary); font-weight: 600;">Installer</span>
             </div>
           </div>
 
-          <!-- Toggle Mode Jour/Nuit -->
-          <div class="theme-toggle">
-            <div class="theme-toggle-label">
-              <span class="theme-toggle-icon" id="themeIcon">O</span>
-              <span id="themeLabel">Mode Jour</span>
-            </div>
-            <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()"></div>
+          <!-- Liens légaux -->
+          <div style="background: var(--bg-card); border-radius: 20px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow);">
+            <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; padding: 16px 20px 8px;">Informations</div>
+            
+            <a href="/cgu.html" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); text-decoration: none;">
+              <span style="color: var(--text); font-weight: 500;">Conditions d'utilisation</span>
+              <span style="color: var(--text-lighter);">→</span>
+            </a>
+            <a href="/confidentialite.html" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); text-decoration: none;">
+              <span style="color: var(--text); font-weight: 500;">Confidentialité</span>
+              <span style="color: var(--text-lighter);">→</span>
+            </a>
+            <a href="/reglement.html" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border-light); text-decoration: none;">
+              <span style="color: var(--text); font-weight: 500;">Règlement</span>
+              <span style="color: var(--text-lighter);">→</span>
+            </a>
+            <a href="/reglement-brumes.html" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; text-decoration: none;">
+              <span style="color: var(--text); font-weight: 500;">Règlement des Brumes</span>
+              <span style="color: var(--text-lighter);">→</span>
+            </a>
           </div>
 
-          <!-- Infos en grille -->
-          <div style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Age</div>
-                <div style="font-size: 1.2rem; font-weight: 700; color: var(--text);" id="profileAge">-</div>
-              </div>
-              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Ville</div>
-                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileCity">-</div>
-              </div>
-              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Genre</div>
-                <div style="font-size: 1rem; font-weight: 600; color: var(--text);" id="profileGender">-</div>
-              </div>
-              <div style="text-align: center; padding: 14px; background: var(--bg-secondary); border-radius: 12px;">
-                <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-lighter); text-transform: uppercase; margin-bottom: 4px;">Recherche</div>
-                <div style="font-size: 0.95rem; font-weight: 600; color: var(--text);" id="profileSexuality">-</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bio & Phrase d'accroche -->
-          <div id="profileBioSection" style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); display: none;">
-            <div id="profileCatchphraseContainer" style="margin-bottom: 12px; display: none;">
-              <div style="font-size: 1rem; font-style: italic; color: var(--text); text-align: center; padding: 10px; background: var(--bg-secondary); border-radius: 10px; border-left: 3px solid var(--primary);">
-                "<span id="profileCatchphrase"></span>"
-              </div>
-            </div>
-            <div id="profileBioContainer" style="display: none;">
-              <div style="font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 0.85rem;">A propos</div>
-              <div id="profileBio" style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;"></div>
-            </div>
-          </div>
-
-          <!-- Centres d'interet -->
-          <div style="background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);">
-            <div style="font-weight: 600; margin-bottom: 12px; color: var(--text); font-size: 0.85rem;">Centres d'interet</div>
-            <div id="profileInterests" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-          </div>
-
-          <!-- Boutons d'action -->
-          <button class="btn btn-primary" onclick="switchView('shop')" style="width: 100%; margin-bottom: 10px; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);">
-            Boutique
-          </button>
-          <button class="btn btn-secondary" onclick="showFavoritesModal()" style="width: 100%; margin-bottom: 10px;">
-            Mes Favoris
-          </button>
-          <button class="btn btn-secondary" onclick="switchView('editProfile')" style="width: 100%; margin-bottom: 10px;">
-            Modifier mon profil
-          </button>
-          <button id="installBtn" class="btn btn-secondary" onclick="installPWA()" style="width: 100%; margin-bottom: 10px; display: none;">
-            Installer l'app
+          <!-- Bouton déconnexion -->
+          <button onclick="logout()" style="width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #EF4444; padding: 14px; border-radius: 14px; font-weight: 600; cursor: pointer; font-size: 0.95rem;">
+            Déconnexion
           </button>
           
-          <!-- Liens -->
-          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.75rem; text-align: center;">
-            <a href="/cgu.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">CGU</a> |
-            <a href="/confidentialite.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">Confidentialite</a> |
-            <a href="/reglement.html" style="color: var(--text-lighter); margin: 0 6px; text-decoration: none;">Reglement</a>
+          <div style="text-align: center; margin-top: 20px; color: var(--text-lighter); font-size: 0.75rem;">
+            Flou v2.0 · © 2026
           </div>
-          
-          <button class="btn-ghost" onclick="logout()" style="width: 100%; margin-top: 12px; color: #EF4444; font-size: 0.9rem;">Deconnexion</button>
         </div>
       </div>
     </div>
@@ -1939,6 +1997,7 @@
             <!-- Messages du chat -->
           </div>
           <div class="live-chat-input-area" style="border-top: 1px solid rgba(255,255,255,0.08);">
+            <button onclick="showGiftModal()" style="background: linear-gradient(135deg, #FCD34D, #F59E0B); border: none; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">🎁</button>
             <input type="text" id="liveChatInput" class="live-chat-input" placeholder="Envoyer un message..." maxlength="200" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: white;">
             <button class="live-chat-send" onclick="sendLiveMessage()" style="background: linear-gradient(135deg, #8B5CF6, #EC4899);">Envoyer</button>
           </div>
@@ -2082,10 +2141,11 @@
         <div style="padding: 20px; max-height: 70vh; overflow-y: auto;">
           
           <!-- Onglets -->
-          <div style="display: flex; gap: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px;">
-            <button id="tabFanMessages" onclick="switchLiveSettingsTab('fan')" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">Messages Fan</button>
-            <button id="tabFavorites" onclick="switchLiveSettingsTab('favorites')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.85rem;">Favoris</button>
-            <button id="tabNimbes" onclick="switchLiveSettingsTab('nimbes')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.85rem;">Nimbes</button>
+          <div style="display: flex; gap: 6px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px;">
+            <button id="tabFanMessages" onclick="switchLiveSettingsTab('fan')" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 0.8rem;">Fans</button>
+            <button id="tabFavorites" onclick="switchLiveSettingsTab('favorites')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.8rem;">Favoris</button>
+            <button id="tabNimbes" onclick="switchLiveSettingsTab('nimbes')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.8rem;">Nimbes</button>
+            <button id="tabEarnings" onclick="switchLiveSettingsTab('earnings')" style="flex: 1; padding: 10px; background: transparent; border: none; border-radius: 10px; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.8rem;">💰 Gains</button>
           </div>
           
           <!-- Section: Message aux fans -->
@@ -2132,9 +2192,131 @@
             </div>
           </div>
           
+          <!-- Section: Gains Créateur -->
+          <div id="sectionEarnings" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+              <span style="font-size: 1.1rem;">💰</span>
+              <span style="color: white; font-weight: 600;">Mes Gains</span>
+            </div>
+            
+            <!-- Solde actuel -->
+            <div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2)); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center;">
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 4px;">Brumes à convertir</div>
+              <div style="font-size: 2rem; font-weight: 700; color: #FCD34D;" id="earningsBrumes">0</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 4px;">≈ <span id="earningsEuros">0,00</span> €</div>
+            </div>
+            
+            <!-- Taux de conversion -->
+            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Taux de conversion</span>
+                <span style="color: white; font-weight: 600;">100 💎 = 0,50 €</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Commission Flou</span>
+                <span style="color: rgba(255,255,255,0.5);">20% sur les cadeaux reçus</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Minimum de retrait</span>
+                <span style="color: white;">1 000 💎 (5,00 €)</span>
+              </div>
+            </div>
+            
+            <!-- Bouton demander conversion -->
+            <button onclick="requestConversion()" id="btnRequestConversion" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #10B981, #059669); border: none; border-radius: 14px; color: white; font-weight: 600; cursor: pointer; font-size: 0.95rem; margin-bottom: 12px;" disabled>
+              💶 Demander un retrait
+            </button>
+            
+            <!-- Statut vérification -->
+            <div id="verificationStatus" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="color: #EF4444;">⚠️</span>
+                <span style="color: white; font-weight: 600; font-size: 0.9rem;">Vérification requise</span>
+              </div>
+              <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0 0 12px 0;">Pour retirer tes gains, tu dois vérifier ton identité :</p>
+              <ul style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0; padding-left: 20px;">
+                <li id="verifyPhone" style="margin-bottom: 4px;">❌ Appel téléphonique de vérification</li>
+                <li id="verifyId" style="margin-bottom: 4px;">❌ Pièce d'identité (CNI/Passeport)</li>
+                <li id="verifyAgreement" style="margin-bottom: 4px;">❌ Accord anti-fraude signé</li>
+                <li id="verifyBank">❌ Coordonnées bancaires validées</li>
+              </ul>
+            </div>
+            
+            <!-- Bouton commencer vérification -->
+            <button onclick="startVerification()" style="width: 100%; padding: 12px; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 12px; color: #A78BFA; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-bottom: 16px;">
+              🔐 Commencer la vérification
+            </button>
+            
+            <!-- Lien règlement -->
+            <a href="/reglement-brumes.html" target="_blank" style="display: block; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-decoration: none;">
+              📜 Voir le règlement des Brumes
+            </a>
+          </div>
+          
         </div>
       </div>
     </div>
+
+    <!-- MODAL CADEAUX LIVE -->
+    <div id="giftModal" class="modal-overlay" style="display: none;">
+      <div class="modal-content" style="background: linear-gradient(180deg, #1C1917 0%, #0C0A09 100%); max-width: 400px; border-radius: 24px; padding: 0; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h3 style="color: white; font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+            🎁 Envoyer un cadeau
+          </h3>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="color: #FCD34D; font-weight: 600;" id="giftModalBalance">0 💎</span>
+            <button onclick="closeGiftModal()" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%;">×</button>
+          </div>
+        </div>
+        
+        <!-- Destinataire -->
+        <div style="padding: 12px 20px; background: rgba(139, 92, 246, 0.1); border-bottom: 1px solid rgba(255,255,255,0.05);">
+          <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">Envoyer à : </span>
+          <span style="color: white; font-weight: 600;" id="giftReceiverName">Host du live</span>
+        </div>
+        
+        <!-- Grille de cadeaux -->
+        <div style="padding: 16px; max-height: 50vh; overflow-y: auto;">
+          <div id="giftsGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+            <!-- Cadeaux générés dynamiquement -->
+          </div>
+        </div>
+        
+        <!-- Bouton Acheter Brumes -->
+        <div style="padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+          <button onclick="closeGiftModal(); switchView('shop');" style="background: transparent; border: 1px solid rgba(251, 191, 36, 0.5); color: #FCD34D; padding: 10px 24px; border-radius: 12px; cursor: pointer; font-size: 0.9rem;">
+            💎 Acheter des Brumes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animation Cadeau -->
+    <div id="giftAnimation" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100000;">
+      <div id="giftAnimationContent" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+        <div id="giftEmoji" style="font-size: 5rem; animation: giftBounce 1s ease-out;"></div>
+        <div id="giftText" style="color: white; font-weight: 700; font-size: 1.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); margin-top: 10px;"></div>
+      </div>
+    </div>
+
+    <style>
+      @keyframes giftBounce {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.3); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      @keyframes giftFloat {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-100px); opacity: 0; }
+      }
+      @keyframes giftRain {
+        0% { transform: translateY(-100%); opacity: 1; }
+        100% { transform: translateY(100vh); opacity: 0; }
+      }
+    </style>
 
     <!-- SPEED DATING VIEW -->
     <div id="liveDateView" class="app-view">
@@ -5516,9 +5698,31 @@
       }
     }
 
-    window.showGiftModal = function() {
-      // Charger les participants du Live
-      loadGiftParticipants();
+    window.showGiftModal = async function() {
+      // Afficher le solde
+      const balance = currentUserProfile?.brumes_balance || 0;
+      document.getElementById('giftModalBalance').textContent = balance + ' 💎';
+      
+      // Trouver le host du live
+      try {
+        const { data: live } = await supabase
+          .from('lives')
+          .select('host_id, users!lives_host_id_fkey(firstname)')
+          .eq('id', currentLiveId)
+          .single();
+        
+        if (live) {
+          selectedGiftRecipient = live.host_id;
+          document.getElementById('giftReceiverName').textContent = live.users?.firstname || 'Host';
+        }
+        
+        // Charger les cadeaux disponibles
+        await loadAvailableGifts();
+        
+      } catch (error) {
+        console.error('Erreur chargement live:', error);
+      }
+      
       document.getElementById('giftModal').style.display = 'flex';
     }
 
@@ -5526,81 +5730,161 @@
       document.getElementById('giftModal').style.display = 'none';
     }
 
-    window.loadGiftParticipants = async function() {
+    // Cadeaux disponibles (hardcodés si la table n'existe pas encore)
+    const defaultGifts = [
+      { id: 'g1', name: 'Coeur', emoji: '❤️', price: 5 },
+      { id: 'g2', name: 'Rose', emoji: '🌹', price: 10 },
+      { id: 'g3', name: 'Bisou', emoji: '💋', price: 15 },
+      { id: 'g4', name: 'Étoile', emoji: '⭐', price: 20 },
+      { id: 'g5', name: 'Diamant', emoji: '💎', price: 50 },
+      { id: 'g6', name: 'Arc-en-ciel', emoji: '🌈', price: 75 },
+      { id: 'g7', name: 'Couronne', emoji: '👑', price: 100 },
+      { id: 'g8', name: 'Champagne', emoji: '🍾', price: 150 },
+      { id: 'g9', name: 'Fusée', emoji: '🚀', price: 200 },
+      { id: 'g10', name: 'Licorne', emoji: '🦄', price: 300 }
+    ];
+
+    let availableGifts = [];
+
+    async function loadAvailableGifts() {
       try {
-        const { data: participants, error } = await supabase
-          .from('live_participants')
-          .select('*, users!live_participants_user_id_fkey(firstname)')
-          .eq('live_id', currentLiveId)
-          .is('left_at', null)
-          .neq('user_id', currentUser.id);
-
-        if (error) throw error;
-
-        const list = document.getElementById('giftParticipantsList');
-        list.innerHTML = participants.map(p => `
-          <div style="padding:12px; background:rgba(255,255,255,0.05); border-radius:8px; margin-bottom:8px; cursor:pointer; border:2px solid transparent;" 
-               class="gift-participant" 
-               data-user-id="${p.user_id}"
-               onclick="selectGiftRecipient('${p.user_id}')">
-            ${p.pseudo} ${p.role === 'host' ? '👑' : ''}
-          </div>
-        `).join('');
-
-      } catch (error) {
-        console.error('Erreur chargement participants:', error);
+        const { data: gifts, error } = await supabase
+          .from('live_gifts')
+          .select('*')
+          .eq('is_active', true)
+          .order('price', { ascending: true });
+        
+        availableGifts = (gifts && gifts.length > 0) ? gifts : defaultGifts;
+      } catch {
+        availableGifts = defaultGifts;
       }
+      
+      renderGiftsGrid();
+    }
+
+    function renderGiftsGrid() {
+      const grid = document.getElementById('giftsGrid');
+      const balance = currentUserProfile?.brumes_balance || 0;
+      
+      grid.innerHTML = availableGifts.map(gift => `
+        <div onclick="sendGift('${gift.id}', ${gift.price}, '${gift.emoji}', '${gift.name}')" 
+             style="display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: ${balance >= gift.price ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)'}; border-radius: 12px; cursor: ${balance >= gift.price ? 'pointer' : 'not-allowed'}; opacity: ${balance >= gift.price ? '1' : '0.4'}; transition: all 0.2s;"
+             onmouseover="this.style.background='${balance >= gift.price ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255,255,255,0.02)'}'"
+             onmouseout="this.style.background='${balance >= gift.price ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)'}'">
+          <div style="font-size: 2rem; margin-bottom: 6px;">${gift.emoji}</div>
+          <div style="font-size: 0.75rem; color: rgba(255,255,255,0.8); margin-bottom: 4px;">${gift.name}</div>
+          <div style="font-size: 0.8rem; color: #FCD34D; font-weight: 600;">${gift.price} 💎</div>
+        </div>
+      `).join('');
     }
 
     let selectedGiftRecipient = null;
 
-    window.selectGiftRecipient = function(userId) {
-      selectedGiftRecipient = userId;
-      document.querySelectorAll('.gift-participant').forEach(p => {
-        if (p.dataset.userId === userId) {
-          p.style.borderColor = '#ffa94d';
-          p.style.background = 'rgba(255, 169, 77, 0.2)';
-        } else {
-          p.style.borderColor = 'transparent';
-          p.style.background = 'rgba(255,255,255,0.05)';
-        }
-      });
-    }
-
-    window.confirmSendGift = async function() {
-      const amount = parseInt(document.getElementById('giftAmount').value);
+    window.sendGift = async function(giftId, price, emoji, name) {
+      const balance = currentUserProfile?.brumes_balance || 0;
+      
+      if (balance < price) {
+        alert(`Tu n'as pas assez de Brumes ! Tu as ${balance}💎, ce cadeau coûte ${price}💎.`);
+        return;
+      }
       
       if (!selectedGiftRecipient) {
-        alert('Sélectionne un destinataire');
+        alert('Erreur: pas de destinataire');
         return;
       }
-      if (!amount || amount < 10) {
-        alert('Montant minimum : 10 Brumes');
-        return;
-      }
-
+      
+      if (!confirm(`Envoyer ${emoji} ${name} pour ${price} Brumes ?`)) return;
+      
       try {
+        // Trouver l'ID du cadeau en BDD
+        let dbGiftId = giftId;
+        const { data: giftData } = await supabase
+          .from('live_gifts')
+          .select('id')
+          .eq('emoji', emoji)
+          .single();
+        
+        if (giftData) dbGiftId = giftData.id;
+        
+        // Appeler la fonction RPC pour envoyer le cadeau
         const { data, error } = await supabase.rpc('send_live_gift', {
-          p_live_id: currentLiveId,
+          p_sender_id: currentUser.id,
           p_receiver_id: selectedGiftRecipient,
-          p_amount: amount,
-          p_message: null
+          p_live_id: currentLiveId,
+          p_gift_id: dbGiftId
         });
-
-        if (error) throw error;
-
-        if (data.success) {
-          alert(`✨ Tu as envoyé ${amount} Brumes !`);
-          closeGiftModal();
-          window.loadProfile();
-        } else {
+        
+        if (error) {
+          // Si la fonction n'existe pas, faire le traitement manuellement
+          console.log('RPC error, doing manual transfer:', error);
+          
+          // Débiter l'expéditeur
+          await supabase
+            .from('users')
+            .update({ brumes_balance: balance - price })
+            .eq('id', currentUser.id);
+          
+          // Créditer le receveur (80%)
+          const { data: receiver } = await supabase
+            .from('users')
+            .select('brumes_balance')
+            .eq('id', selectedGiftRecipient)
+            .single();
+          
+          const receiverBalance = receiver?.brumes_balance || 0;
+          await supabase
+            .from('users')
+            .update({ brumes_balance: receiverBalance + Math.floor(price * 0.8) })
+            .eq('id', selectedGiftRecipient);
+          
+          // Mettre à jour le profil local
+          currentUserProfile.brumes_balance = balance - price;
+        } else if (data && !data.success) {
           alert(data.error);
+          return;
+        } else {
+          currentUserProfile.brumes_balance = balance - price;
         }
-
+        
+        // Animation du cadeau
+        showGiftAnimation(emoji, name);
+        
+        // Envoyer un message dans le chat
+        await supabase
+          .from('live_messages')
+          .insert({
+            live_id: currentLiveId,
+            user_id: currentUser.id,
+            pseudo: currentUserProfile?.firstname || 'Anonyme',
+            content: `a envoyé ${emoji} ${name}!`
+          });
+        
+        // Fermer la modale et rafraîchir
+        closeGiftModal();
+        loadLiveMessages(currentLiveId);
+        
       } catch (error) {
         console.error('Erreur envoi cadeau:', error);
         alert('Erreur lors de l\'envoi du cadeau');
       }
+    }
+
+    function showGiftAnimation(emoji, name) {
+      const animDiv = document.getElementById('giftAnimation');
+      const emojiDiv = document.getElementById('giftEmoji');
+      const textDiv = document.getElementById('giftText');
+      
+      emojiDiv.textContent = emoji;
+      emojiDiv.style.animation = 'none';
+      setTimeout(() => emojiDiv.style.animation = 'giftBounce 1s ease-out', 10);
+      
+      textDiv.textContent = name + ' envoyé !';
+      
+      animDiv.style.display = 'flex';
+      
+      setTimeout(() => {
+        animDiv.style.display = 'none';
+      }, 2000);
     }
 
     window.addToFavorites = async function() {
@@ -6096,11 +6380,14 @@
       document.getElementById('tabFavorites').style.color = 'rgba(255,255,255,0.6)';
       document.getElementById('tabNimbes').style.background = 'transparent';
       document.getElementById('tabNimbes').style.color = 'rgba(255,255,255,0.6)';
+      document.getElementById('tabEarnings').style.background = 'transparent';
+      document.getElementById('tabEarnings').style.color = 'rgba(255,255,255,0.6)';
       
       // Hide all sections
       document.getElementById('sectionFanMessages').style.display = 'none';
       document.getElementById('sectionFavorites').style.display = 'none';
       document.getElementById('sectionNimbes').style.display = 'none';
+      document.getElementById('sectionEarnings').style.display = 'none';
       
       // Show selected
       if (tab === 'fan') {
@@ -6115,7 +6402,126 @@
         document.getElementById('tabNimbes').style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
         document.getElementById('tabNimbes').style.color = 'white';
         document.getElementById('sectionNimbes').style.display = 'block';
+      } else if (tab === 'earnings') {
+        document.getElementById('tabEarnings').style.background = 'linear-gradient(135deg, #10B981, #059669)';
+        document.getElementById('tabEarnings').style.color = 'white';
+        document.getElementById('sectionEarnings').style.display = 'block';
+        loadCreatorEarnings();
       }
+    }
+    
+    // ============================================
+    // GAINS CRÉATEUR
+    // ============================================
+    
+    async function loadCreatorEarnings() {
+      try {
+        // Charger les gains
+        const { data: earnings } = await supabase
+          .from('creator_earnings')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .single();
+        
+        const pendingBrumes = earnings?.brumes_pending || 0;
+        const eurosEquiv = ((pendingBrumes / 100) * 0.50).toFixed(2);
+        
+        document.getElementById('earningsBrumes').textContent = pendingBrumes;
+        document.getElementById('earningsEuros').textContent = eurosEquiv;
+        
+        // Activer/désactiver le bouton de retrait
+        const btnRetrait = document.getElementById('btnRequestConversion');
+        if (pendingBrumes >= 1000) {
+          btnRetrait.disabled = false;
+          btnRetrait.style.opacity = '1';
+        } else {
+          btnRetrait.disabled = true;
+          btnRetrait.style.opacity = '0.5';
+        }
+        
+        // Charger le statut de vérification
+        const { data: bankInfo } = await supabase
+          .from('creator_bank_info')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .single();
+        
+        updateVerificationStatus(bankInfo);
+        
+      } catch (error) {
+        console.log('Pas encore de gains créateur');
+      }
+    }
+    
+    function updateVerificationStatus(bankInfo) {
+      const verifyPhone = document.getElementById('verifyPhone');
+      const verifyId = document.getElementById('verifyId');
+      const verifyAgreement = document.getElementById('verifyAgreement');
+      const verifyBank = document.getElementById('verifyBank');
+      const statusDiv = document.getElementById('verificationStatus');
+      
+      if (bankInfo) {
+        verifyPhone.innerHTML = bankInfo.phone_verified ? '✅ Appel téléphonique vérifié' : '❌ Appel téléphonique de vérification';
+        verifyId.innerHTML = bankInfo.identity_verified ? '✅ Pièce d\'identité validée' : '❌ Pièce d\'identité (CNI/Passeport)';
+        verifyAgreement.innerHTML = bankInfo.agreement_signed ? '✅ Accord anti-fraude signé' : '❌ Accord anti-fraude signé';
+        verifyBank.innerHTML = bankInfo.revolut_account_id ? '✅ Coordonnées bancaires validées' : '❌ Coordonnées bancaires validées';
+        
+        // Tout est vérifié ?
+        if (bankInfo.phone_verified && bankInfo.identity_verified && bankInfo.agreement_signed && bankInfo.revolut_account_id) {
+          statusDiv.style.background = 'rgba(16, 185, 129, 0.1)';
+          statusDiv.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+          statusDiv.querySelector('span').textContent = '✅';
+          statusDiv.querySelector('span:nth-child(2)').textContent = 'Vérification complète';
+        }
+      }
+    }
+    
+    window.requestConversion = async function() {
+      const pendingBrumes = parseInt(document.getElementById('earningsBrumes').textContent);
+      
+      if (pendingBrumes < 1000) {
+        alert('Tu dois avoir au moins 1000 Brumes pour demander un retrait (5€ minimum).');
+        return;
+      }
+      
+      // Vérifier si la vérification est complète
+      const { data: bankInfo } = await supabase
+        .from('creator_bank_info')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .single();
+      
+      if (!bankInfo || !bankInfo.phone_verified || !bankInfo.identity_verified || !bankInfo.agreement_signed) {
+        alert('Tu dois d\'abord compléter la vérification de ton identité avant de pouvoir retirer tes gains.');
+        return;
+      }
+      
+      const eurosAmount = ((pendingBrumes / 100) * 0.50).toFixed(2);
+      
+      if (confirm(`Tu vas demander la conversion de ${pendingBrumes} Brumes en ${eurosAmount}€.\n\nLe paiement sera effectué sous 5-10 jours ouvrés après validation.\n\nConfirmer ?`)) {
+        try {
+          const { data, error } = await supabase.rpc('request_brumes_conversion', {
+            p_user_id: currentUser.id,
+            p_brumes_amount: pendingBrumes
+          });
+          
+          if (error) throw error;
+          
+          if (data.success) {
+            alert(`✅ Demande de retrait créée !\n\n${data.brumes_converted} Brumes → ${data.euros_amount}€\n\nTu recevras le paiement sous 5-10 jours.`);
+            loadCreatorEarnings();
+          } else {
+            alert('Erreur: ' + data.error);
+          }
+        } catch (error) {
+          console.error('Erreur conversion:', error);
+          alert('Erreur lors de la demande de conversion.');
+        }
+      }
+    }
+    
+    window.startVerification = function() {
+      alert(`🔐 Processus de vérification\n\n1️⃣ Un membre de l'équipe Flou va te contacter par téléphone\n\n2️⃣ Tu devras fournir une pièce d'identité\n\n3️⃣ Tu signeras un accord de transparence\n\n4️⃣ Tu recevras un lien Revolut pour valider tes coordonnées bancaires\n\n📧 Contacte-nous à brumes@flouapp.fr pour commencer !`);
     }
     
     // Charger les favoris de l'utilisateur
