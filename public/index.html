@@ -868,25 +868,48 @@
 </head>
 <body>
   <!-- INSTALL APP MODAL -->
-  <div id="installAppModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #FFFFFF; border-radius: 24px; max-width: 340px; width: 100%; padding: 32px 24px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalSlideIn 0.4s ease-out;">
+  <div id="installAppModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #FFFFFF; border-radius: 24px; max-width: 340px; width: 100%; padding: 32px 24px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalSlideIn 0.4s ease-out; max-height: 90vh; overflow-y: auto;">
       <div style="width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(139,92,246,0.4);">
         <img src="/assets/logos/FLOU.png" alt="Flou" style="width: 50px; height: 50px; object-fit: contain;">
       </div>
-      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1C1917; margin-bottom: 12px;">Installe Flou</h2>
-      <p style="color: #57534E; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px;">Ajoute Flou à ton écran d'accueil pour une expérience optimale, plus rapide et hors-ligne !</p>
+      <h2 style="font-size: 1.5rem; font-weight: 700; color: #1C1917; margin-bottom: 12px;">📲 Ajoute Flou à ton téléphone</h2>
+      <p style="color: #57534E; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">Icône sur l'écran d'accueil, ouverture plein écran, sensation d'app native !</p>
+      
+      <!-- Avantages -->
+      <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+        <span style="background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500;">✔ Gratuit</span>
+        <span style="background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500;">✔ Rapide</span>
+        <span style="background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500;">✔ Plein écran</span>
+      </div>
       
       <!-- Instructions iOS -->
-      <div id="iosInstructions" style="display: none; background: #F5F5F4; border-radius: 16px; padding: 16px; margin-bottom: 20px; text-align: left;">
-        <p style="font-size: 0.85rem; color: #57534E; margin-bottom: 12px;">Sur Safari :</p>
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-          <span style="background: #8B5CF6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">1</span>
-          <span style="font-size: 0.9rem; color: #1C1917;">Appuie sur <strong>⎙</strong> (Partager)</span>
+      <div id="iosInstructions" style="display: none; background: linear-gradient(135deg, #FEF3C7, #FDE68A); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: left;">
+        <p style="font-size: 0.9rem; color: #92400E; font-weight: 600; margin-bottom: 16px; text-align: center;">🍎 Sur iPhone/iPad (Safari)</p>
+        <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px;">
+          <span style="background: #8B5CF6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">1</span>
+          <div>
+            <span style="font-size: 0.95rem; color: #1C1917; font-weight: 600;">Appuie sur le bouton Partager</span>
+            <div style="font-size: 1.5rem; margin-top: 4px;">⬆️</div>
+            <span style="font-size: 0.8rem; color: #78716C;">(en bas de Safari)</span>
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <span style="background: #8B5CF6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;">2</span>
-          <span style="font-size: 0.9rem; color: #1C1917;">Puis <strong>"Sur l'écran d'accueil"</strong></span>
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <span style="background: #8B5CF6; color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">2</span>
+          <div>
+            <span style="font-size: 0.95rem; color: #1C1917; font-weight: 600;">Sélectionne "Sur l'écran d'accueil"</span>
+            <div style="font-size: 1.5rem; margin-top: 4px;">➕</div>
+            <span style="font-size: 0.8rem; color: #78716C;">(ou "Add to Home Screen")</span>
+          </div>
         </div>
+        <div style="text-align: center; margin-top: 16px; padding-top: 12px; border-top: 1px dashed #D97706;">
+          <span style="font-size: 0.8rem; color: #92400E;">✨ L'icône Flou apparaîtra sur ton écran d'accueil !</span>
+        </div>
+      </div>
+      
+      <!-- Instructions Android/Desktop -->
+      <div id="androidInstructions" style="display: none; background: #F0FDF4; border-radius: 16px; padding: 16px; margin-bottom: 20px; text-align: center;">
+        <p style="font-size: 0.9rem; color: #166534;">Clique sur "Installer" et Flou sera ajouté à ton écran d'accueil automatiquement ! 🚀</p>
       </div>
       
       <button id="installAppBtn" onclick="installApp()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #8B5CF6, #EC4899); border: none; border-radius: 14px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(139,92,246,0.3);">
@@ -1628,12 +1651,23 @@
             </div>
             
             <!-- Installer l'app -->
-            <div id="installBtn" onclick="installPWA()" style="display: none; justify-content: space-between; align-items: center; padding: 14px 20px; cursor: pointer;">
+            <div id="installPWABtn" onclick="showInstallModal()" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; cursor: pointer; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.1));">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 1.2rem;">📱</span>
-                <span style="color: var(--text); font-weight: 500;">Installer l'application</span>
+                <span style="font-size: 1.2rem;">📲</span>
+                <div>
+                  <span style="color: var(--text); font-weight: 500; display: block;">Ajouter Flou à l'écran d'accueil</span>
+                  <span style="color: var(--text-lighter); font-size: 0.75rem;">Accès rapide, plein écran</span>
+                </div>
               </div>
-              <span style="color: var(--primary); font-weight: 600;">Installer</span>
+              <span style="background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Installer</span>
+            </div>
+            
+            <!-- Badge PWA installé -->
+            <div id="pwaInstalledBadge" style="display: none; justify-content: space-between; align-items: center; padding: 14px 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.2rem;">✅</span>
+                <span style="color: var(--success); font-weight: 500;">App installée !</span>
+              </div>
             </div>
           </div>
 
@@ -2654,24 +2688,32 @@
     });
 
     // Show install modal on first visit
-    function showInstallModal() {
+    function showInstallModal(forceShow = false) {
       // Don't show if already installed as PWA
       if (window.matchMedia('(display-mode: standalone)').matches) {
         console.log('App already installed');
-        return;
+        // Update UI to show installed badge
+        const installBtn = document.getElementById('installPWABtn');
+        const installedBadge = document.getElementById('pwaInstalledBadge');
+        if (installBtn) installBtn.style.display = 'none';
+        if (installedBadge) installedBadge.style.display = 'flex';
+        if (!forceShow) return;
       }
       
-      // Don't show if user dismissed it recently (24h)
-      const lastDismissed = localStorage.getItem('installModalDismissed');
-      if (lastDismissed) {
-        const dismissedTime = parseInt(lastDismissed);
-        if (Date.now() - dismissedTime < 24 * 60 * 60 * 1000) {
-          return;
+      // Don't show automatically if user dismissed it recently (24h)
+      if (!forceShow) {
+        const lastDismissed = localStorage.getItem('installModalDismissed');
+        if (lastDismissed) {
+          const dismissedTime = parseInt(lastDismissed);
+          if (Date.now() - dismissedTime < 24 * 60 * 60 * 1000) {
+            return;
+          }
         }
       }
       
       const modal = document.getElementById('installAppModal');
       const iosInstructions = document.getElementById('iosInstructions');
+      const androidInstructions = document.getElementById('androidInstructions');
       const installBtn = document.getElementById('installAppBtn');
       
       // Detect iOS
@@ -2680,10 +2722,14 @@
       
       if (isIOS) {
         iosInstructions.style.display = 'block';
-        installBtn.textContent = 'J\'ai compris !';
+        androidInstructions.style.display = 'none';
+        installBtn.textContent = 'J\'ai compris ! 👍';
+        installBtn.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
       } else {
         iosInstructions.style.display = 'none';
-        installBtn.textContent = 'Installer l\'application';
+        androidInstructions.style.display = deferredPrompt ? 'block' : 'none';
+        installBtn.textContent = deferredPrompt ? '📲 Installer maintenant' : 'Fermer';
+        installBtn.style.background = 'linear-gradient(135deg, #8B5CF6, #EC4899)';
       }
       
       modal.style.display = 'flex';
@@ -2708,10 +2754,14 @@
         
         if (outcome === 'accepted') {
           localStorage.setItem('appInstalled', 'true');
+          // Update UI
+          const installBtn = document.getElementById('installPWABtn');
+          const installedBadge = document.getElementById('pwaInstalledBadge');
+          if (installBtn) installBtn.style.display = 'none';
+          if (installedBadge) installedBadge.style.display = 'flex';
         }
       } else {
-        // No prompt available, show instructions
-        alert('Pour installer Flou, utilise le menu de ton navigateur et cherche "Ajouter à l\'écran d\'accueil" ou "Installer l\'application"');
+        // No prompt available
         closeInstallModal();
       }
     }
@@ -2721,11 +2771,29 @@
       document.getElementById('installAppModal').style.display = 'none';
       localStorage.setItem('installModalDismissed', Date.now().toString());
     }
+    
+    // Check if PWA is installed and update UI
+    function checkPWAInstallStatus() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const installBtn = document.getElementById('installPWABtn');
+      const installedBadge = document.getElementById('pwaInstalledBadge');
+      
+      if (isStandalone || localStorage.getItem('appInstalled') === 'true') {
+        if (installBtn) installBtn.style.display = 'none';
+        if (installedBadge) installedBadge.style.display = 'flex';
+      } else {
+        if (installBtn) installBtn.style.display = 'flex';
+        if (installedBadge) installedBadge.style.display = 'none';
+      }
+    }
 
-    // Show modal after 2 seconds on page load
+    // Show modal after 3 seconds on page load (only if not installed)
     setTimeout(() => {
-      showInstallModal();
-    }, 2000);
+      if (!window.matchMedia('(display-mode: standalone)').matches) {
+        showInstallModal();
+      }
+      checkPWAInstallStatus();
+    }, 3000);
 
     // ============================================
     // MODE JOUR/NUIT - THEME TOGGLE
