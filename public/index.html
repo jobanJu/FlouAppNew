@@ -1843,6 +1843,79 @@
       showInstallModal();
     }, 2000);
 
+    // ============================================
+    // FONCTIONS DE NAVIGATION - DÉFINIES EN PREMIER
+    // ============================================
+    
+    // Navigation vers la page d'inscription
+    window.goToSignup = function() { 
+      document.getElementById('landingPage').classList.remove('active'); 
+      document.getElementById('signupPage').classList.add('active'); 
+      currentStep = 1; 
+      if (window.showStep) window.showStep(1); 
+      if (window.renderInterests) window.renderInterests(); 
+    }
+    
+    // Navigation vers la landing page
+    window.goToLanding = function() { 
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+      document.getElementById('landingPage').classList.add('active'); 
+    }
+    
+    // Navigation vers la page de connexion
+    window.login = function() { 
+      document.getElementById('landingPage').classList.remove('active'); 
+      document.getElementById('loginPage').classList.add('active'); 
+    }
+    
+    // Vérifier si on revient d'un reset password
+    window.checkPasswordResetFlow = function() {
+      const url = new URL(window.location.href);
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      
+      // Supabase met les tokens dans le hash après redirection
+      if (hashParams.get('type') === 'recovery' || url.searchParams.get('reset') === 'true') {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('resetPasswordPage').classList.add('active');
+        // Nettoyer l'URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+    
+    // Authentification Google
+    window.signInWithGoogle = async function() {
+      console.log('🔑 Démarrage connexion Google...');
+      try {
+        const redirectUrl = window.location.origin;
+        console.log('🔗 Redirect URL:', redirectUrl);
+        
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: redirectUrl,
+            skipBrowserRedirect: false
+          }
+        });
+        
+        console.log('📦 Réponse Google Auth:', data, error);
+        
+        if (error) {
+          console.error('❌ Erreur Google:', error);
+          throw error;
+        }
+        
+        // La redirection vers Google se fait automatiquement
+        console.log('✅ Redirection vers Google...');
+      } catch (err) {
+        console.error('❌ Erreur Google Auth:', err);
+        alert('Erreur de connexion Google: ' + (err.message || 'Erreur inconnue'));
+      }
+    }
+    
+    // ============================================
+    // FIN DES FONCTIONS DE NAVIGATION
+    // ============================================
+
     const interests = ["Voyages", "Musique", "Sport", "Cinéma", "Art", "Cuisine", "Photographie", "Lecture", "Nature", "Tech", "Mode", "Danse", "Yoga", "Méditation", "Gaming", "Musée", "Théâtre", "Concert", "Randonnée", "Café", "Vin", "Bière", "Cocktails", "Festivals"];
 
     let formData = { firstName: '', age: '', city: '', location: null, gender: '', sexuality: '', interests: [], photoFile: null, catchphrase: '', bio: '', email: '', password: '' };
@@ -2074,36 +2147,6 @@
         currentUser = data.user;
         window.goToMatches();
       } catch (err) { if (error) error.textContent = err.message; }
-    }
-
-    // AUTHENTIFICATION GOOGLE
-    window.signInWithGoogle = async function() {
-      console.log('🔑 Démarrage connexion Google...');
-      try {
-        const redirectUrl = window.location.origin;
-        console.log('🔗 Redirect URL:', redirectUrl);
-        
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: redirectUrl,
-            skipBrowserRedirect: false
-          }
-        });
-        
-        console.log('📦 Réponse Google Auth:', data, error);
-        
-        if (error) {
-          console.error('❌ Erreur Google:', error);
-          throw error;
-        }
-        
-        // La redirection vers Google se fait automatiquement
-        console.log('✅ Redirection vers Google...');
-      } catch (err) {
-        console.error('❌ Erreur Google Auth:', err);
-        alert('Erreur de connexion Google: ' + (err.message || 'Erreur inconnue'));
-      }
     }
 
     // Gérer le callback après connexion Google
@@ -2382,23 +2425,6 @@
       }
     }
 
-    // Vérifier si on revient d'un reset password
-    window.checkPasswordResetFlow = function() {
-      const url = new URL(window.location.href);
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      
-      // Supabase met les tokens dans le hash après redirection
-      if (hashParams.get('type') === 'recovery' || url.searchParams.get('reset') === 'true') {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('resetPasswordPage').classList.add('active');
-        // Nettoyer l'URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
-
-    window.goToSignup = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('signupPage').classList.add('active'); currentStep = 1; window.showStep(1); window.renderInterests(); }
-    window.goToLanding = function() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('landingPage').classList.add('active'); }
-    window.login = function() { document.getElementById('landingPage').classList.remove('active'); document.getElementById('loginPage').classList.add('active'); }
     window.goToMatches = function() { 
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
       document.getElementById('appPage').classList.add('active');
