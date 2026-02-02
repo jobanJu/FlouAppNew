@@ -1,0 +1,691 @@
+/* ============================================================================
+   FLOU LIVE - MAIN STYLESHEET
+   Clean, organized, and maintainable
+   ============================================================================ */
+
+/* ============================================================================
+   1. RESET & BASE STYLES
+   ============================================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: #fff;
+    color: #1a1a1a;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+input, textarea, button {
+    font-family: inherit;
+}
+
+/* ============================================================================
+   2. LAYOUT STRUCTURE
+   ============================================================================ */
+
+.live-container {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================================================
+   3. BUTTONS & INTERACTIONS
+   ============================================================================ */
+
+.btn {
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.btn-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #8B5CF6;
+    background: rgba(255, 255, 255, 0.95);
+    color: #8B5CF6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+}
+
+.btn-icon:hover {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    transform: scale(1.1);
+}
+
+.btn-icon.active {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+}
+
+.btn-close {
+    border-color: #EC4899;
+}
+
+.btn-follow {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    padding: 8px 16px;
+    font-size: 12px;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+.btn-follow:hover {
+    transform: scale(1.05);
+}
+
+.btn-send {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.btn-send:hover {
+    transform: scale(1.05);
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.btn-decline {
+    background: #e5e7eb;
+    color: #1a1a1a;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-close-chat {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+}
+
+/* ============================================================================
+   4. HEADER & BADGE
+   ============================================================================ */
+
+.live-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 16px;
+    border-radius: 50px;
+    border: 2px solid #8B5CF6;
+    font-weight: 600;
+    color: #8B5CF6;
+    font-size: 14px;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #EC4899;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* ============================================================================
+   5. VIEWERS CARD
+   ============================================================================ */
+
+.viewers-card {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 16px 24px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 60;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.viewers-card i {
+    color: #8B5CF6;
+    font-size: 24px;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+}
+
+.viewers-count {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.viewers-label {
+    color: #666;
+    font-size: 12px;
+}
+
+/* ============================================================================
+   6. REQUEST CAMERA BUTTON
+   ============================================================================ */
+
+.request-camera-btn {
+    position: absolute;
+    top: 80px;
+    left: 320px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+    z-index: 60;
+    transition: all 0.3s ease;
+}
+
+.request-camera-btn:hover:not(.disabled) {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+}
+
+.request-camera-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.request-camera-btn.pending {
+    animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3); }
+    50% { box-shadow: 0 8px 32px rgba(139, 92, 246, 0.6); }
+}
+
+/* ============================================================================
+   7. STREAMER INFO
+   ============================================================================ */
+
+.streamer-info {
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 60;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    max-width: 280px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.info {
+    flex: 1;
+}
+
+.info h3 {
+    color: #1a1a1a;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.info p {
+    color: #666;
+    font-size: 13px;
+}
+
+/* ============================================================================
+   8. CONTROLS
+   ============================================================================ */
+
+.controls {
+    position: absolute;
+    bottom: 120px;
+    left: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    max-width: 200px;
+    z-index: 60;
+}
+
+/* ============================================================================
+   9. CHAT PANEL
+   ============================================================================ */
+
+.chat-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 60;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    overflow: hidden;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    color: white;
+    padding: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-message {
+    display: flex;
+    gap: 8px;
+    animation: slideIn 0.3s ease;
+}
+
+.chat-message .chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.chat-content {
+    flex: 1;
+}
+
+.chat-username {
+    font-weight: 600;
+    color: #8B5CF6;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.chat-text {
+    background: rgba(139, 92, 246, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #333;
+    font-size: 13px;
+    border-left: 3px solid #8B5CF6;
+    word-break: break-word;
+}
+
+.chat-footer {
+    padding: 12px;
+    border-top: 1px solid rgba(139, 92, 246, 0.1);
+    display: flex;
+    gap: 8px;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.chat-input:focus {
+    border-color: #8B5CF6;
+}
+
+/* ============================================================================
+   10. GIFT MODAL
+   ============================================================================ */
+
+.gift-modal {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 16px;
+    z-index: 70;
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    display: none;
+}
+
+.gift-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.gift-item {
+    width: 60px;
+    height: 60px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    transition: all 0.3s;
+}
+
+.gift-item:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+    border-color: #8B5CF6;
+    transform: scale(1.1);
+}
+
+/* ============================================================================
+   11. VIDEO GRID
+   ============================================================================ */
+
+.video-grid {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: grid;
+    gap: 8px;
+    z-index: 50;
+}
+
+.video-participant {
+    width: 140px;
+    height: 200px;
+    background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    border-radius: 16px;
+    border: 3px solid #8B5CF6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+    overflow: hidden;
+}
+
+.video-participant-video {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    border-radius: 14px;
+}
+
+.video-participant-label {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.remove-participant {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #EC4899;
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.remove-participant:hover {
+    background: #d1347a;
+    transform: scale(1.1);
+}
+
+/* ============================================================================
+   12. MODALS
+   ============================================================================ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 150;
+    display: none;
+}
+
+.modal-overlay.show {
+    display: block;
+}
+
+.video-request-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    z-index: 200;
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+    border: 2px solid #8B5CF6;
+    display: none;
+    text-align: center;
+    max-width: 90vw;
+    min-width: 320px;
+}
+
+.video-request-modal.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.modal-title {
+    color: #1a1a1a;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.modal-username {
+    color: #8B5CF6;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* ============================================================================
+   13. ANIMATIONS
+   ============================================================================ */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+}
+
+.floating-gift {
+    position: fixed;
+    font-size: 40px;
+    pointer-events: none;
+    z-index: 100;
+    animation: floatUp 2s ease-out forwards;
+}
+
+/* ============================================================================
+   14. RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .chat-panel {
+        width: 280px;
+        height: 400px;
+    }
+
+    .video-grid {
+        top: 5px;
+        right: 5px;
+        gap: 4px;
+    }
+
+    .video-participant {
+        width: 100px;
+        height: 140px;
+    }
+
+    .streamer-info {
+        left: 10px;
+        bottom: 30px;
+    }
+
+    .controls {
+        left: 10px;
+        bottom: 100px;
+    }
+
+    .request-camera-btn {
+        left: 270px;
+    }
+
+    .live-header {
+        top: 10px;
+        left: 10px;
+    }
+
+    .viewers-card {
+        top: 60px;
+        right: 10px;
+    }
+}
